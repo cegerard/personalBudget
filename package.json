@@ -1,0 +1,36 @@
+{
+  "name": "personalbudget",
+  "version": "0.0.0",
+  "description": "App to manage your personal budget",
+  "main": "app.js",
+  "type": "module",
+  "engines" : { 
+    "node" : ">=14.4.0",
+    "npm": ">=6.14.0"
+  },
+  "scripts": {
+    "start": "node app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cegerard/personalBudget.git"
+  },
+  "keywords": [
+    "budget",
+    "money",
+    "manager"
+  ],
+  "author": {
+    "name": "Cédric Gérard",
+    "email": "git@eriatand.org"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/cegerard/personalBudget/issues"
+  },
+  "homepage": "https://github.com/cegerard/personalBudget#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
