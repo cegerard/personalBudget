@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "jest --passWithNoTest"
+    "test": "jest --passWithNoTests --coverage",
+    "test:ci": "npm run test -- --ci",
+    "test:watch": "jest --passWithNoTests --watch"
   },
   "engines": {
     "node": ">=14.4.0",
