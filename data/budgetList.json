@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Electricité",
+        "slug": "electricite",
+        "amount": 58
+    },
+    {
+        "name": "Crédit voiture",
+        "slug": "credit-voiture",
+        "amount": 369.89
+    },
+    {
+        "name": "Crédit immobilier",
+        "slug": "credit-immobilier",
+        "amount": 857.12
+    },
+    {
+        "name": "Essence",
+        "slug": "essence",
+        "amount": 150
+    },
+    {
+        "name": "Assurance voiture",
+        "slug": "assurance-voiture",
+        "amount": 127
+    },
+    {
+        "name": "Alimentation",
+        "slug": "alimentation",
+        "amount": 500
+    },
+    {
+        "name": "Animaux",
+        "slug": "animaux",
+        "amount": 120
+    },
+    {
+        "name": "Enfants",
+        "slug": "enfants",
+        "amount": 0
+    }
+]
