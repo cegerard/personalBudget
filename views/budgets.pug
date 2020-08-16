@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1(class=['mb-4', 'mt-3']) Budgets
+  .row
+    .col-4
+      .list-group
+        each budget in budgetList
+          a(
+            href='#' + budget.slug,
+            class='list-group-item list-group-item-action',
+            data-toggle='list'
+          )
+            div(class=['d-flex', 'w-100', 'justify-content-between'])
+              h5.mb-1=budget.name
+              medium= budget.amount + ' €'
+    .col-8
+      .tab-content
+        each budget in budgetList
+          .tab-pane(id=budget.slug)= budget.name
+

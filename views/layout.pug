@@ -1,7 +1,21 @@
 doctype html
 html
   head
-    title= title
+    title Personal Budget
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+    link(rel='stylesheet', href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css", integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk", crossorigin="anonymous")
+  body.container
+    nav(class=['navbar', 'navbar-expand-lg', 'navbar-dark', 'bg-dark'])
+      a(class=['navbar-brand'], href="#") Personal Budget
+      button.navbar-toggler(type="button", data-toggle="collapse", data-target="#navbarSupportedContent", aria-controls="navbarSupportedContent", aria-expanded="false", aria-label="Toggle navigation")
+        span.navbar-toggler-icon
+      div#navbarSupportedContent(class=['collapse', 'navbar-collapse'])
+        ul(class=['navbar-nav', 'mr-auto'])
+          li.nav-item(class=(page === 'budgets' ? 'active' : ''))
+            a.nav-link(href="/budgets") Budgets
+          li.nav-item(class=(page === 'expenses' ? 'active' : ''))
+            a.nav-link(href="/expenses") Expenses
     block content
+  script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
+  script(src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js")
+  script( src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
