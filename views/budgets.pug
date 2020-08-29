@@ -3,7 +3,7 @@ extends layout
 block content
   h1(class=['mb-4', 'mt-3']) Budgets
   .row
-    .col-4
+    .col-md-4
       .list-group
         each budget in budgetList
           a(
@@ -14,8 +14,21 @@ block content
             div(class=['d-flex', 'w-100', 'justify-content-between'])
               h5.mb-1=budget.name
               medium= budget.amount + ' €'
-    .col-8
+    .col-md-8
       .tab-content
         each budget in budgetList
-          .tab-pane(id=budget.slug)= budget.name
-
+          .tab-pane(id=budget.slug)
+            p=budget.description || budget.name
+            p='Available: ' + budget.available + '€'
+            table.table
+              thead
+                tr
+                  th Expense
+                  th Amount
+                  th Date
+              tbody
+              each expense in budget.expenses
+                tr
+                  td= expense.name
+                  td= expense.amount + ' €'
+                  td= expense.date
