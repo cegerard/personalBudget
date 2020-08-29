@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1(class=['mb-4', 'mt-3']) Expenses
+  table.table
+    thead
+      tr
+        th Expense
+        th Amount
+        th Budget Line
+        th Date
+    tbody
+    each expense in expenseList
+      tr
+        td= expense.name
+        td= expense.amount + ' €'
+        td= expense.budgetLine
+        td= expense.date
