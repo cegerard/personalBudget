@@ -42,16 +42,16 @@ block content
           .modal-header
             h4.modal-title New Budget Line
           .modal-body
-            form
+            form(method="POST" action="/budgets")
               .form-group
                 label(for="budgetName") Name
-                input.form-control(id="budgetName" type="text" aria-describedby="budgetNameHelp" required)
+                input.form-control(id="budgetName" name="name" type="text" aria-describedby="budgetNameHelp" required)
                 small(id="budgetNameHelp" class="form-text text-muted") Budget line name must be unique
                 label(for="budgetAmount") Amount (€)
-                input.form-control(id="budgetAmount" type="number" aria-describedby="budgetAmountHelp" required)
+                input.form-control(id="budgetAmount" name="amount" type="number" aria-describedby="budgetAmountHelp" required)
                 small(id="budgetAmountHelp" class="form-text text-muted") Budget line amount must be gretter than 0
                 label(for="budgetAmount") Description
-                textarea.form-control(id="budgetDesc")
+                textarea.form-control(id="budgetDesc" name="description")
               .modal-footer
                 button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
                 button(type="submit" class="btn btn-primary") Add
