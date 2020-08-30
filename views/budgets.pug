@@ -1,7 +1,10 @@
 extends layout
 
 block content
-  h1(class=['mb-4', 'mt-3']) Budgets
+  div
+    h1(class="mb-4 mt-3") Budgets
+      button(type="button" class='btn btn-primary addBtn' data-target="#addBudgetModal" data-toggle="modal")
+        span(class='fas fa-plus')
   .row
     .col-md-4
       .list-group
@@ -12,7 +15,7 @@ block content
             data-toggle='list'
           )
             div(class=['d-flex', 'w-100', 'justify-content-between'])
-              h5.mb-1=budget.name
+              h5.mb-1= budget.name
               medium= budget.amount + ' €'
     .col-md-8
       .tab-content
@@ -32,3 +35,23 @@ block content
                   td= expense.name
                   td= expense.amount + ' €'
                   td= expense.date
+
+    div(id="addBudgetModal" class="modal fade")
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h4.modal-title New Budget Line
+          .modal-body
+            form
+              .form-group
+                label(for="budgetName") Name
+                input.form-control(id="budgetName" type="text" aria-describedby="budgetNameHelp" required)
+                small(id="budgetNameHelp" class="form-text text-muted") Budget line name must be unique
+                label(for="budgetAmount") Amount (€)
+                input.form-control(id="budgetAmount" type="number" aria-describedby="budgetAmountHelp" required)
+                small(id="budgetAmountHelp" class="form-text text-muted") Budget line amount must be gretter than 0
+                label(for="budgetAmount") Description
+                textarea.form-control(id="budgetDesc")
+              .modal-footer
+                button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
+                button(type="submit" class="btn btn-primary") Add
