@@ -4,13 +4,15 @@ const expenseList = require('../data/expenseList.json'); // TODO replace this by
 
 const router = express.Router();
 
-/* GET home page. */
+/* GET home page */
 router.get('/', (req, res) => res.redirect(`${req.baseUrl}/budgets`));
 
+/* Budgets routes */
 router.get('/budgets', (req, res) => {
   res.render('budgets', { page: 'budgets', budgetList });
 });
 
+/* Expenses routes */
 router.get('/expenses', (req, res) => {
   res.render('expenses', { page: 'expenses', expenseList });
 });
