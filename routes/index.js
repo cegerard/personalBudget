@@ -1,6 +1,5 @@
 const express = require('express');
-const { budgetRepository } = require('../data');
-const expenseList = require('../data/expenseList.json'); // TODO replace this by core service layer when available
+const { budgetRepository, expenseRepository } = require('../data');
 
 const router = express.Router();
 
@@ -23,7 +22,17 @@ router.post('/budgets', (req, res) => {
 
 /* Expenses routes */
 router.get('/expenses', (req, res) => {
-  res.render('expenses', { page: 'expenses', expenseList });
+  res.render('expenses', { page: 'expenses', expenseList: expenseRepository.expenses });
+});
+
+router.post('/expenses', (req, res) => {
+  expenseRepository.add({
+    name: req.body.name,
+    amount: req.body.amount,
+    date: req.body.date,
+    budgetLine: req.body.budgetline,
+  });
+  res.render('expenses', { page: 'expenses', expenseList: expenseRepository.expenses });
 });
 
 module.exports = router;

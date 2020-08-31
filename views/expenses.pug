@@ -2,6 +2,8 @@ extends layout
 
 block content
   h1(class=['mb-4', 'mt-3']) Expenses
+    button(type="button" class='btn btn-primary addBtn' data-target="#addExpenseModal" data-toggle="modal")
+      span(class='fas fa-plus')
   table.table
     thead
       tr
@@ -16,3 +18,24 @@ block content
         td= expense.amount + ' €'
         td= expense.budgetLine
         td= expense.date
+
+  div(id="addExpenseModal" class="modal fade")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h4.modal-title Add Expense
+        .modal-body
+          form(method="POST" action="/expenses")
+            .form-group
+              label(for="expenseName") Name
+              input.form-control(id="expenseName" name="name" type="text" required)
+              label(for="expenseAmount") Amount (€)
+              input.form-control(id="expenseAmount" name="amount" type="number" aria-describedby="expenseAmountHelp" required)
+              small(id="expenseAmountHelp" class="form-text text-muted") Expense amount must be gretter than 0
+              label(for="expenseDate") Date
+              input.form-control(id="expenseDate" name="date" type="date" required)
+              label(for="budgetLine") Budget Line
+              input.form-control(id="budgetLine" name="budgetline" type="text")
+            .modal-footer
+              button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
+              button(type="submit" class="btn btn-primary") Add
