@@ -20,6 +20,14 @@ class BudgetRepository {
       expenses: [],
     });
   }
+
+  delete(budgetId) {
+    const budgetIndex = this.budgetList.findIndex((budget) => budget.id === budgetId);
+    if (budgetIndex !== -1) {
+      return this.budgetList.splice(budgetIndex, 1);
+    }
+    return null;
+  }
 }
 
 module.exports = new BudgetRepository();

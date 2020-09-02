@@ -20,6 +20,16 @@ router.post('/budgets', (req, res) => {
   res.render('budgets', { page: 'budgets', budgetList: budgetRepository.budgets });
 });
 
+router.delete('/budgets/:id', (req, res) => {
+  const deleted = budgetRepository.delete(req.params.id);
+  if (deleted !== null) {
+    res.status(204).end();
+    return;
+  }
+
+  res.status(500).end();
+});
+
 /* Expenses routes */
 router.get('/expenses', (req, res) => {
   res.render('expenses', { page: 'expenses', expenseList: expenseRepository.expenses });

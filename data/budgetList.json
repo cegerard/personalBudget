@@ -1,5 +1,6 @@
 [
     {
+        "id": "1",
         "name": "Electricité",
         "slug": "electricite",
         "amount": 58,
@@ -8,6 +9,7 @@
         "expenses": []
     },
     {
+        "id": "2",
         "name": "Crédit voiture",
         "slug": "credit-voiture",
         "amount": 369.89,
@@ -16,6 +18,7 @@
         "expenses": []
     },
     {
+        "id": "3",
         "name": "Crédit immobilier",
         "slug": "credit-immobilier",
         "amount": 857.12,
@@ -24,6 +27,7 @@
         "expenses": []
     },
     {
+        "id": "4",
         "name": "Essence",
         "slug": "essence",
         "amount": 150,
@@ -47,6 +51,7 @@
         ]
     },
     {
+        "id": "5",
         "name": "Assurance voiture",
         "slug": "assurance-voiture",
         "amount": 127,
@@ -55,6 +60,7 @@
         "expenses": []
     },
     {
+        "id": "6",
         "name": "Alimentation",
         "slug": "alimentation",
         "amount": 500,
@@ -63,6 +69,7 @@
         "expenses": []
     },
     {
+        "id": "7",
         "name": "Animaux",
         "slug": "animaux",
         "amount": 120,
@@ -71,6 +78,7 @@
         "expenses": []
     },
     {
+        "id": "8",
         "name": "Enfants",
         "slug": "enfants",
         "amount": 0,

@@ -21,20 +21,23 @@ block content
       .tab-content
         each budget in budgetList
           .tab-pane(id=budget.slug)
-            p=budget.description || budget.name
-            p='Available: ' + budget.available + '€'
-            table.table
-              thead
-                tr
-                  th Expense
-                  th Amount
-                  th Date
-              tbody
-              each expense in budget.expenses
-                tr
-                  td= expense.name
-                  td= expense.amount + ' €'
-                  td= expense.date
+            .row
+              .col-12= budget.description || budget.name
+              .col-11= 'Available: ' + budget.available + '€'
+              button.col-1(class='btn btn-danger btn-sm' onclick=`deleteBudgetLine(${budget.id})`)
+                span(class='fas fa-trash-alt')
+              table.table(class='col-12 mt-2')
+                thead
+                  tr
+                    th Expense
+                    th Amount
+                    th Date
+                tbody
+                each expense in budget.expenses
+                  tr
+                    td= expense.name
+                    td= expense.amount + ' €'
+                    td= expense.date
 
     div(id="addBudgetModal" class="modal fade")
       .modal-dialog
