@@ -10,13 +10,13 @@ class BudgetRepository {
     return this.budgetList;
   }
 
-  add(budgetList) {
-    this.budgetList.push({
-      name: budgetList.name,
-      slug: slugify(budgetList.name),
-      amount: budgetList.amount,
-      description: budgetList.description,
-      available: budgetList.amount,
+  add(budget) {
+    return this.budgetList.push({
+      name: budget.name,
+      slug: slugify(budget.name),
+      amount: budget.amount,
+      description: budget.description,
+      available: budget.amount,
       expenses: [],
     });
   }
