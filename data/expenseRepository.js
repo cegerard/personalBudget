@@ -19,6 +19,14 @@ class ExpenseRepository {
       budgetLine: expense.budgetLine,
     });
   }
+
+  delete(expenseId) {
+    const expenseIndex = this.expenseList.findIndex((expense) => expense.id === expenseId);
+    if (expenseIndex !== -1) {
+      return this.expenseList.splice(expenseIndex, 1);
+    }
+    return null;
+  }
 }
 
 module.exports = new ExpenseRepository();

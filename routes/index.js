@@ -45,4 +45,14 @@ router.post('/expenses', (req, res) => {
   res.render('expenses', { page: 'expenses', expenseList: expenseRepository.expenses });
 });
 
+router.delete('/expenses/:id', (req, res) => {
+  const deleted = expenseRepository.delete(req.params.id);
+  if (deleted !== null) {
+    res.status(204).end();
+    return;
+  }
+
+  res.status(500).end();
+});
+
 module.exports = router;

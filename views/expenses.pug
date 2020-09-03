@@ -11,6 +11,7 @@ block content
         th Amount
         th Budget Line
         th Date
+        th Action
     tbody
     each expense in expenseList
       tr
@@ -18,6 +19,9 @@ block content
         td= expense.amount + ' €'
         td= expense.budgetLine
         td= expense.date
+        td 
+          button(class='btn btn-danger btn-sm' onclick=`deleteExpense("${expense.id}")`)
+            span(class='fas fa-trash-alt')
 
   div(id="addExpenseModal" class="modal fade")
     .modal-dialog
