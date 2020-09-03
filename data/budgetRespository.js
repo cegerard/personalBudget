@@ -1,4 +1,5 @@
 const slugify = require('slugify');
+const { uid } = require('uid');
 const budgetListSeed = require('./budgetList.json'); // TODO replace this by core service layer when available
 
 class BudgetRepository {
@@ -12,6 +13,7 @@ class BudgetRepository {
 
   add(budget) {
     return this.budgetList.push({
+      id: uid(),
       name: budget.name,
       slug: slugify(budget.name),
       amount: budget.amount,

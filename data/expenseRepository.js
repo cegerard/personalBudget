@@ -1,3 +1,4 @@
+const uid = require('uid');
 const expenseListSeed = require('./expenseList.json'); // TODO replace this by core service layer when available
 
 class ExpenseRepository {
@@ -11,6 +12,7 @@ class ExpenseRepository {
 
   add(expense) {
     this.expenseList.push({
+      id: uid(),
       name: expense.name,
       amount: expense.amount,
       date: expense.date,
