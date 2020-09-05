@@ -51,7 +51,7 @@ block content
                 input.form-control(id="budgetName" name="name" type="text" aria-describedby="budgetNameHelp" required)
                 small(id="budgetNameHelp" class="form-text text-muted") Budget line name must be unique
                 label(for="budgetAmount") Amount (€)
-                input.form-control(id="budgetAmount" name="amount" type="number" aria-describedby="budgetAmountHelp" required)
+                input.form-control(id="budgetAmount" name="amount" type="number" step="0.01" aria-describedby="budgetAmountHelp" required)
                 small(id="budgetAmountHelp" class="form-text text-muted") Budget line amount must be gretter than 0
                 label(for="budgetDesc") Description
                 textarea.form-control(id="budgetDesc" name="description")

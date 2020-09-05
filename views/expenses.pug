@@ -34,7 +34,7 @@ block content
               label(for="expenseName") Name
               input.form-control(id="expenseName" name="name" type="text" required)
               label(for="expenseAmount") Amount (€)
-              input.form-control(id="expenseAmount" name="amount" type="number" aria-describedby="expenseAmountHelp" required)
+              input.form-control(id="expenseAmount" name="amount" type="number" step="0.01" aria-describedby="expenseAmountHelp" required)
               small(id="expenseAmountHelp" class="form-text text-muted") Expense amount must be gretter than 0
               label(for="expenseDate") Date
               input.form-control(id="expenseDate" name="date" type="date" required)

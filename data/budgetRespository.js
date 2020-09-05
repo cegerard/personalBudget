@@ -1,5 +1,5 @@
 const slugify = require('slugify');
-const { uid } = require('uid');
+const uid = require('uid');
 const budgetListSeed = require('./budgetList.json'); // TODO replace this by core service layer when available
 
 class BudgetRepository {
