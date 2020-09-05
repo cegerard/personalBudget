@@ -32,17 +32,33 @@ router.delete('/budgets/:id', (req, res) => {
 
 /* Expenses routes */
 router.get('/expenses', (req, res) => {
-  res.render('expenses', { page: 'expenses', expenseList: expenseRepository.expenses });
+  res.render(
+    'expenses',
+    {
+      page: 'expenses',
+      expenseList: expenseRepository.expenses,
+      budgetList: budgetRepository.simpleBudgets,
+    },
+  );
 });
 
 router.post('/expenses', (req, res) => {
+  const budgetLine = budgetRepository.getSimpleBudget(req.body.budgetlineId);
   expenseRepository.add({
     name: req.body.name,
     amount: req.body.amount,
     date: req.body.date,
-    budgetLine: req.body.budgetline,
+    budgetLine,
   });
-  res.render('expenses', { page: 'expenses', expenseList: expenseRepository.expenses });
+
+  res.render(
+    'expenses',
+    {
+      page: 'expenses',
+      expenseList: expenseRepository.expenses,
+      budgetList: budgetRepository.simpleBudgets,
+    },
+  );
 });
 
 router.delete('/expenses/:id', (req, res) => {

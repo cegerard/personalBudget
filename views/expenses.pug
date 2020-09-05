@@ -17,7 +17,7 @@ block content
       tr
         td= expense.name
         td= expense.amount + ' €'
-        td= expense.budgetLine
+        td= expense.budgetLine.name
         td= expense.date
         td 
           button(class='btn btn-danger btn-sm' onclick=`deleteExpense("${expense.id}")`)
@@ -39,7 +39,9 @@ block content
               label(for="expenseDate") Date
               input.form-control(id="expenseDate" name="date" type="date" required)
               label(for="budgetLine") Budget Line
-              input.form-control(id="budgetLine" name="budgetline" type="text")
+              select.custom-select(id="budgetLine" name="budgetlineId")
+                each budget in budgetList
+                  option(value=budget.id)= budget.name
             .modal-footer
               button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
               button(type="submit" class="btn btn-primary") Add

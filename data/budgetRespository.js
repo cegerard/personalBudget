@@ -11,6 +11,10 @@ class BudgetRepository {
     return this.budgetList;
   }
 
+  get simpleBudgets() {
+    return this.budgetList.map((budget) => ({ id: budget.id, name: budget.name }));
+  }
+
   add(budget) {
     return this.budgetList.push({
       id: uid(),
@@ -29,6 +33,15 @@ class BudgetRepository {
       return this.budgetList.splice(budgetIndex, 1);
     }
     return null;
+  }
+
+  getSimpleBudget(budgetId) {
+    const foundBudget = this.budgetList.find((budget) => budget.id === budgetId);
+    // TODO handle error when budgetLine is not found
+    return {
+      id: foundBudget.id,
+      name: foundBudget.name,
+    };
   }
 }
 
