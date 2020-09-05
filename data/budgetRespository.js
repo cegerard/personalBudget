@@ -30,7 +30,7 @@ class BudgetRepository {
   delete(budgetId) {
     const budgetIndex = this.budgetList.findIndex((budget) => budget.id === budgetId);
     if (budgetIndex !== -1) {
-      return this.budgetList.splice(budgetIndex, 1);
+      return this.budgetList.splice(budgetIndex, 1)[0];
     }
     return null;
   }
@@ -42,6 +42,24 @@ class BudgetRepository {
       id: foundBudget.id,
       name: foundBudget.name,
     };
+  }
+
+  addExpenseToBudget(budgetId, expense) {
+    const foundBudget = this.budgetList.find((budget) => budget.id === budgetId);
+    // TODO handle error when budgetLine is not found
+    foundBudget.expenses.push(expense);
+    // compute available field
+    foundBudget.available -= expense.amount;
+  }
+
+  removeExpenseFromBudget(budgetId, expenseId) {
+    const foundBudget = this.budgetList.find((budget) => budget.id === budgetId);
+    // TODO handle error when budgetLine is not found
+    const expenseIndex = foundBudget.expenses.findIndex((expense) => expense.id === expenseId);
+    if (expenseIndex !== -1) {
+      return foundBudget.expenses.splice(expenseIndex, 1)[0];
+    }
+    return null;
   }
 }
 

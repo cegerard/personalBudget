@@ -23,7 +23,7 @@
         "slug": "credit-immobilier",
         "amount": 857.12,
         "description": "Dépenses liées au crédit de la maison",
-        "available": 0,
+        "available": 857.12,
         "expenses": []
     },
     {
@@ -32,17 +32,17 @@
         "slug": "essence",
         "amount": 150,
         "description": "Dépenses concernant l'essence des voitures",
-        "available": 120,
+        "available": 79,
         "expenses": [
             {
-                "id": 1,
+                "id": "100",
                 "name": "Cmax",
                 "amount": "41",
                 "date": "2020-08-29"
 
             },
             {
-                "id": 2,
+                "id": "101",
                 "name": "Ka+",
                 "amount": "30",
                 "date": "2020-08-22"
@@ -56,7 +56,7 @@
         "slug": "assurance-voiture",
         "amount": 127,
         "description": "Assurance des voitures",
-        "available": 0,
+        "available": 127,
         "expenses": []
     },
     {
@@ -65,7 +65,7 @@
         "slug": "alimentation",
         "amount": 500,
         "description": "Dépenses concernant l'alimentation (boucher, laitier, primeur et supermarché)",
-        "available": 331.43,
+        "available": 500,
         "expenses": []
     },
     {

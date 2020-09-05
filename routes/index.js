@@ -21,8 +21,9 @@ router.post('/budgets', (req, res) => {
 });
 
 router.delete('/budgets/:id', (req, res) => {
-  const deleted = budgetRepository.delete(req.params.id);
-  if (deleted !== null) {
+  const deletedBudget = budgetRepository.delete(req.params.id);
+  const nbDeleteExpenses = expenseRepository.removeAllFromBudget(deletedBudget.id);
+  if (deletedBudget !== null && nbDeleteExpenses != null) {
     res.status(204).end();
     return;
   }
@@ -43,13 +44,16 @@ router.get('/expenses', (req, res) => {
 });
 
 router.post('/expenses', (req, res) => {
-  const budgetLine = budgetRepository.getSimpleBudget(req.body.budgetlineId);
-  expenseRepository.add({
+  const budgetLineId = req.body.budgetlineId;
+  const budgetLine = budgetRepository.getSimpleBudget(budgetLineId);
+  const baseExpense = {
     name: req.body.name,
     amount: req.body.amount,
     date: req.body.date,
-    budgetLine,
-  });
+  };
+
+  const newExpenseId = expenseRepository.add({ ...baseExpense, budgetLine });
+  budgetRepository.addExpenseToBudget(budgetLineId, { ...baseExpense, id: newExpenseId });
 
   res.render(
     'expenses',
@@ -62,8 +66,13 @@ router.post('/expenses', (req, res) => {
 });
 
 router.delete('/expenses/:id', (req, res) => {
-  const deleted = expenseRepository.delete(req.params.id);
-  if (deleted !== null) {
+  const deletedFromExpense = expenseRepository.delete(req.params.id);
+  const deletedFromBudget = budgetRepository.removeExpenseFromBudget(
+    deletedFromExpense.budgetLine.id,
+    deletedFromExpense.id,
+  );
+
+  if (deletedFromExpense !== null && deletedFromBudget !== null) {
     res.status(204).end();
     return;
   }
