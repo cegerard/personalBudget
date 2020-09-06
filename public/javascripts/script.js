@@ -41,3 +41,12 @@ function deleteExpense(attr) {
   // TODO make load action feedback
   request.send();
 }
+
+function filterExpenseOnBudgetName() {
+  const budgetNameQuery = document.getElementById('expense-filter').value;
+  if(budgetNameQuery === '') {
+    window.location.replace('/expenses');
+  } else {
+    window.location.replace(`/expenses/filter?budgetName=${budgetNameQuery}`);
+  }
+}

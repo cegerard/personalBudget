@@ -10,6 +10,10 @@ class ExpenseRepository {
     return this.expenseList;
   }
 
+  getForBudgetLineName(budgetLineName) {
+    return this.expenseList.filter((expense) => expense.budgetLine.name === budgetLineName);
+  }
+
   add(expense) {
     const generatedId = uid();
     this.expenseList.push({

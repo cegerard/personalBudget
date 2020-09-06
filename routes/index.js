@@ -43,6 +43,17 @@ router.get('/expenses', (req, res) => {
   );
 });
 
+router.get('/expenses/filter', (req, res) => {
+  res.render(
+    'expenses',
+    {
+      page: 'expenses',
+      expenseList: expenseRepository.getForBudgetLineName(req.query.budgetName),
+      budgetList: budgetRepository.simpleBudgets,
+    },
+  );
+});
+
 router.post('/expenses', (req, res) => {
   const budgetLineId = req.body.budgetlineId;
   const budgetLine = budgetRepository.getSimpleBudget(budgetLineId);

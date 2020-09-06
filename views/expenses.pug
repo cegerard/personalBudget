@@ -1,9 +1,15 @@
 extends layout
 
 block content
-  h1(class=['mb-4', 'mt-3']) Expenses
-    button(type="button" class='btn btn-primary addBtn' data-target="#addExpenseModal" data-toggle="modal")
-      span(class='fas fa-plus')
+  .row
+    h1(class='mb-4 mt-3 col-md-9') Expenses
+      button(type="button" class='btn btn-primary addBtn' data-target="#addExpenseModal" data-toggle="modal")
+        span(class='fas fa-plus')
+    .col-md-3(class='mb-4 mt-3')
+      .input-group(style="padding-top: 4%")
+        input.form-control(id='expense-filter' type='text' placeholder='Budget Name' aria-label='Budget Name' aria-describedby='budget-name-filter')  
+        .input-group-append
+          button(id='budget-name-filter' class='btn btn-outline-secondary' type='button' onclick='filterExpenseOnBudgetName()') Filter
   table.table
     thead
       tr
