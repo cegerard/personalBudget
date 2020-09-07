@@ -36,7 +36,7 @@ class ExpenseRepository {
 
   removeAllFromBudget(budgetId) {
     const expensesToRemove = this.expenseList.filter(
-      (expense) => expense.budgetLine.id === budgetId,
+      (expense) => expense.budgetLine.id === budgetId
     );
     const errors = [];
     expensesToRemove.forEach((expense) => {

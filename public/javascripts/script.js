@@ -13,7 +13,7 @@ function deleteBudgetLine(attr) {
 
   request.onerror = function () {
     // There was a connection error of some sort
-    console.error('Can\'t reach server', this.response);
+    console.error("Can't reach server", this.response);
   };
 
   // TODO make load action feedback
@@ -35,7 +35,7 @@ function deleteExpense(attr) {
 
   request.onerror = function () {
     // There was a connection error of some sort
-    console.error('Can\'t reach server', this.response);
+    console.error("Can't reach server", this.response);
   };
 
   // TODO make load action feedback
@@ -44,7 +44,7 @@ function deleteExpense(attr) {
 
 function filterExpenseOnBudgetName() {
   const budgetNameQuery = document.getElementById('expense-filter').value;
-  if(budgetNameQuery === '') {
+  if (budgetNameQuery === '') {
     window.location.replace('/expenses');
   } else {
     window.location.replace(`/expenses/filter?budgetName=${budgetNameQuery}`);

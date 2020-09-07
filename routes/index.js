@@ -33,25 +33,19 @@ router.delete('/budgets/:id', (req, res) => {
 
 /* Expenses routes */
 router.get('/expenses', (req, res) => {
-  res.render(
-    'expenses',
-    {
-      page: 'expenses',
-      expenseList: expenseRepository.expenses,
-      budgetList: budgetRepository.simpleBudgets,
-    },
-  );
+  res.render('expenses', {
+    page: 'expenses',
+    expenseList: expenseRepository.expenses,
+    budgetList: budgetRepository.simpleBudgets,
+  });
 });
 
 router.get('/expenses/filter', (req, res) => {
-  res.render(
-    'expenses',
-    {
-      page: 'expenses',
-      expenseList: expenseRepository.getForBudgetLineName(req.query.budgetName),
-      budgetList: budgetRepository.simpleBudgets,
-    },
-  );
+  res.render('expenses', {
+    page: 'expenses',
+    expenseList: expenseRepository.getForBudgetLineName(req.query.budgetName),
+    budgetList: budgetRepository.simpleBudgets,
+  });
 });
 
 router.post('/expenses', (req, res) => {
@@ -66,21 +60,18 @@ router.post('/expenses', (req, res) => {
   const newExpenseId = expenseRepository.add({ ...baseExpense, budgetLine });
   budgetRepository.addExpenseToBudget(budgetLineId, { ...baseExpense, id: newExpenseId });
 
-  res.render(
-    'expenses',
-    {
-      page: 'expenses',
-      expenseList: expenseRepository.expenses,
-      budgetList: budgetRepository.simpleBudgets,
-    },
-  );
+  res.render('expenses', {
+    page: 'expenses',
+    expenseList: expenseRepository.expenses,
+    budgetList: budgetRepository.simpleBudgets,
+  });
 });
 
 router.delete('/expenses/:id', (req, res) => {
   const deletedFromExpense = expenseRepository.delete(req.params.id);
   const deletedFromBudget = budgetRepository.removeExpenseFromBudget(
     deletedFromExpense.budgetLine.id,
-    deletedFromExpense.id,
+    deletedFromExpense.id
   );
 
   if (deletedFromExpense !== null && deletedFromBudget !== null) {
