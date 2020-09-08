@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "jest --passWithNoTests --coverage",
+    "test": "jest --passWithNoTests",
+    "test:cov": "npm run test -- --coverage",
     "test:ci": "npm run test -- --ci",
     "test:watch": "jest --passWithNoTests --watch",
     "lint": "npx eslint .",
@@ -47,6 +48,7 @@
     "eslint": "^7.3.1",
     "eslint-plugin-import": "^2.22.0",
     "jest": "^26.1.0",
-    "prettier": "2.0.5"
+    "prettier": "2.0.5",
+    "superagent": "^6.1.0"
   }
 }
