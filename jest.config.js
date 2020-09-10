@@ -1,5 +1,5 @@
 module.exports = {
+  testEnvironment: 'node',
   verbose: true,
-  globalSetup: './test/setup.js',
-  globalTeardown: './test/teardown.js',
+  coveragePathIgnorePatterns: ['/node_modules/'],
 };

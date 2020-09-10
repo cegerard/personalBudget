@@ -49,6 +49,6 @@
     "eslint-plugin-import": "^2.22.0",
     "jest": "^26.1.0",
     "prettier": "2.0.5",
-    "superagent": "^6.1.0"
+    "supertest": "^4.0.2"
   }
 }
