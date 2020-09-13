@@ -75,7 +75,7 @@ describe('Route', () => {
         .send(newBudget)
         .expect(200)
         .then(() => {
-          const budgetsFound = budgetRepository.getBudgets().filter((budget) => {
+          const budgetsFound = budgetRepository.find().filter((budget) => {
             return budget.name === newBudget.name;
           });
           expect(budgetsFound.length).toEqual(1);
@@ -137,7 +137,7 @@ describe('Route', () => {
 
           expect(expenseNotFound).toBeUndefined();
 
-          const budgetList = budgetRepository.getBudgets().find((budget) => {
+          const budgetList = budgetRepository.find().find((budget) => {
             return budget.id === '4';
           });
           const expenseNotFoundInBudgetLine = budgetList.expenses.find((expense) => {
@@ -159,7 +159,7 @@ describe('Route', () => {
         .delete('/budgets/4')
         .expect(204)
         .then(() => {
-          const budgetNotFound = budgetRepository.getBudgets().find((budget) => {
+          const budgetNotFound = budgetRepository.find().find((budget) => {
             return budget.id === '4';
           });
 

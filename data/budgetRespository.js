@@ -7,16 +7,32 @@ class BudgetRepository {
     this.budgetList = budgetListSeed;
   }
 
-  // TODO remove when it is not necessary anymore
-  get simpleBudgets() {
-    return this.budgetList.map((budget) => ({ id: budget.id, name: budget.name }));
+  find(selectedFields = []) {
+    if(selectedFields.length === 0) {
+      return this.budgetList;
+    }
+    // TODO validate fields parameters
+    return this.budgetList.map((budget) => {
+      return selectedFields.reduce((acc, field) => {
+        acc[field] = budget[field];
+        return acc;
+      }, {});
+    });
   }
 
-  getBudgets() {
-    return this.budgetList;
+  findOneById(budgetId, selectedFields = []) {
+    const foundBudget = this.budgetList.find((budget) => budget.id === budgetId);
+    if (selectedFields.length === 0) {
+      return foundBudget;
+    }
+    // TODO validate fields parameters
+    return selectedFields.reduce((acc, field) => {
+      acc[field] = foundBudget[field];
+      return acc;
+    }, {});
   }
 
-  addBudget(budget) {
+  create(budget) {
     return this.budgetList.push({
       id: uid(),
       name: budget.name,
@@ -28,37 +44,17 @@ class BudgetRepository {
     });
   }
 
-  deleteBudget(budgetId) {
+  update(budgetToUpdate) {
+    const budgetIndex = this.budgetList.findIndex((budget) => budget.id === budgetToUpdate.id);
+    // TODO handle error when budgetLine is not found
+    const budgetReplaced = this.budgetList.splice(budgetIndex, 1, budgetToUpdate);
+    return budgetReplaced.length === 1;
+  }
+
+  delete(budgetId) {
     const budgetIndex = this.budgetList.findIndex((budget) => budget.id === budgetId);
     if (budgetIndex !== -1) {
       return this.budgetList.splice(budgetIndex, 1)[0];
-    }
-    return null;
-  }
-
-  getSimpleBudget(budgetId) {
-    const foundBudget = this.budgetList.find((budget) => budget.id === budgetId);
-    // TODO handle error when budgetLine is not found
-    return {
-      id: foundBudget.id,
-      name: foundBudget.name,
-    };
-  }
-
-  addExpenseToBudget(budgetId, expense) {
-    const foundBudget = this.budgetList.find((budget) => budget.id === budgetId);
-    // TODO handle error when budgetLine is not found
-    foundBudget.expenses.push(expense);
-    // compute available field
-    foundBudget.available -= expense.amount;
-  }
-
-  removeExpenseFromBudget(budgetId, expenseId) {
-    const foundBudget = this.budgetList.find((budget) => budget.id === budgetId);
-    // TODO handle error when budgetLine is not found
-    const expenseIndex = foundBudget.expenses.findIndex((expense) => expense.id === expenseId);
-    if (expenseIndex !== -1) {
-      return foundBudget.expenses.splice(expenseIndex, 1)[0];
     }
     return null;
   }
