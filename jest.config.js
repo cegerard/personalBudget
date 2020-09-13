@@ -1,5 +1,5 @@
 module.exports = {
   testEnvironment: 'node',
   verbose: true,
-  coveragePathIgnorePatterns: ['/node_modules/'],
+  coveragePathIgnorePatterns: ['/node_modules/', 'app.js'],
 };
