@@ -7,15 +7,21 @@ class BudgetRepository {
     this.budgetList = budgetListSeed;
   }
 
+  // TODO remove when it is not necessary anymore
   get budgets() {
     return this.budgetList;
   }
 
+  // TODO remove when it is not necessary anymore
   get simpleBudgets() {
     return this.budgetList.map((budget) => ({ id: budget.id, name: budget.name }));
   }
 
-  add(budget) {
+  getBudgets() {
+    return this.budgetList;
+  }
+
+  addBudget(budget) {
     return this.budgetList.push({
       id: uid(),
       name: budget.name,
@@ -27,7 +33,7 @@ class BudgetRepository {
     });
   }
 
-  delete(budgetId) {
+  deleteBudget(budgetId) {
     const budgetIndex = this.budgetList.findIndex((budget) => budget.id === budgetId);
     if (budgetIndex !== -1) {
       return this.budgetList.splice(budgetIndex, 1)[0];

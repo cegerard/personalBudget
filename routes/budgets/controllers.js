@@ -1,25 +1,23 @@
-const { budgetRepository, expenseRepository } = require('../../data');
+const { budgetService } = require('../../services/budgets');
 
 module.exports.listBudgetController = (_, res) => {
-  res.render('budgets', { page: 'budgets', budgetList: budgetRepository.budgets });
+  res.render('budgets', { page: 'budgets', budgetList: budgetService.list() });
 };
 
 module.exports.createBudgetController = (req, res) => {
-  budgetRepository.add({
+  // TODO hanlde rendering when create budget fail
+  budgetService.create({
     name: req.body.name,
     amount: req.body.amount,
     description: req.body.description,
   });
-  res.render('budgets', { page: 'budgets', budgetList: budgetRepository.budgets });
+  res.render('budgets', { page: 'budgets', budgetList: budgetService.list() });
 };
 
 module.exports.deleteBudgetController = (req, res) => {
-  const deletedBudget = budgetRepository.delete(req.params.id);
-  const nbDeleteExpenses = expenseRepository.removeAllFromBudget(deletedBudget.id);
-  if (deletedBudget !== null && nbDeleteExpenses != null) {
+  if (budgetService.remove(req.params.id)) {
     res.status(204).end();
-    return;
+  } else {
+    res.status(500).end();
   }
-
-  res.status(500).end();
 };
