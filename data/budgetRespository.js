@@ -8,11 +8,6 @@ class BudgetRepository {
   }
 
   // TODO remove when it is not necessary anymore
-  get budgets() {
-    return this.budgetList;
-  }
-
-  // TODO remove when it is not necessary anymore
   get simpleBudgets() {
     return this.budgetList.map((budget) => ({ id: budget.id, name: budget.name }));
   }
