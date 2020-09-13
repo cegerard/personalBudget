@@ -6,10 +6,6 @@ class ExpenseRepository {
     this.expenseList = expenseListSeed;
   }
 
-  get expenses() {
-    return this.expenseList;
-  }
-
   find() {
     return this.expenseList;
   }

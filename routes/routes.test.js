@@ -5,6 +5,12 @@ const app = require('../app'); // Beware test order is important as we avec stat
 const { expenseRepository, budgetRepository } = require('../data');
 
 describe('Route', () => {
+  describe('GET /notFound', () => {
+    it('should response with 404', async () => {
+      await request(app).get('/notFound').expect(404);
+    });
+  });
+
   describe('GET /', () => {
     it('should response with 302', async () => {
       await request(app).get('/').expect(302);
@@ -89,6 +95,14 @@ describe('Route', () => {
             expenses: [],
           });
         });
+    });
+
+    it('should trigger a 500 error', async () => {
+      await request(app)
+        .post('/budgets')
+        .set('Content-Type', 'application/json')
+        .send({})
+        .expect(500);
     });
   });
 
