@@ -8,7 +8,7 @@ class BudgetRepository {
   }
 
   find(selectedFields = []) {
-    if(selectedFields.length === 0) {
+    if (selectedFields.length === 0) {
       return this.budgetList;
     }
     // TODO validate fields parameters

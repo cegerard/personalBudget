@@ -53,12 +53,12 @@ class BudgetService {
     // TODO handle budget deletion error
     const nbDeleteExpenses = expenseRepository.removeAllFromBudget(deletedBudget.id);
     // TODO handle expense deletion error
-    return deletedBudget !== null && nbDeleteExpenses != null
+    return deletedBudget !== null && nbDeleteExpenses != null;
   }
 
   /**
    * Add an expense to an existing budget
-   * @param {string} budgetId 
+   * @param {string} budgetId
    * @param {Object} expense
    * @param {string} expense.id
    * @param {string} expense.name
@@ -79,7 +79,7 @@ class BudgetService {
 
   /**
    * Remove expense from an existing budget
-   * @param {string} budgetId 
+   * @param {string} budgetId
    * @param {string} expenseId
    */
   removeExpense(budgetId, expenseId) {
