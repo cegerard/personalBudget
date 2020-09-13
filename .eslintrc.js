@@ -4,8 +4,11 @@ module.exports = {
     es2020: true,
     node: true,
   },
+  extends: 'eslint:recommended',
   parserOptions: {
     ecmaVersion: 11,
   },
-  rules: {},
+  rules: {
+    indent: ['error', 2]
+  },
 };
