@@ -1,12 +1,12 @@
-const { expenseRepository } = require('../../data');
 const { budgetService } = require('../../services/budgets');
+const { expenseService } = require('../../services/expenses');
 
 const selectedField = ['id', 'name'];
 
 module.exports.listExpensesController = (_, res) => {
   res.render('expenses', {
     page: 'expenses',
-    expenseList: expenseRepository.expenses,
+    expenseList: expenseService.list(),
     budgetList: budgetService.list(selectedField),
   });
 };
@@ -14,7 +14,7 @@ module.exports.listExpensesController = (_, res) => {
 module.exports.filterByBudgetLineController = (req, res) => {
   res.render('expenses', {
     page: 'expenses',
-    expenseList: expenseRepository.getForBudgetLineName(req.query.budgetName),
+    expenseList: expenseService.search({ budget: { name: req.query.budgetName } }),
     budgetList: budgetService.list(selectedField),
   });
 };
@@ -28,18 +28,18 @@ module.exports.createExpenseController = (req, res) => {
     date: req.body.date,
   };
 
-  const newExpenseId = expenseRepository.add({ ...baseExpense, budgetLine });
+  const newExpenseId = expenseService.add({ ...baseExpense, budgetLine });
   budgetService.addExpense(budgetLineId, { ...baseExpense, id: newExpenseId });
 
   res.render('expenses', {
     page: 'expenses',
-    expenseList: expenseRepository.expenses,
+    expenseList: expenseService.list(),
     budgetList: budgetService.list(selectedField),
   });
 };
 
 module.exports.deleteExpenseController = (req, res) => {
-  const deletedFromExpense = expenseRepository.delete(req.params.id);
+  const deletedFromExpense = expenseService.remove(req.params.id);
   const deletedFromBudget = budgetService.removeExpense(
     deletedFromExpense.budgetLine.id,
     deletedFromExpense.id

@@ -1,4 +1,4 @@
-//TODO remove that when expense service is available
+// TODO remove this dependency
 const { expenseRepository } = require('../../data');
 
 class BudgetService {
@@ -51,7 +51,7 @@ class BudgetService {
   remove(budgetId) {
     const deletedBudget = this.repository.delete(budgetId);
     // TODO handle budget deletion error
-    const nbDeleteExpenses = expenseRepository.removeAllFromBudget(deletedBudget.id);
+    const nbDeleteExpenses = expenseRepository.deleteMany({ budget: { id: deletedBudget.id } });
     // TODO handle expense deletion error
     return deletedBudget !== null && nbDeleteExpenses != null;
   }

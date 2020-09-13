@@ -107,7 +107,7 @@ describe('Route', () => {
         .send(newExpense)
         .expect(200)
         .then(() => {
-          const expensesFound = expenseRepository.expenses.filter((expense) => {
+          const expensesFound = expenseRepository.find().filter((expense) => {
             return expense.name === newExpense.name;
           });
           expect(expensesFound.length).toEqual(1);
@@ -131,7 +131,7 @@ describe('Route', () => {
         .delete('/expenses/100')
         .expect(204)
         .then(() => {
-          const expenseNotFound = expenseRepository.expenses.find((expense) => {
+          const expenseNotFound = expenseRepository.find().find((expense) => {
             return expense.id === 100;
           });
 
@@ -165,7 +165,7 @@ describe('Route', () => {
 
           expect(budgetNotFound).toBeUndefined();
 
-          const expensesFound = expenseRepository.expenses.filter((expense) => {
+          const expensesFound = expenseRepository.find().filter((expense) => {
             return expense.budgetLine.id === '4';
           });
 

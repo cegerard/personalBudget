@@ -10,11 +10,19 @@ class ExpenseRepository {
     return this.expenseList;
   }
 
-  getForBudgetLineName(budgetLineName) {
-    return this.expenseList.filter((expense) => expense.budgetLine.name === budgetLineName);
+  find() {
+    return this.expenseList;
   }
 
-  add(expense) {
+  /**
+   * This only support search on budget name
+   * @param {Object} query
+   */
+  search(query) {
+    return this.expenseList.filter((expense) => expense.budgetLine.name === query.budget.name);
+  }
+
+  create(expense) {
     const generatedId = uid();
     this.expenseList.push({
       id: generatedId,
@@ -34,9 +42,14 @@ class ExpenseRepository {
     return null;
   }
 
-  removeAllFromBudget(budgetId) {
+  /**
+   * This delete multiple expense based on query select object
+   * /!\ this only works for budget identifier
+   * @param {Object} query
+   */
+  deleteMany(query) {
     const expensesToRemove = this.expenseList.filter(
-      (expense) => expense.budgetLine.id === budgetId
+      (expense) => expense.budgetLine.id === query.budget.id
     );
     const errors = [];
     expensesToRemove.forEach((expense) => {
