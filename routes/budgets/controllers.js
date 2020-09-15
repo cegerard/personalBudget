@@ -5,7 +5,6 @@ module.exports.listBudgetController = (_, res) => {
 };
 
 module.exports.createBudgetController = (req, res) => {
-  // TODO hanlde rendering when create budget fail
   budgetService.create({
     name: req.body.name,
     amount: req.body.amount,
@@ -15,9 +14,6 @@ module.exports.createBudgetController = (req, res) => {
 };
 
 module.exports.deleteBudgetController = (req, res) => {
-  if (budgetService.remove(req.params.id)) {
-    res.status(204).end();
-  } else {
-    res.status(500).end();
-  }
+  budgetService.remove(req.params.id);
+  res.status(204).end();
 };

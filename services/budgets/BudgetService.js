@@ -34,13 +34,11 @@ class BudgetService {
    */
   create(newBudget) {
     // TODO Validate input data using an adapter
-    const created = this.repository.create({
+    return this.repository.create({
       name: newBudget.name,
       amount: newBudget.amount,
       description: newBudget.description,
     });
-    // TODO handle repository created error
-    return created;
   }
 
   /**
@@ -50,10 +48,8 @@ class BudgetService {
    */
   remove(budgetId) {
     const deletedBudget = this.repository.delete(budgetId);
-    // TODO handle budget deletion error
-    const nbDeleteExpenses = expenseRepository.deleteMany({ budget: { id: deletedBudget.id } });
-    // TODO handle expense deletion error
-    return deletedBudget !== null && nbDeleteExpenses != null;
+    expenseRepository.deleteMany({ budget: { id: deletedBudget.id } });
+    return true;
   }
 
   /**
@@ -67,9 +63,8 @@ class BudgetService {
    * @returns {boolean} true the expense has been added to the budget, false otherwise
    */
   addExpense(budgetId, expense) {
-    // TODO adapt expense to BudgetEpense sub-model
+    // TODO adapt expense to BudgetExpense sub-model
     const foundBudget = this.repository.findOneById(budgetId);
-    // TODO handle error when budgetLine is not found
     foundBudget.expenses.push(expense);
     // compute available field
     foundBudget.available -= expense.amount;
@@ -84,7 +79,6 @@ class BudgetService {
    */
   removeExpense(budgetId, expenseId) {
     const foundBudget = this.repository.findOneById(budgetId);
-    // TODO handle error when budgetLine is not found
     const expenseIndex = foundBudget.expenses.findIndex((expense) => expense.id === expenseId);
     if (expenseIndex !== -1) {
       foundBudget.expenses.splice(expenseIndex, 1);

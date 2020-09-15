@@ -137,6 +137,15 @@ describe('Route', () => {
           });
         });
     });
+
+    it('should return 404 if budget not found', async () => {
+      newExpense.budgetlineId = 'notfound';
+      await request(app)
+        .post('/expenses')
+        .set('Content-Type', 'application/json')
+        .send(newExpense)
+        .expect(404);
+    });
   });
 
   describe('DELETE /expenses', () => {
@@ -162,8 +171,8 @@ describe('Route', () => {
         });
     });
 
-    it('should return a 500 error when the expense can not be deleted', async () => {
-      await request(app).delete('/expenses/404').expect(500);
+    it('should return a 404 error when the expense can not be deleted', async () => {
+      await request(app).delete('/expenses/404').expect(404);
     });
   });
 
@@ -187,8 +196,8 @@ describe('Route', () => {
         });
     });
 
-    it('should return a 500 error when the budget can not be deleted', async () => {
-      await request(app).delete('/budgets/404').expect(500);
+    it('should return a 404 error when the budget can not be deleted', async () => {
+      await request(app).delete('/budgets/404').expect(404);
     });
   });
 });

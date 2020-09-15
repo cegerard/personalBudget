@@ -1,6 +1,7 @@
 const slugify = require('slugify');
 const uid = require('uid');
 const budgetListSeed = require('./budgetList.json'); // TODO replace this by core service layer when available
+const AppError = require('../AppError');
 
 class BudgetRepository {
   constructor() {
@@ -22,6 +23,10 @@ class BudgetRepository {
 
   findOneById(budgetId, selectedFields = []) {
     const foundBudget = this.budgetList.find((budget) => budget.id === budgetId);
+    if(foundBudget === undefined) {
+      throw new AppError(404, `budget(${budgetId}) not found`);
+    }
+
     if (selectedFields.length === 0) {
       return foundBudget;
     }
@@ -46,7 +51,9 @@ class BudgetRepository {
 
   update(budgetToUpdate) {
     const budgetIndex = this.budgetList.findIndex((budget) => budget.id === budgetToUpdate.id);
-    // TODO handle error when budgetLine is not found
+    if(budgetIndex === -1)
+      throw new AppError(404, `budget(${budgetToUpdate.id}) not found`);
+
     const budgetReplaced = this.budgetList.splice(budgetIndex, 1, budgetToUpdate);
     return budgetReplaced.length === 1;
   }
@@ -56,7 +63,7 @@ class BudgetRepository {
     if (budgetIndex !== -1) {
       return this.budgetList.splice(budgetIndex, 1)[0];
     }
-    return null;
+    throw new AppError(404, `budget(${budgetId}) not found`);
   }
 }
 

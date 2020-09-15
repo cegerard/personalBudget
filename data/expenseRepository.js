@@ -1,4 +1,5 @@
 const uid = require('uid');
+const AppError = require('../AppError');
 const expenseListSeed = require('./expenseList.json'); // TODO replace this by core service layer when available
 
 class ExpenseRepository {
@@ -32,10 +33,10 @@ class ExpenseRepository {
 
   delete(expenseId) {
     const expenseIndex = this.expenseList.findIndex((expense) => expense.id === expenseId);
-    if (expenseIndex !== -1) {
+    if (expenseIndex !== -1)
       return this.expenseList.splice(expenseIndex, 1)[0];
-    }
-    return null;
+
+    throw new AppError(404, `expense(${expenseId}) not found`);
   }
 
   /**
@@ -49,10 +50,12 @@ class ExpenseRepository {
     );
     const errors = [];
     expensesToRemove.forEach((expense) => {
-      if (this.delete(expense.id) === null) {
+      try { 
+        this.delete(expense.id)
+      } catch (err) {
         errors.push({
           expenseId: expense.id,
-          message: 'Not Found',
+          message: `${err.code}:${err.message}`,
         });
       }
     });
@@ -60,7 +63,7 @@ class ExpenseRepository {
     if (errors.length > 0) {
       // eslint-disable-next-line no-console
       console.error('Expenses deletion errors: ', errors);
-      return null;
+      throw new AppError(500, `${errors}`);
     }
 
     return expensesToRemove.length;
