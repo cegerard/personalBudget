@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "jest --passWithNoTests",
+    "test": "npx jest --passWithNoTests",
     "test:cov": "npm run test -- --coverage",
     "test:ci": "npm run test -- --ci",
     "test:watch": "jest --passWithNoTests --watch",
@@ -39,6 +39,7 @@
     "debug": "^2.6.9",
     "express": "^4.17.1",
     "http-errors": "^1.6.3",
+    "mongoose": "^5.10.6",
     "morgan": "^1.9.1",
     "pug": "^3.0.0",
     "slugify": "^1.4.5",
@@ -48,6 +49,7 @@
     "eslint": "^7.3.1",
     "eslint-plugin-import": "^2.22.0",
     "jest": "^26.4.2",
+    "mongodb-memory-server-global-4.2": "^6.8.0",
     "prettier": "2.0.5",
     "supertest": "^4.0.2"
   }
