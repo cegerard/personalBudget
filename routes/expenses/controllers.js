@@ -1,4 +1,4 @@
-const { budgetService } = require('../../services/budgets');
+const { budgetService } = require('../../services/budgets/BudgetService');
 const { expenseService } = require('../../services/expenses');
 
 const selectedField = ['id', 'name'];

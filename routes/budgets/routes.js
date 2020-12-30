@@ -1,15 +1,13 @@
 const { Router } = require('express');
 
-const {
-  createBudgetController,
-  deleteBudgetController,
-  listBudgetController,
-} = require('./controllers');
+function init(controller) {
+  const router = Router();
 
-const router = Router();
+  router.get('/', controller.list.bind(controller));
+  router.post('/', controller.create.bind(controller));
+  router.delete('/:id', controller.delete.bind(controller));
 
-router.get('/', listBudgetController);
-router.post('/', createBudgetController);
-router.delete('/:id', deleteBudgetController);
+  return router;
+}
 
-module.exports = router;
+module.exports = { init };
