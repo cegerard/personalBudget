@@ -8,7 +8,7 @@
 
 const debug = require('debug')('personalbudget:server');
 const http = require('http');
-const app = require('../app');
+const app = require('../app').app;
 
 /**
  * Get port from environment and store in Express.

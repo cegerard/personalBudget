@@ -9,7 +9,7 @@ class BudgetService {
   /**
    * List all budget from the default budget repository
    * @param {string[]} select selected field from budget model
-   * @returns list of full budget objects
+   * @returns Promise: list of full budget objects
    */
   list(select) {
     return this.repository.find(select);
@@ -46,10 +46,12 @@ class BudgetService {
    * @param {string} budgetId
    * @returns {boolean} true if the budget and all its expenses have been removed, false otherwise
    */
-  remove(budgetId) {
-    const deletedBudget = this.repository.delete(budgetId);
-    expenseRepository.deleteMany({ budget: { id: deletedBudget.id } });
-    return true;
+  async remove(budgetId) {
+    const isDeleted = await this.repository.delete(budgetId);
+    if (isDeleted) {
+      expenseRepository.deleteMany({ budget: { id: budgetId } });
+    }
+    return isDeleted;
   }
 
   /**
@@ -62,9 +64,9 @@ class BudgetService {
    * @param {string} expense.date
    * @returns {boolean} true the expense has been added to the budget, false otherwise
    */
-  addExpense(budgetId, expense) {
+  async addExpense(budgetId, expense) {
     // TODO adapt expense to BudgetExpense sub-model
-    const foundBudget = this.repository.findOneById(budgetId);
+    const foundBudget = await this.repository.findOneById(budgetId);
     foundBudget.expenses.push(expense);
     // compute available field
     foundBudget.available -= expense.amount;
@@ -77,11 +79,12 @@ class BudgetService {
    * @param {string} budgetId
    * @param {string} expenseId
    */
-  removeExpense(budgetId, expenseId) {
-    const foundBudget = this.repository.findOneById(budgetId);
+  async removeExpense(budgetId, expenseId) {
+    const foundBudget = await this.repository.findOneById(budgetId);
     const expenseIndex = foundBudget.expenses.findIndex((expense) => expense.id === expenseId);
     if (expenseIndex !== -1) {
-      foundBudget.expenses.splice(expenseIndex, 1);
+      const deletedExpenses = foundBudget.expenses.splice(expenseIndex, 1);
+      foundBudget.available += deletedExpenses[0].amount;
       return this.repository.update(foundBudget);
     }
     return false;
