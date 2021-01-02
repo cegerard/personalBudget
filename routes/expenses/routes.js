@@ -1,17 +1,14 @@
 const { Router } = require('express');
 
-const {
-  createExpenseController,
-  deleteExpenseController,
-  filterByBudgetLineController,
-  listExpensesController,
-} = require('./controllers');
+function init(controller) {
+  const router = Router();
 
-const router = Router();
+  router.get('/', controller.list.bind(controller));
+  router.get('/filter', controller.filterByBudgetLine.bind(controller));
+  router.post('/', controller.create.bind(controller));
+  router.delete('/:id', controller.delete.bind(controller));
 
-router.get('/', listExpensesController);
-router.get('/filter', filterByBudgetLineController);
-router.post('/', createExpenseController);
-router.delete('/:id', deleteExpenseController);
+  return router;
+}
 
-module.exports = router;
+module.exports = { init };

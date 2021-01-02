@@ -1,9 +1,7 @@
-// TODO remove this dependency
-const { expenseRepository } = require('../../data');
-
 class BudgetService {
-  constructor(budgetRepository) {
+  constructor(budgetRepository, expenseRepository) {
     this.repository = budgetRepository;
+    this.expenseRepository = expenseRepository;
   }
 
   /**
@@ -49,7 +47,7 @@ class BudgetService {
   async remove(budgetId) {
     const isDeleted = await this.repository.delete(budgetId);
     if (isDeleted) {
-      expenseRepository.deleteMany({ budget: { id: budgetId } });
+      this.expenseRepository.delete({ 'budgetLine.id': budgetId });
     }
     return isDeleted;
   }

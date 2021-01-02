@@ -12,14 +12,14 @@ class ExpenseService {
   }
 
   /**
-   * Search for expense (search only work for budget name)
+   * Search for expense
    * @param {Object} query
-   * @param {Object} query.budget
-   * @param {string} query.budget.name
+   * @param {Object} query.budgetLine
+   * @param {string} query.budgetLine.name
    */
   search(query) {
     // TODO validate query
-    return this.repository.search(query);
+    return this.repository.find(query);
   }
 
   /**
@@ -31,7 +31,7 @@ class ExpenseService {
    * @param {Object} expense.budgetLine
    * @param {string} expense.budgetLine.id
    * @param {Obstringject} expense.budgetLine.name
-   * @returns {string} the new expense identifier
+   * @returns {Expense} the newly created expense
    */
   add(expense) {
     // TODO validate expense
@@ -40,10 +40,10 @@ class ExpenseService {
 
   /**
    * remove an existing expense from the default expense repository
-   * @param {string} expenseId
+   * @param {Object} query
    */
-  remove(expenseId) {
-    return this.repository.delete(expenseId);
+  remove(query) {
+    return this.repository.delete(query);
   }
 }
 

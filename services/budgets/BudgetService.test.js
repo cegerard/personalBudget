@@ -1,5 +1,7 @@
+const ExpenseRepository = require('../../data').ExpenseRepository;
 const BudgetRepository = require('../../data').BudgetRepository;
 const budgetFixture = require('../../test/fixtures/budgetFixture');
+const ExpenseModelStub = require('../../test/stubs/ExpenseModelStub');
 const BudgetModelStub = require('../../test/stubs/BudgetModelStub');
 const BudgetService = require('./BudgetService');
 
@@ -11,7 +13,8 @@ describe('BudgetService', () => {
 
   beforeAll(() => {
     const budgetRepository = new BudgetRepository(BudgetModelStub);
-    budgetService = new BudgetService(budgetRepository);
+    const expenseRepository = new ExpenseRepository(ExpenseModelStub);
+    budgetService = new BudgetService(budgetRepository, expenseRepository);
   });
 
   beforeEach(() => {
@@ -91,7 +94,7 @@ describe('BudgetService', () => {
       expect(isDeleted).toEqual(true);
     });
 
-    it('should do nothing fr a non existing budget', async () => {
+    it('should do nothing for a non existing budget', async () => {
       const isDeleted = await budgetService.remove('unkown');
       
       expect(isDeleted).toEqual(false);
