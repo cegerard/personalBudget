@@ -26,7 +26,7 @@ block content
         td= expense.budgetLine.name
         td= expense.date
         td 
-          button(class='btn btn-danger btn-sm' onclick=`deleteExpense("${expense.id}")`)
+          button(class='btn btn-danger btn-sm' onclick=`deleteExpense("${expense._id}")`)
             span(class='fas fa-trash-alt')
 
   div(id="addExpenseModal" class="modal fade")
@@ -47,7 +47,7 @@ block content
               label(for="budgetLine") Budget Line
               select.custom-select(id="budgetLine" name="budgetlineId")
                 each budget in budgetList
-                  option(value=budget.id)= budget.name
+                  option(value=budget._id)= budget.name
             .modal-footer
               button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
               button(type="submit" class="btn btn-primary") Add

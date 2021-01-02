@@ -29,7 +29,7 @@ class ExpenseService {
    * @param {number} expense.amount
    * @param {string} expense.date
    * @param {Object} expense.budgetLine
-   * @param {string} expense.budgetLine.id
+   * @param {string} expense.budgetLine._id
    * @param {Obstringject} expense.budgetLine.name
    * @returns {Expense} the newly created expense
    */

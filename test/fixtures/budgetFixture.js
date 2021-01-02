@@ -1,7 +1,7 @@
 module.exports = {
     list: [
         {
-          id: '1',
+          _id: '1',
           name: 'Electricité',
           slug: 'electricite',
           amount: 58,
@@ -10,7 +10,7 @@ module.exports = {
           expenses: []
         },
         {
-          id: '2',
+          _id: '2',
           name: 'Crédit voiture',
           slug: 'credit-voiture',
           amount: 369.89,
@@ -19,7 +19,7 @@ module.exports = {
           expenses: []
         },
         {
-          id: '3',
+          _id: '3',
           name: 'Crédit immobilier',
           slug: 'credit-immobilier',
           amount: 857.12,
@@ -28,7 +28,7 @@ module.exports = {
           expenses: []
         },
         {
-          id: '4',
+          _id: '4',
           name: 'Essence',
           slug: 'essence',
           amount: 150,
@@ -36,13 +36,13 @@ module.exports = {
           available: 79,
           expenses: [
             {
-              id: '100',
+              _id: '100',
               name: 'Cmax',
               amount: 41,
               date: '2020-08-29'
             },
             {
-              id: '101',
+              _id: '101',
               name: 'Ka+',
               amount: 30,
               date: '2020-08-22'
@@ -50,16 +50,16 @@ module.exports = {
           ]
         },
         {
-          id: '5',
+          _id: '5',
           name: 'Assurance voiture',
           slug: 'assurance-voiture',
           amount: 127,
-          description:' Assurance des voitures',
+          description:'Assurance des voitures',
           available: 127,
           expenses: []
         },
         {
-          id: '6',
+          _id: '6',
           name: 'Alimentation',
           slug: 'alimentation',
           amount: 500,
@@ -68,7 +68,7 @@ module.exports = {
           expenses: []
         },
         {
-          id: '7',
+          _id: '7',
           name: 'Animaux',
           slug: 'animaux',
           amount: 120,
@@ -77,7 +77,7 @@ module.exports = {
           expenses: []
         },
         {
-          id: '8',
+          _id: '8',
           name: 'Enfants',
           slug: 'enfants',
           amount: 0,
