@@ -6,9 +6,12 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 
 const BudgetRepository = require('./data/budget/BudgetRespository');
+const ExpenseRepository = require('./data/expense/ExpenseRepository');
 const BudgetService = require('./services/budgets/BudgetService');
+const ExpenseService = require('./services/expenses/ExpenseService');
 const AppRouter = require('./routes/AppRouter');
 const BudgetController = require('./routes/budgets/controllers');
+const ExpenseController = require('./routes/expenses/controllers');
 
 class Application {
   constructor() {
@@ -43,9 +46,14 @@ class Application {
 
   _setupRouter() {
     const budgetRepository = new BudgetRepository();
-    const budgetService = new BudgetService(budgetRepository);
+    const expenseRepository = new ExpenseRepository();
+
+    const budgetService = new BudgetService(budgetRepository, expenseRepository);
+    const expenseService = new ExpenseService(expenseRepository);
+
     const budgetController = new BudgetController(budgetService);
-    const appRouter = new AppRouter(budgetController);
+    const expenseController = new ExpenseController(budgetService, expenseService);
+    const appRouter = new AppRouter(budgetController, expenseController);
     this.app.use('/', appRouter.router);
   }
 

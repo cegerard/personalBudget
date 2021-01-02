@@ -1,54 +1,65 @@
-const { budgetService } = require('../../services/budgets/BudgetService');
-const { expenseService } = require('../../services/expenses');
-
 const selectedField = ['id', 'name'];
 
-module.exports.listExpensesController = (_, res) => {
-  res.render('expenses', {
-    page: 'expenses',
-    expenseList: expenseService.list(),
-    budgetList: budgetService.list(selectedField),
-  });
-};
-
-module.exports.filterByBudgetLineController = (req, res) => {
-  res.render('expenses', {
-    page: 'expenses',
-    expenseList: expenseService.search({ budget: { name: req.query.budgetName } }),
-    budgetList: budgetService.list(selectedField),
-  });
-};
-
-module.exports.createExpenseController = (req, res) => {
-  const budgetLineId = req.body.budgetlineId;
-  const budgetLine = budgetService.getById(budgetLineId, selectedField);
-  const baseExpense = {
-    name: req.body.name,
-    amount: req.body.amount,
-    date: req.body.date,
-  };
-
-  const newExpenseId = expenseService.add({ ...baseExpense, budgetLine });
-  budgetService.addExpense(budgetLineId, { ...baseExpense, id: newExpenseId });
-
-  res.render('expenses', {
-    page: 'expenses',
-    expenseList: expenseService.list(),
-    budgetList: budgetService.list(selectedField),
-  });
-};
-
-module.exports.deleteExpenseController = (req, res) => {
-  const deletedFromExpense = expenseService.remove(req.params.id);
-  const deletedFromBudget = budgetService.removeExpense(
-    deletedFromExpense.budgetLine.id,
-    deletedFromExpense.id
-  );
-
-  if (deletedFromExpense !== null && deletedFromBudget !== null) {
-    res.status(204).end();
-    return;
+class ExpenseController {
+  constructor(budgetService, expenseService) {
+    this.budgetService = budgetService;
+    this.expenseService = expenseService;
   }
 
-  res.status(500).end();
-};
+  async list(_, res) {
+    this._renderExpenseListPage(res);
+  }
+
+  async filterByBudgetLine(req, res) {
+    this._renderExpenseListPage(res, { 'budgetLine.name': req.query.budgetName });
+  }
+
+  async create(req, res) {
+    const budgetLineId = req.body.budgetlineId;
+    const budgetLine = await this.budgetService.getById(budgetLineId, selectedField);
+    const baseExpense = {
+      name: req.body.name,
+      amount: req.body.amount,
+      date: req.body.date,
+    };
+
+    const newExpense = await this.expenseService.add({ ...baseExpense, budgetLine });
+    await this.budgetService.addExpense(budgetLineId, { ...baseExpense, id: newExpense.id });
+
+    this._renderExpenseListPage(res);
+  }
+
+  async delete(req, res) {
+    const deletedFromExpense = await this.expenseService.remove(req.params.id);
+    const deletedFromBudget = await this.budgetService.removeExpense(
+      deletedFromExpense.budgetLine.id,
+      deletedFromExpense.id
+    );
+
+    if (deletedFromExpense !== null && deletedFromBudget !== null) {
+      res.status(204).end();
+      return;
+    }
+
+    res.status(500).end();
+  }
+
+  async _renderExpenseListPage(res, query = null) {
+    let expenseList = [];
+    if (query === null) {
+      expenseList = await this.expenseService.list();
+    } else {
+      expenseList = await this.expenseService.search(query);
+    }
+
+    const budgetList = await this.budgetService.list(selectedField);
+
+    res.render('expenses', {
+      page: 'expenses',
+      expenseList,
+      budgetList,
+    });
+  }
+}
+
+module.exports = ExpenseController;

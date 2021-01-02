@@ -1,7 +1,7 @@
 const BudgetRepository = require('./budget/BudgetRespository');
-const expenseRepository = require('./expenseRepository');
+const ExpenseRepository = require('./expense/ExpenseRepository');
 
 module.exports = {
   BudgetRepository,
-  expenseRepository,
+  ExpenseRepository,
 };
