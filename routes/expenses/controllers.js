@@ -32,12 +32,18 @@ class ExpenseController {
   async delete(req, res) {
     const expenseToDelete = await this.expenseService.search({ _id: req.params.id });
     const isExpenseDeleted = await this.expenseService.remove({ _id: req.params.id });
-    const isBudgetDeleted = await this.budgetService.removeExpense(
+
+    if (!isExpenseDeleted) {
+      res.status(404).end();
+      return;
+    }
+
+    const isExpenseRemoveFromBudget = await this.budgetService.removeExpense(
       expenseToDelete[0].budgetLine._id.toString(),
       expenseToDelete[0]._id.toString()
       );
 
-    if (isExpenseDeleted && isBudgetDeleted) {
+    if (isExpenseRemoveFromBudget) {
       res.status(204).end();
       return;
     }

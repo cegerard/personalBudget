@@ -17,8 +17,12 @@ class BudgetController {
   }
 
   async delete(req, res) {
-    await this.budgetService.remove(req.params.id);
-    res.status(204).end();
+    const isDeleted = await this.budgetService.remove(req.params.id);
+    if(isDeleted) {
+      res.status(204).end();
+      return;
+    }
+    res.status(404).end();
   }
 
   async _renderBudgetListPage(res) {
