@@ -5,6 +5,10 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 
+const MongoBudgetModel = require('./data/budget/mongo/budget.model');
+const MongoExpenseModel = require('./data/expense/mongo/expense.model');
+const BudgetModelStub = require('./test/stubs/BudgetModelStub');
+const ExpenseModelStub = require('./test/stubs/ExpenseModelStub');
 const BudgetRepository = require('./data/budget/BudgetRespository');
 const ExpenseRepository = require('./data/expense/ExpenseRepository');
 const BudgetService = require('./services/budgets/BudgetService');
@@ -16,8 +20,11 @@ const ExpenseController = require('./routes/expenses/controllers');
 class Application {
   constructor() {
     this.app = express();
+    this.mode = this.app.get('env');
 
-    this._setupMongo();
+    if(this.mode !== 'test') {
+      this._setupMongo();
+    } 
     this._setupViewEngine();
     this._setupRouter();
     this._setupErrorHandling();
@@ -45,8 +52,15 @@ class Application {
   }
 
   _setupRouter() {
-    const budgetRepository = new BudgetRepository();
-    const expenseRepository = new ExpenseRepository();
+    let budgetModel = MongoBudgetModel;
+    let expenseModel = MongoExpenseModel;
+    if (this.mode === 'test') {
+      budgetModel = BudgetModelStub;
+      expenseModel = ExpenseModelStub;
+    }
+
+    const budgetRepository = new BudgetRepository(budgetModel);
+    const expenseRepository = new ExpenseRepository(expenseModel);
 
     const budgetService = new BudgetService(budgetRepository, expenseRepository);
     const expenseService = new ExpenseService(expenseRepository);
