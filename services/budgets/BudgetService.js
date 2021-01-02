@@ -47,7 +47,7 @@ class BudgetService {
   async remove(budgetId) {
     const isDeleted = await this.repository.delete(budgetId);
     if (isDeleted) {
-      this.expenseRepository.delete({ 'budgetLine.id': budgetId });
+      this.expenseRepository.delete({ 'budgetLine._id': budgetId });
     }
     return isDeleted;
   }
@@ -56,7 +56,7 @@ class BudgetService {
    * Add an expense to an existing budget
    * @param {string} budgetId
    * @param {Object} expense
-   * @param {string} expense.id
+   * @param {string} expense._id
    * @param {string} expense.name
    * @param {number} expense.amount
    * @param {string} expense.date
@@ -79,7 +79,7 @@ class BudgetService {
    */
   async removeExpense(budgetId, expenseId) {
     const foundBudget = await this.repository.findOneById(budgetId);
-    const expenseIndex = foundBudget.expenses.findIndex((expense) => expense.id === expenseId);
+    const expenseIndex = foundBudget.expenses.findIndex((expense) => expense._id.toString() === expenseId);
     if (expenseIndex !== -1) {
       const deletedExpenses = foundBudget.expenses.splice(expenseIndex, 1);
       foundBudget.available += deletedExpenses[0].amount;

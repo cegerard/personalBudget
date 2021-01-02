@@ -12,7 +12,7 @@ class MongoBudgetModel {
     return BudgetModel.find({}, selectedFields).exec();
   }
 
-  static findOneById(budgetId, selectedFields) {
+  static findById(budgetId, selectedFields) {
     return BudgetModel.findById(budgetId, selectedFields).exec();
   }
 

@@ -27,12 +27,12 @@ class BudgetRepository {
   }
 
   async update(budgetToUpdate) {
-    const res = await this.BudgetModel.replaceOne({ id: budgetToUpdate.id }, budgetToUpdate);
+    const res = await this.BudgetModel.replaceOne({ _id: budgetToUpdate._id }, budgetToUpdate);
     return res.nModified === 1;
   }
 
   async delete(budgetId) {
-    const res = await this.BudgetModel.remove({ id: budgetId });
+    const res = await this.BudgetModel.remove({ _id: budgetId });
     return res.deletedCount === 1;
   }
 }

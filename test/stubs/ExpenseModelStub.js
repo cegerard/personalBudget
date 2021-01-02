@@ -16,17 +16,23 @@ module.exports = class ExpenseModelStub {
 
   static find(query) {
     if (query) {
-      return Promise.resolve(
-        ExpenseModelStub.expenseStore.filter(
-          (expense) => expense.budgetLine.name === get(query, 'budgetLine.name')
-        )
-      );
+      const compareKeys = Object.keys(query);
+      const filteredExpenses = ExpenseModelStub.expenseStore.filter((expense) => {
+        let keepExpense = true;
+        compareKeys.forEach((key) => {
+          if (get(expense, key) !== get(query, key)) {
+            keepExpense = false;
+          }
+        });
+        return keepExpense;
+      });
+      return Promise.resolve(filteredExpenses);
     }
     return Promise.resolve(ExpenseModelStub.expenseStore);
   }
 
   static findById(id, selectedFields) {
-    const foundBudget = ExpenseModelStub.expenseStore.find((budget) => budget.id === id);
+    const foundBudget = ExpenseModelStub.expenseStore.find((budget) => budget._id === id);
     if (selectedFields.length === 0) {
       return Promise.resolve(foundBudget);
     }
@@ -59,7 +65,7 @@ module.exports = class ExpenseModelStub {
   }
 
   save() {
-    this.expense.id = uid();
+    this.expense._id = uid();
     ExpenseModelStub.expenseStore.push(this.expense);
     return Promise.resolve(this.expense);
   }

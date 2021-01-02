@@ -1,4 +1,4 @@
-const selectedField = ['id', 'name'];
+const selectedField = ['_id', 'name'];
 
 class ExpenseController {
   constructor(budgetService, expenseService) {
@@ -24,19 +24,20 @@ class ExpenseController {
     };
 
     const newExpense = await this.expenseService.add({ ...baseExpense, budgetLine });
-    await this.budgetService.addExpense(budgetLineId, { ...baseExpense, id: newExpense.id });
+    await this.budgetService.addExpense(budgetLineId, { ...baseExpense, _id: newExpense._id });
 
     this._renderExpenseListPage(res);
   }
 
   async delete(req, res) {
-    const deletedFromExpense = await this.expenseService.remove(req.params.id);
-    const deletedFromBudget = await this.budgetService.removeExpense(
-      deletedFromExpense.budgetLine.id,
-      deletedFromExpense.id
-    );
+    const expenseToDelete = await this.expenseService.search({ _id: req.params.id });
+    const isExpenseDeleted = await this.expenseService.remove({ _id: req.params.id });
+    const isBudgetDeleted = await this.budgetService.removeExpense(
+      expenseToDelete[0].budgetLine._id.toString(),
+      expenseToDelete[0]._id.toString()
+      );
 
-    if (deletedFromExpense !== null && deletedFromBudget !== null) {
+    if (isExpenseDeleted && isBudgetDeleted) {
       res.status(204).end();
       return;
     }

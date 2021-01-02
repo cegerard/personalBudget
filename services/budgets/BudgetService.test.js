@@ -30,12 +30,12 @@ describe('BudgetService', () => {
     it('should return the list of projected budget fields', async () => {
       const expectedBudgetList = budgetFixture.list.map((budget) => {
         return {
-          id: budget.id,
+          _id: budget._id,
           name: budget.name,
           amount: budget.amount,
         };
       });
-      const list = await budgetService.list(['id', 'name', 'amount']);
+      const list = await budgetService.list(['_id', 'name', 'amount']);
       expect(list).toEqual(expectedBudgetList);
     });
   });
@@ -66,7 +66,7 @@ describe('BudgetService', () => {
   describe('create', () => {
     it('should create a new budget', async () => {
       const expectedBudget = {
-        id: expect.any(String),
+        _id: expect.any(String),
         name: 'budgetName',
         slug: 'budgetName',
         amount: 100,
@@ -80,7 +80,7 @@ describe('BudgetService', () => {
         amount: expectedBudget.amount,
         description: expectedBudget.description
       });
-      const storedBudget = await BudgetModelStub.findById(budget.id, []);
+      const storedBudget = await BudgetModelStub.findById(budget._id, []);
 
       expect(budget).toEqual(expectedBudget);
       expect(storedBudget).toEqual(expectedBudget)
@@ -103,7 +103,7 @@ describe('BudgetService', () => {
 
   describe('addExpense', () => {
     const newExpense = {
-      id: '42',
+      _id: '42',
       name: 'new expense',
       amount: 42,
       date: '2020-12-29'
@@ -143,7 +143,7 @@ describe('BudgetService', () => {
       const updatedBudget = await BudgetModelStub.findById(FOURTH_BUDGET_ID, []);
 
       expect(updatedBudget.expenses.length).toEqual(1);
-      expect(updatedBudget.expenses[0].id).toEqual('101');
+      expect(updatedBudget.expenses[0]._id).toEqual('101');
     });
 
     it('should update the available field', async () => {

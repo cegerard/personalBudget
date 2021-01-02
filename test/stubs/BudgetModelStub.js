@@ -28,7 +28,7 @@ module.exports = class BudgetModelStub {
   }
 
   static findById(id, selectedFields) {
-    const foundBudget = BudgetModelStub.budgetStore.find((budget) => budget.id === id);
+    const foundBudget = BudgetModelStub.budgetStore.find((budget) => budget._id === id);
     if (selectedFields.length === 0) {
       return Promise.resolve(foundBudget);
     }
@@ -41,7 +41,7 @@ module.exports = class BudgetModelStub {
   }
 
   static remove(budgetFilter) {
-    const budgetIndex = BudgetModelStub.budgetStore.findIndex((budget) => budget.id === budgetFilter.id);
+    const budgetIndex = BudgetModelStub.budgetStore.findIndex((budget) => budget._id === budgetFilter._id);
     if (budgetIndex !== -1) {
       const deleted = BudgetModelStub.budgetStore.splice(budgetIndex, 1);
       return Promise.resolve({ deletedCount: deleted.length });
@@ -50,13 +50,13 @@ module.exports = class BudgetModelStub {
   }
 
   static replaceOne(budgetFilter, newBudgetValue) {
-    const budgetIndex = BudgetModelStub.budgetStore.findIndex((budget) => budget.id === budgetFilter.id);
+    const budgetIndex = BudgetModelStub.budgetStore.findIndex((budget) => budget._id === budgetFilter._id);
     const budgetsReplaced = BudgetModelStub.budgetStore.splice(budgetIndex, 1, newBudgetValue);
     return Promise.resolve({ nModified: budgetsReplaced.length });
   }
 
   save() {
-    this.budget.id = uid();
+    this.budget._id = uid();
     BudgetModelStub.budgetStore.push(this.budget);
     return Promise.resolve(this.budget);
   }
