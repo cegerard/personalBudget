@@ -50,7 +50,6 @@
     "eslint": "^7.3.1",
     "eslint-plugin-import": "^2.22.0",
     "jest": "^26.4.2",
-    "mongodb-memory-server-global-4.2": "^6.8.0",
     "prettier": "2.0.5",
     "supertest": "^4.0.2"
   }
