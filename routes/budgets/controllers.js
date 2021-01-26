@@ -4,7 +4,7 @@ class BudgetController {
   }
 
   list(_, res) {
-    this._renderBudgetListPage(res)
+    renderBudgetListPage(res)
   }
 
   async create(req, res) {
@@ -13,7 +13,7 @@ class BudgetController {
       amount: req.body.amount,
       description: req.body.description,
     });
-    this._renderBudgetListPage(res);
+    renderBudgetListPage(res);
   }
 
   async delete(req, res) {
@@ -25,10 +25,14 @@ class BudgetController {
     res.status(404).end();
   }
 
-  async _renderBudgetListPage(res) {
-    const budgetList = await this.budgetService.list();
-    res.render('budgets', { page: 'budgets', budgetList: budgetList });
+  async patch(req, res) {
+    await this.budgetService.patch
   }
+}
+
+async function renderBudgetListPage(res) {
+  const budgetList = await this.budgetService.list();
+  res.render('budgets', { page: 'budgets', budgetList: budgetList });
 }
 
 module.exports = BudgetController;
