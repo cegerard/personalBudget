@@ -17,7 +17,7 @@ class BudgetRepository {
   create(budget) {
     const createBudget = new this.BudgetModel({
       name: budget.name,
-      slug: slugify(budget.name),
+      slug: budget.slug,
       amount: budget.amount,
       description: budget.description,
       available: budget.amount,
@@ -34,6 +34,11 @@ class BudgetRepository {
   async delete(budgetId) {
     const res = await this.BudgetModel.remove({ _id: budgetId });
     return res.deletedCount === 1;
+  }
+
+  async patch(budgetId, attributes) {
+    const res = await this.BudgetModel.patch({ _id: budgetId },  attributes);
+    return res.n === 1;
   }
 }
 

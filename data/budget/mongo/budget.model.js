@@ -24,6 +24,10 @@ class MongoBudgetModel {
     return BudgetModel.remove(budgetFilter);
   }
 
+  static path(budgetFilter, attributesToUpdate) {
+    return BudgetModel.updateOne(budgetFilter, attributesToUpdate);
+  }
+
   save() {
     const mongoBudgetInstance = new BudgetModel(this.budgetValue);
     return mongoBudgetInstance.save();

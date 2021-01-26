@@ -2,6 +2,8 @@ const uid = require('uid');
 
 const budgetFixture = require('../fixtures/budgetFixture');
 
+const PATCHABLE_FIELDS = ['name', 'slug', 'amount', 'available', 'description'];
+
 module.exports = class BudgetModelStub {
   static budgetStore = [];
 
@@ -53,6 +55,25 @@ module.exports = class BudgetModelStub {
     const budgetIndex = BudgetModelStub.budgetStore.findIndex((budget) => budget._id === budgetFilter._id);
     const budgetsReplaced = BudgetModelStub.budgetStore.splice(budgetIndex, 1, newBudgetValue);
     return Promise.resolve({ nModified: budgetsReplaced.length });
+  }
+
+  static patch(budgetFilter, attributes) {
+    const budgetIndex = BudgetModelStub.budgetStore.findIndex((budget) => budget._id === budgetFilter._id);
+
+    if(budgetIndex >= 0) {
+      const budgetToUpdate = BudgetModelStub.budgetStore[budgetIndex];
+  
+      PATCHABLE_FIELDS.forEach(key => {
+        const value = attributes[key];
+        if(value !== undefined) {
+          budgetToUpdate[key] = value;
+        }
+      });
+  
+      BudgetModelStub.budgetStore[budgetIndex] = budgetToUpdate;
+    }
+    
+    return Promise.resolve({ n: budgetIndex >= 0 ? 1 : 0});
   }
 
   save() {

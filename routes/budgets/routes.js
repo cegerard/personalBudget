@@ -6,6 +6,7 @@ function init(controller) {
   router.get('/', controller.list.bind(controller));
   router.post('/', controller.create.bind(controller));
   router.delete('/:id', controller.delete.bind(controller));
+  router.patch('/:id', controller.patch.bind(controller));
 
   return router;
 }
