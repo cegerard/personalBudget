@@ -1,3 +1,5 @@
+const slugify = require('slugify');
+
 class BudgetService {
   constructor(budgetRepository, expenseRepository) {
     this.repository = budgetRepository;
@@ -34,6 +36,7 @@ class BudgetService {
     // TODO Validate input data using an adapter
     return this.repository.create({
       name: newBudget.name,
+      slug: slugify(newBudget.name),
       amount: newBudget.amount,
       description: newBudget.description,
     });
@@ -50,6 +53,23 @@ class BudgetService {
       this.expenseRepository.delete({ 'budgetLine._id': budgetId });
     }
     return isDeleted;
+  }
+
+  async patch(budgetId, attributes) {
+    // TODO validate and convert attributes to update only updatable fields
+    if(attributes.name !== undefined) {
+      attributes.slug = slugify(attributes.name);
+    }
+
+    if(attributes.amount !== undefined) {
+      const budget = await this.repository.findOneById(budgetId);
+      if(budget === undefined) {
+        return false;
+      }
+      const amountDiff = attributes.amount - budget.amount;
+      attributes.available = budget.available + amountDiff;
+    }
+    return this.repository.patch(budgetId, attributes);
   }
 
   /**
