@@ -56,6 +56,23 @@ describe('Route', () => {
     });
   });
 
+  describe('GET /budgets/:id', () => {
+    const budgetId = 4;
+    const budgetUrl = `/budgets/${budgetId}`;
+
+    it('should response with 200', async () => {
+      await request(app).get(budgetUrl).expect(http.OK);
+    });
+
+    it('should render budget details page', async () => {
+      await request(app)
+        .get(budgetUrl)
+        .then((res) => {
+          expect(res.text).toMatchSnapshot();
+        });
+    });
+  });
+
   describe('GET /expenses', () => {
     it('should response with 200', async () => {
       await request(app).get('/expenses').expect(http.OK);
