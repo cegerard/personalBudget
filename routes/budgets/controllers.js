@@ -9,6 +9,11 @@ class BudgetController {
     renderBudgetListPage(res, this.budgetService)
   }
 
+  async get(req, res) {
+    const budget = await this.budgetService.getById(req.params.id);
+    res.render('budget', { page: 'budget', budget });
+  }
+
   async create(req, res) {
     await this.budgetService.create({
       name: req.body.name,
