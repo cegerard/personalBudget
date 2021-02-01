@@ -63,12 +63,15 @@ class BudgetService {
 
     if(attributes.amount !== undefined) {
       const budget = await this.repository.findOneById(budgetId);
+      
       if(budget === undefined) {
         return false;
       }
+
       const amountDiff = attributes.amount - budget.amount;
       attributes.available = budget.available + amountDiff;
     }
+
     return this.repository.patch(budgetId, attributes);
   }
 

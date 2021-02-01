@@ -8,7 +8,12 @@ module.exports = class BudgetModelStub {
   static budgetStore = [];
 
   constructor(budget) {
-    this.budget = budget;
+    this.budget = {
+      ...budget,
+      amount: Number(budget.amount),
+      available: Number(budget.available)
+    };
+
   }
 
   static resetStore() {
