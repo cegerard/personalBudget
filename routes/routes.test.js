@@ -250,10 +250,10 @@ describe('Route', () => {
       ['description', 'the description'],
     ])('should update the budget %s', async (field, value) => {
       await request(app)
-        .patch(`/budgets/${budgetId}`)
+        .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ [field]: value })
-        .expect(http.NO_CONTENT);
+        .expect(http.OK);
 
       const budget = await budgetRepository.findOneById(budgetId);
       expect(budget[field]).toEqual(value);
@@ -261,10 +261,10 @@ describe('Route', () => {
 
     it('should not update other budget attributes', async () => {
       await request(app)
-        .patch(`/budgets/${budgetId}`)
+        .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ name: 'new name' })
-        .expect(http.NO_CONTENT);
+        .expect(http.OK);
 
       const budget = await budgetRepository.findOneById(budgetId);
       delete budget.name;
@@ -273,10 +273,10 @@ describe('Route', () => {
 
     it('should not add attributes not define in schema', async () => {
       await request(app)
-        .patch(`/budgets/${budgetId}`)
+        .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ name: 'new name', notexist: 'should not add', dont: 'aie' })
-        .expect(http.NO_CONTENT);
+        .expect(http.OK);
 
       const budget = await budgetRepository.findOneById(budgetId);
       expect(budget.notexist).toBeUndefined();
@@ -285,10 +285,10 @@ describe('Route', () => {
 
     it('should update the slug with the name', async () => {
       await request(app)
-        .patch(`/budgets/${budgetId}`)
+        .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ name: 'new name' })
-        .expect(http.NO_CONTENT);
+        .expect(http.OK);
 
       const budget = await budgetRepository.findOneById(budgetId);
       expect(budget.slug).toEqual('new-name');
@@ -296,10 +296,10 @@ describe('Route', () => {
 
     it('should update the available value when amount is updated', async () => {
       await request(app)
-        .patch(`/budgets/${budgetId}`)
+        .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 666 })
-        .expect(http.NO_CONTENT);
+        .expect(http.OK);
 
       const budget = await budgetRepository.findOneById(budgetId);
       expect(budget.available).toEqual(666);
@@ -308,10 +308,10 @@ describe('Route', () => {
     it('should update the available value with expenses', async () => {
       const budgetWithExpenseId = '4';
       await request(app)
-        .patch(`/budgets/${budgetWithExpenseId}`)
+        .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100 })
-        .expect(http.NO_CONTENT);
+        .expect(http.OK);
 
       const budget = await budgetRepository.findOneById(budgetWithExpenseId);
       expect(budget.available).toEqual(29);
@@ -320,19 +320,21 @@ describe('Route', () => {
     it('should return 404 when budget does not exists on amount update', async () => {
       const budgetWithExpenseId = 'not-exists';
       await request(app)
-        .patch(`/budgets/${budgetWithExpenseId}`)
+        .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100 })
         .expect(http.NOT_FOUND);
     });
 
-    it('should return 404 when budget does not exists on name update', async () => {
-      const budgetWithExpenseId = 'not-exists';
+    it('should render budget details page', async () => {
+      const budgetWithExpenseId = '4';
       await request(app)
-        .patch(`/budgets/${budgetWithExpenseId}`)
+        .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
-        .send({ name: 'not found' })
-        .expect(http.NOT_FOUND);
+        .send({ amount: 100 })
+        .then((res) => {
+          expect(res.text).toMatchSnapshot();
+        });
     });
   });
 });
