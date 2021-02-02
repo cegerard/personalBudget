@@ -110,6 +110,34 @@ class BudgetService {
     }
     return false;
   }
+
+  /**
+   * Update an expense in the budget line and update the available field
+   * @param {string} expenseId the expense identifier
+   * @param {Object} attributes the expense attributes to update
+   * @param {string} attributes.name
+   * @param {number} attributes.amount
+   * @param {string} attributes.date
+   * @param {string} attributes.budgetlineId
+   * @returns {boolean} true the expense and the budget have been updated, false otherwise
+   */
+  async updateExpense(expenseId, attributes) {
+    const foundBudget = await this.repository.findOneById(attributes.budgetlineId);
+    const expenseIndex = foundBudget.expenses.findIndex(expense => {
+      return expense.id === expenseId;
+    });
+    const expenseToUpdate = foundBudget.expenses[expenseIndex];
+    const amountDiff = expenseToUpdate.amount - attributes.amount;
+
+    expenseToUpdate.name = attributes.name
+    expenseToUpdate.amount = attributes.amount
+    expenseToUpdate.date = attributes.date
+
+    foundBudget.available += amountDiff;
+    foundBudget.expenses[expenseIndex] = expenseToUpdate
+
+    return this.repository.update(foundBudget);
+  }
 }
 
 module.exports = BudgetService;

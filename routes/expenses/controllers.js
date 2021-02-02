@@ -1,3 +1,5 @@
+const http = require('http-status-codes').StatusCodes;
+
 const selectedField = ['_id', 'name'];
 
 class ExpenseController {
@@ -12,6 +14,18 @@ class ExpenseController {
 
   async filterByBudgetLine(req, res) {
     this._renderExpenseListPage(res, { 'budgetLine.name': req.query.budgetName });
+  }
+
+  async get(req, res) {
+    const expenses = await this.expenseService.search({ _id: req.params.id });
+    if(expenses.length > 0) {
+      res.render('expense', {
+        page: 'expense',
+        expense: expenses[0],
+      });
+      return;
+    }
+    res.sendStatus(http.NOT_FOUND);
   }
 
   async create(req, res) {
@@ -34,7 +48,7 @@ class ExpenseController {
     const isExpenseDeleted = await this.expenseService.remove({ _id: req.params.id });
 
     if (!isExpenseDeleted) {
-      res.status(404).end();
+      res.status(http.NOT_FOUND).end();
       return;
     }
 
@@ -44,11 +58,22 @@ class ExpenseController {
       );
 
     if (isExpenseRemoveFromBudget) {
-      res.status(204).end();
+      res.status(http.NO_CONTENT).end();
       return;
     }
 
-    res.status(500).end();
+    res.status(http.INTERNAL_SERVER_ERROR).end();
+  }
+
+  async patch(req, res) {
+    //TODO adapt the body
+    const isUpdated = await this.expenseService.patch(req.params.id, req.body);
+    if(isUpdated) {
+      await this.budgetService.updateExpense(req.param.id, req.body);
+      this._renderExpenseListPage(res);
+      return;
+    }
+    res.sendStatus(http.NOT_FOUND);
   }
 
   async _renderExpenseListPage(res, query = null) {

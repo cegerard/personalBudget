@@ -87,6 +87,20 @@ describe('Route', () => {
     });
   });
 
+  describe('GET /expense/:id', () => {
+    it('should response with 200', async () => {
+      await request(app).get('/expenses/100').expect(http.OK);
+    });
+
+    it('should render expenses page', async () => {
+      await request(app)
+        .get('/expenses/100')
+        .then((res) => {
+          expect(res.text).toMatchSnapshot();
+        });
+    });
+  });
+
   describe('GET /expenses/filter', () => {
     it('should response with 200', async () => {
       await request(app).get('/expenses/filter?budgetName=Essence').expect(http.OK);
@@ -332,6 +346,82 @@ describe('Route', () => {
         .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100 })
+        .then((res) => {
+          expect(res.text).toMatchSnapshot();
+        });
+    });
+  });
+
+  describe('PATCH /expenses', () => {
+    const expenseId = '100';
+
+    let expenseBeforeUpdate;
+
+    beforeEach(async () => {
+      const expenses = await expenseRepository.find({ _id: expenseId });
+      expenseBeforeUpdate = expenses[0];
+    });
+
+    it.each([
+      ['name', 'new name'],
+      ['amount', 42],
+      ['date', '2021-02-02'],
+    ])('should update the expense %s', async (field, value) => {
+      await request(app)
+        .post(`/expenses/${expenseId}`)
+        .set('Content-Type', 'application/json')
+        .send({ [field]: value, budgetlineId: expenseBeforeUpdate.budgetLine._id })
+        .expect(http.OK);
+
+      const expenses = await expenseRepository.find({ _id: expenseId });
+      expect(expenses[0][field]).toEqual(value);
+    });
+
+    it('should not update the expense budget line ', async () => {
+      await request(app)
+        .post(`/expenses/${expenseId}`)
+        .set('Content-Type', 'application/json')
+        .send({
+          budgetLine: 'new-budget-line-id',
+          budgetlineId: expenseBeforeUpdate.budgetLine._id,
+        })
+        .expect(http.OK);
+
+      const expenses = await expenseRepository.find({ _id: expenseId });
+      expect(expenses[0]).toEqual(expenseBeforeUpdate);
+    });
+
+    it('should not add attributes not define in schema', async () => {
+      await request(app)
+        .post(`/expenses/${expenseId}`)
+        .set('Content-Type', 'application/json')
+        .send({
+          name: 'new name',
+          notexist: 'should not add',
+          dont: 'aie',
+          budgetlineId: expenseBeforeUpdate.budgetLine._id,
+        })
+        .expect(http.OK);
+
+      const expenses = await expenseRepository.find({ _id: expenseId });
+      expect(expenses[0].notexist).toBeUndefined();
+      expect(expenses[0].dont).toBeUndefined();
+    });
+
+    it('should return 404 when expense does not exists', async () => {
+      await request(app)
+        .post(`/expenses/not-exists`)
+        .set('Content-Type', 'application/json')
+        .send({ amount: 100 })
+        .expect(http.NOT_FOUND);
+    });
+
+    it('should render expenses page', async () => {
+      await request(app)
+        .post(`/expenses/${expenseId}`)
+        .set('Content-Type', 'application/json')
+        .send({ amount: 100, budgetlineId: expenseBeforeUpdate.budgetLine._id })
+        .expect(http.OK)
         .then((res) => {
           expect(res.text).toMatchSnapshot();
         });
