@@ -3,6 +3,8 @@ const { get } = require('lodash');
 
 const expenseFixture = require('../fixtures/expenseFixture');
 
+const PATCHABLE_FIELDS = ['name', 'amount', 'date'];
+
 module.exports = class ExpenseModelStub {
   static expenseStore = [];
 
@@ -62,6 +64,25 @@ module.exports = class ExpenseModelStub {
     });
 
     return Promise.resolve({ deletedCount: deletedExpenses });
+  }
+
+  static patch(expenseFilter, attributes) {
+    const expenseIndex = ExpenseModelStub.expenseStore.findIndex((expense) => expense._id === expenseFilter._id);
+
+    if(expenseIndex >= 0) {
+      const expenseToUpdate = ExpenseModelStub.expenseStore[expenseIndex];
+  
+      PATCHABLE_FIELDS.forEach(key => {
+        const value = attributes[key];
+        if(value !== undefined) {
+          expenseToUpdate[key] = value;
+        }
+      });
+  
+      ExpenseModelStub.expenseStore[expenseIndex] = expenseToUpdate;
+    }
+    
+    return Promise.resolve({ n: expenseIndex >= 0 ? 1 : 0});
   }
 
   save() {
