@@ -22,6 +22,7 @@ class BudgetRepository {
       description: budget.description,
       available: budget.amount,
       expenses: [],
+      category: budget.category
     });
     return createBudget.save();
   }

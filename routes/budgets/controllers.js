@@ -18,13 +18,14 @@ class BudgetController {
       name: req.body.name,
       amount: req.body.amount,
       description: req.body.description,
+      category: req.body.category,
     });
     renderBudgetListPage(res, this.budgetService);
   }
 
   async delete(req, res) {
     const isDeleted = await this.budgetService.remove(req.params.id);
-    if(isDeleted) {
+    if (isDeleted) {
       res.sendStatus(http.NO_CONTENT);
       return;
     }
@@ -33,7 +34,7 @@ class BudgetController {
 
   async patch(req, res) {
     const isUpdated = await this.budgetService.patch(req.params.id, req.body);
-    if(isUpdated) {
+    if (isUpdated) {
       renderBudgetPage(req, res, this.budgetService);
       return;
     }
