@@ -2,7 +2,7 @@ const uid = require('uid');
 
 const budgetFixture = require('../fixtures/budgetFixture');
 
-const PATCHABLE_FIELDS = ['name', 'slug', 'amount', 'available', 'description'];
+const PATCHABLE_FIELDS = ['name', 'slug', 'amount', 'available', 'description', 'category'];
 
 module.exports = class BudgetModelStub {
   static budgetStore = [];

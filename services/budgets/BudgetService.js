@@ -39,6 +39,7 @@ class BudgetService {
       slug: slugify(newBudget.name),
       amount: newBudget.amount,
       description: newBudget.description,
+      category: newBudget.category
     });
   }
 

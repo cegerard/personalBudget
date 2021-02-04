@@ -120,6 +120,7 @@ describe('Route', () => {
       name: 'budget Name',
       amount: 42,
       description: 'little description',
+      category: 'cat'
     };
 
     it('should create a new budget line', async () => {
@@ -127,23 +128,23 @@ describe('Route', () => {
         .post('/budgets')
         .set('Content-Type', 'application/json')
         .send(newBudget)
-        .expect(http.OK)
-        .then(async () => {
-          const budgets = await budgetRepository.find();
-          const budgetsFound = budgets.filter((budget) => {
-            return budget.name === newBudget.name;
-          });
-          expect(budgetsFound.length).toEqual(1);
-          expect(budgetsFound[0]).toMatchObject({
-            _id: expect.any(String),
-            name: newBudget.name,
-            slug: slugify(newBudget.name),
-            amount: newBudget.amount,
-            description: newBudget.description,
-            available: newBudget.amount,
-            expenses: [],
-          });
-        });
+        .expect(http.OK);
+
+      const budgets = await budgetRepository.find();
+      const budgetsFound = budgets.filter((budget) => {
+        return budget.name === newBudget.name;
+      });
+      expect(budgetsFound.length).toEqual(1);
+      expect(budgetsFound[0]).toMatchObject({
+        _id: expect.any(String),
+        name: newBudget.name,
+        slug: slugify(newBudget.name),
+        amount: newBudget.amount,
+        description: newBudget.description,
+        available: newBudget.amount,
+        expenses: [],
+        category: 'cat',
+      });
     });
   });
 
@@ -262,6 +263,7 @@ describe('Route', () => {
       ['name', 'new name'],
       ['amount', 42],
       ['description', 'the description'],
+      ['category', 'cat']
     ])('should update the budget %s', async (field, value) => {
       await request(app)
         .post(`/budgets/${budgetId}`)
