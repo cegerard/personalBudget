@@ -103,12 +103,17 @@ class BudgetService {
    */
   async removeExpense(budgetId, expenseId) {
     const foundBudget = await this.repository.findOneById(budgetId);
+    if (!foundBudget) {
+      return false;
+    }
+
     const expenseIndex = foundBudget.expenses.findIndex((expense) => expense._id.toString() === expenseId);
     if (expenseIndex !== -1) {
       const deletedExpenses = foundBudget.expenses.splice(expenseIndex, 1);
       foundBudget.available += deletedExpenses[0].amount;
       return this.repository.update(foundBudget);
     }
+    
     return false;
   }
 
