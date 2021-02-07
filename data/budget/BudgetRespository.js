@@ -1,5 +1,9 @@
+const mongoose = require('mongoose');
 const slugify = require('slugify');
-const MongoBudgetModel = require('./mongo/budget.model');
+
+const budgetSchema = require('./mongo/budget.schema');
+
+const MongoBudgetModel = mongoose.model('Budget', budgetSchema);
 
 class BudgetRepository {
   constructor(modelClass = MongoBudgetModel) {
@@ -7,7 +11,7 @@ class BudgetRepository {
   }
 
   find(selectedFields = []) {
-    return this.BudgetModel.find(selectedFields);
+    return this.BudgetModel.find({}, selectedFields);
   }
 
   findOneById(budgetId, selectedFields = []) {

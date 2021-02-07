@@ -20,7 +20,7 @@ module.exports = class BudgetModelStub {
     BudgetModelStub.budgetStore = JSON.parse(JSON.stringify(budgetFixture.list));
   }
 
-  static find(selectedFields) {
+  static find(_, selectedFields) {
     if (selectedFields.length === 0) {
       return Promise.resolve(BudgetModelStub.budgetStore);
     }
