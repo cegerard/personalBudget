@@ -1,15 +1,15 @@
 extends layout
 
 block content
-  div
-    h1(class="mb-4 mt-3")= budget.name
   .row
+    h1(class="mb-4 mt-3 col-md-9")= budget.name
     .col-12= budget.description
     .col-10= 'Available: ' + budget.available + '€'
-    button.col-1(class='btn btn-primary btn-sm' data-target="#editBudgetModal" data-toggle="modal" )
-      span(class='fas fa-pencil-alt')
-    button.col-1(class='btn btn-danger btn-sm' onclick=`deleteBudgetLine("${budget._id}")`)
-      span(class='fas fa-trash-alt')
+    .col-2.d-flex.flex-row-reverse
+      button(class='btn btn-danger btn-sm' onclick=`deleteBudgetLine("${budget._id}")`)
+        span(class='fas fa-trash-alt')
+      button(class='btn btn-primary btn-sm mr-1' data-target="#editBudgetModal" data-toggle="modal" )
+        span(class='fas fa-pencil-alt')
     table.table(class='col-12 mt-2')
       thead
         tr
