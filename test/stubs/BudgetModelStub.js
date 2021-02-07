@@ -62,7 +62,7 @@ module.exports = class BudgetModelStub {
     return Promise.resolve({ nModified: budgetsReplaced.length });
   }
 
-  static patch(budgetFilter, attributes) {
+  static updateOne(budgetFilter, attributes) {
     const budgetIndex = BudgetModelStub.budgetStore.findIndex((budget) => budget._id === budgetFilter._id);
 
     if(budgetIndex >= 0) {

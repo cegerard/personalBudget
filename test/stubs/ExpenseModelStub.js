@@ -58,7 +58,7 @@ module.exports = class ExpenseModelStub {
     return Promise.resolve({ deletedCount: deletedExpenses });
   }
 
-  static patch(expenseFilter, attributes) {
+  static updateOne(expenseFilter, attributes) {
     const expenseIndex = ExpenseModelStub.expenseStore.findIndex((expense) => expense._id === expenseFilter._id);
 
     if(expenseIndex >= 0) {

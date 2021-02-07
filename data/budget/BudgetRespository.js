@@ -1,12 +1,5 @@
-const mongoose = require('mongoose');
-const slugify = require('slugify');
-
-const budgetSchema = require('./mongo/budget.schema');
-
-const MongoBudgetModel = mongoose.model('Budget', budgetSchema);
-
 class BudgetRepository {
-  constructor(modelClass = MongoBudgetModel) {
+  constructor(modelClass) {
     this.BudgetModel = modelClass;
   }
 
@@ -42,7 +35,7 @@ class BudgetRepository {
   }
 
   async patch(budgetId, attributes) {
-    const res = await this.BudgetModel.patch({ _id: budgetId },  attributes);
+    const res = await this.BudgetModel.updateOne({ _id: budgetId },  attributes);
     return res.n === 1;
   }
 }
