@@ -5,8 +5,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 
-const BudgetModelStub = require('./test/stubs/BudgetModelStub');
-const ExpenseModelStub = require('./test/stubs/ExpenseModelStub');
 const BudgetRepository = require('./data/budget/BudgetRespository');
 const ExpenseRepository = require('./data/expense/ExpenseRepository');
 const BudgetService = require('./services/budgets/BudgetService');
@@ -52,9 +50,13 @@ class Application {
   _setupRouter() {
     let budgetModel;
     let expenseModel;
+
     if (this.mode === 'test') {
-      budgetModel = BudgetModelStub;
-      expenseModel = ExpenseModelStub;
+      budgetModel = require('./test/stubs/BudgetModelStub');
+      expenseModel = require('./test/stubs/ExpenseModelStub');
+    } else {
+      budgetModel = require('./data/budget/mongo');
+      expenseModel = require('./data/expense/mongo');
     }
 
     const budgetRepository = new BudgetRepository(budgetModel);

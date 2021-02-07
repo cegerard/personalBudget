@@ -1,12 +1,5 @@
-const mongoose = require('mongoose');
-const uid = require('uid');
-
-const expenseSchema = require('./mongo/expense.schema');
-
-const MongoExpenseModel = mongoose.model('Expense', expenseSchema);
-
 class ExpenseRepository {
-  constructor(modelClass = MongoExpenseModel) {
+  constructor(modelClass) {
     this.ExpenseModel = modelClass;
   }
 
@@ -25,7 +18,7 @@ class ExpenseRepository {
   }
 
   async patch(expenseId, attributes) {
-    const res = await this.ExpenseModel.patch({ _id: expenseId },  attributes);
+    const res = await this.ExpenseModel.updateOne({ _id: expenseId },  attributes);
     return res.n === 1;
   }
 }
