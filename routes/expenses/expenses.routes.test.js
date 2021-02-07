@@ -171,7 +171,12 @@ describe('Route', () => {
       await request(app)
         .post(`/expenses/${expenseId}`)
         .set('Content-Type', 'application/json')
-        .send({ [field]: value, budgetlineId: expenseBeforeUpdate.budgetLine._id })
+        .send({ 
+          [field]: value,
+          budgetLine: {
+            _id: expenseBeforeUpdate.budgetLine._id
+          }
+        })
         .expect(http.OK);
 
       const expenses = await expenseRepository.find({ _id: expenseId });
@@ -183,8 +188,9 @@ describe('Route', () => {
         .post(`/expenses/${expenseId}`)
         .set('Content-Type', 'application/json')
         .send({
-          budgetLine: 'new-budget-line-id',
-          budgetlineId: expenseBeforeUpdate.budgetLine._id,
+          budgetLine: {
+            _id: 'new_budget_line_id',
+          }
         })
         .expect(http.OK);
 

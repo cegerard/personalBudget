@@ -69,7 +69,7 @@ class ExpenseController {
     //TODO adapt the body
     const isUpdated = await this.expenseService.patch(req.params.id, req.body);
     if(isUpdated) {
-      await this.budgetService.updateExpense(req.param.id, req.body);
+      await this.budgetService.updateExpense(req.params.id);
       this._renderExpenseListPage(res);
       return;
     }

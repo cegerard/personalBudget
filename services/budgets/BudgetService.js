@@ -127,17 +127,20 @@ class BudgetService {
    * @param {string} attributes.budgetlineId
    * @returns {boolean} true the expense and the budget have been updated, false otherwise
    */
-  async updateExpense(expenseId, attributes) {
-    const foundBudget = await this.repository.findOneById(attributes.budgetlineId);
-    const expenseIndex = foundBudget.expenses.findIndex(expense => {
-      return expense.id === expenseId;
-    });
-    const expenseToUpdate = foundBudget.expenses[expenseIndex];
-    const amountDiff = expenseToUpdate.amount - attributes.amount;
+  async updateExpense(expenseId) {
+    const foundExpenses = await this.expenseRepository.find({ _id: expenseId });
+    const updatedExpenses = foundExpenses[0];
 
-    expenseToUpdate.name = attributes.name
-    expenseToUpdate.amount = attributes.amount
-    expenseToUpdate.date = attributes.date
+    const foundBudget = await this.repository.findOneById(updatedExpenses.budgetLine._id);
+
+    const expenseIndex = foundBudget.expenses.findIndex(expense => expense._id.toString() === expenseId );
+    const expenseToUpdate = foundBudget.expenses[expenseIndex];
+
+    const amountDiff = expenseToUpdate.amount - updatedExpenses.amount;
+
+    expenseToUpdate.name = updatedExpenses.name
+    expenseToUpdate.amount = updatedExpenses.amount
+    expenseToUpdate.date = updatedExpenses.date
 
     foundBudget.available += amountDiff;
     foundBudget.expenses[expenseIndex] = expenseToUpdate
