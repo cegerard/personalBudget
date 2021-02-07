@@ -5,8 +5,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 
-const MongoBudgetModel = require('./data/budget/mongo/budget.model');
-const MongoExpenseModel = require('./data/expense/mongo/expense.model');
 const BudgetModelStub = require('./test/stubs/BudgetModelStub');
 const ExpenseModelStub = require('./test/stubs/ExpenseModelStub');
 const BudgetRepository = require('./data/budget/BudgetRespository');
@@ -52,8 +50,8 @@ class Application {
   }
 
   _setupRouter() {
-    let budgetModel = MongoBudgetModel;
-    let expenseModel = MongoExpenseModel;
+    let budgetModel;
+    let expenseModel;
     if (this.mode === 'test') {
       budgetModel = BudgetModelStub;
       expenseModel = ExpenseModelStub;

@@ -1,5 +1,9 @@
+const mongoose = require('mongoose');
 const uid = require('uid');
-const MongoExpenseModel = require('./mongo/expense.model');
+
+const expenseSchema = require('./mongo/expense.schema');
+
+const MongoExpenseModel = mongoose.model('Expense', expenseSchema);
 
 class ExpenseRepository {
   constructor(modelClass = MongoExpenseModel) {
