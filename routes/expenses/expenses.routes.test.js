@@ -40,6 +40,10 @@ describe('Route', () => {
       await request(app).get('/expenses/100').expect(http.OK);
     });
 
+    it('should response with 404 if expense does not exist', async () => {
+      await request(app).get('/expenses/not_found').expect(http.NOT_FOUND);
+    });
+
     it('should render expenses page', async () => {
       await request(app)
         .get('/expenses/100')
@@ -133,7 +137,19 @@ describe('Route', () => {
     });
 
     it('should return a 404 error when the expense can not be deleted', async () => {
-      await request(app).delete('/expenses/404').expect(404);
+      await request(app).delete('/expenses/404').expect(http.NOT_FOUND);
+    });
+
+    it('should return a 500 error when the budget line does not exists', async () => {
+      let newExpense = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: 'notExist'} });
+      newExpense = await newExpense.save();
+      await request(app).delete(`/expenses/${newExpense._id}`).expect(http.INTERNAL_SERVER_ERROR);
+    });
+
+    it('should return a 500 error when expense does not exist in budget line', async () => {
+      let newExpense = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: '1'} });
+      newExpense = await newExpense.save();
+      await request(app).delete(`/expenses/${newExpense._id}`).expect(http.INTERNAL_SERVER_ERROR);
     });
   });
 
