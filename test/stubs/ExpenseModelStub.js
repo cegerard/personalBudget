@@ -33,17 +33,9 @@ module.exports = class ExpenseModelStub {
     return Promise.resolve(ExpenseModelStub.expenseStore);
   }
 
-  static findById(id, selectedFields) {
-    const foundBudget = ExpenseModelStub.expenseStore.find((budget) => budget._id === id);
-    if (selectedFields.length === 0) {
-      return Promise.resolve(foundBudget);
-    }
-
-    const projectedBudget = selectedFields.reduce((acc, field) => {
-      acc[field] = foundBudget[field];
-      return acc;
-    }, {});
-    return Promise.resolve(projectedBudget);
+  static findById(id) {
+    const foundExpense = ExpenseModelStub.expenseStore.find((budget) => budget._id === id);
+    return Promise.resolve(foundExpense);
   }
 
   static remove(query = {}) {

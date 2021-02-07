@@ -50,7 +50,7 @@ describe('ExpenseService', () => {
         date: expectedExpense.date,
         budgetLine: expectedExpense.budgetLine
       });
-      const storedExpense = await ExpenseModelStub.findById(createdExpense._id, []);
+      const storedExpense = await ExpenseModelStub.findById(createdExpense._id);
 
       expect(createdExpense).toEqual(expectedExpense);
       expect(storedExpense).toEqual(expectedExpense)
