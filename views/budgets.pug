@@ -26,6 +26,8 @@ block content
                 small(id="budgetAmountHelp" class="form-text text-muted") Budget line amount must be gretter than 0
                 label(for="budgetDesc") Description
                 textarea.form-control(id="budgetDesc" name="description")
+                label(for="budgetCategory") Category
+                input.form-control(id="budgetCategory" name="category" type="text" aria-describedby="budgetCategoryHelp")
               .modal-footer
                 button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
                 button(type="submit" class="btn btn-primary") Add
