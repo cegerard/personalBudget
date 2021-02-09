@@ -11,9 +11,8 @@ module.exports = class BudgetModelStub {
     this.budget = {
       ...budget,
       amount: Number(budget.amount),
-      available: Number(budget.available)
+      available: Number(budget.available),
     };
-
   }
 
   static resetStore() {
@@ -48,7 +47,9 @@ module.exports = class BudgetModelStub {
   }
 
   static remove(budgetFilter) {
-    const budgetIndex = BudgetModelStub.budgetStore.findIndex((budget) => budget._id === budgetFilter._id);
+    const budgetIndex = BudgetModelStub.budgetStore.findIndex(
+      (budget) => budget._id === budgetFilter._id
+    );
     if (budgetIndex !== -1) {
       const deleted = BudgetModelStub.budgetStore.splice(budgetIndex, 1);
       return Promise.resolve({ deletedCount: deleted.length });
@@ -57,28 +58,32 @@ module.exports = class BudgetModelStub {
   }
 
   static replaceOne(budgetFilter, newBudgetValue) {
-    const budgetIndex = BudgetModelStub.budgetStore.findIndex((budget) => budget._id === budgetFilter._id);
+    const budgetIndex = BudgetModelStub.budgetStore.findIndex(
+      (budget) => budget._id === budgetFilter._id
+    );
     const budgetsReplaced = BudgetModelStub.budgetStore.splice(budgetIndex, 1, newBudgetValue);
     return Promise.resolve({ nModified: budgetsReplaced.length });
   }
 
   static updateOne(budgetFilter, attributes) {
-    const budgetIndex = BudgetModelStub.budgetStore.findIndex((budget) => budget._id === budgetFilter._id);
+    const budgetIndex = BudgetModelStub.budgetStore.findIndex(
+      (budget) => budget._id === budgetFilter._id
+    );
 
-    if(budgetIndex >= 0) {
+    if (budgetIndex >= 0) {
       const budgetToUpdate = BudgetModelStub.budgetStore[budgetIndex];
-  
-      PATCHABLE_FIELDS.forEach(key => {
+
+      PATCHABLE_FIELDS.forEach((key) => {
         const value = attributes[key];
-        if(value !== undefined) {
+        if (value !== undefined) {
           budgetToUpdate[key] = value;
         }
       });
-  
+
       BudgetModelStub.budgetStore[budgetIndex] = budgetToUpdate;
     }
-    
-    return Promise.resolve({ n: budgetIndex >= 0 ? 1 : 0});
+
+    return Promise.resolve({ n: budgetIndex >= 0 ? 1 : 0 });
   }
 
   save() {
@@ -86,5 +91,4 @@ module.exports = class BudgetModelStub {
     BudgetModelStub.budgetStore.push(this.budget);
     return Promise.resolve(this.budget);
   }
-
 };

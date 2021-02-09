@@ -45,20 +45,20 @@ describe('BudgetService', () => {
       const budget = await budgetService.getById(SECOND_BUDGET_ID);
       expect(budget).toEqual(budgetFixture.list[1]);
     });
-    
+
     it('should return a projected budget from its id with fields projection', async () => {
       const expectedProjectedBudget = {
         description: budgetFixture.list[1].description,
         name: budgetFixture.list[1].name,
         amount: budgetFixture.list[1].amount,
       };
-      
+
       const budget = await budgetService.getById(SECOND_BUDGET_ID, [
         'name',
         'amount',
         'description',
       ]);
-      
+
       expect(budget).toEqual(expectedProjectedBudget);
     });
   });
@@ -72,31 +72,31 @@ describe('BudgetService', () => {
         amount: 100,
         available: 100,
         description: 'budget description',
-        expenses: []
-      }
+        expenses: [],
+      };
 
       const budget = await budgetService.create({
         name: expectedBudget.name,
         amount: expectedBudget.amount,
-        description: expectedBudget.description
+        description: expectedBudget.description,
       });
       const storedBudget = await BudgetModelStub.findById(budget._id, []);
 
       expect(budget).toEqual(expectedBudget);
-      expect(storedBudget).toEqual(expectedBudget)
+      expect(storedBudget).toEqual(expectedBudget);
     });
   });
 
   describe('remove', () => {
     it('should remove an existing budget', async () => {
       const isDeleted = await budgetService.remove(SECOND_BUDGET_ID);
-      
+
       expect(isDeleted).toEqual(true);
     });
 
     it('should do nothing for a non existing budget', async () => {
       const isDeleted = await budgetService.remove('unkown');
-      
+
       expect(isDeleted).toEqual(false);
     });
   });
@@ -106,7 +106,7 @@ describe('BudgetService', () => {
       _id: '42',
       name: 'new expense',
       amount: 42,
-      date: '2020-12-29'
+      date: '2020-12-29',
     };
 
     it('should return that the expense has been replaced', async () => {

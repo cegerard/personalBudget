@@ -57,7 +57,7 @@ describe('/budgets', () => {
       name: 'budget Name',
       amount: 42,
       description: 'little description',
-      category: 'cat'
+      category: 'cat',
     };
 
     it('should create a new budget line', async () => {
@@ -126,7 +126,7 @@ describe('/budgets', () => {
       ['name', 'new name'],
       ['amount', 42],
       ['description', 'the description'],
-      ['category', 'cat']
+      ['category', 'cat'],
     ])('should update the budget %s', async (field, value) => {
       await request(app)
         .post(`/budgets/${budgetId}`)

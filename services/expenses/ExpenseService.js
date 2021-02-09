@@ -48,11 +48,11 @@ class ExpenseService {
 
   async patch(expenseId, attributes) {
     // TODO validate and convert attributes to update only updatable fields
-    if(attributes.amount !== undefined) {
+    if (attributes.amount !== undefined) {
       attributes.amount = Number(attributes.amount);
     }
     delete attributes.budgetLine;
-    
+
     return this.repository.patch(expenseId, attributes);
   }
 }

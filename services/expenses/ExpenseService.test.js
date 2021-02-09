@@ -41,19 +41,19 @@ describe('ExpenseService', () => {
         date: '2020-10-08',
         budgetLine: {
           _id: '1',
-          name: "bduget"
-        }
+          name: 'bduget',
+        },
       };
       const createdExpense = await expenseService.add({
         name: expectedExpense.name,
         amount: expectedExpense.amount,
         date: expectedExpense.date,
-        budgetLine: expectedExpense.budgetLine
+        budgetLine: expectedExpense.budgetLine,
       });
       const storedExpense = await ExpenseModelStub.findById(createdExpense._id);
 
       expect(createdExpense).toEqual(expectedExpense);
-      expect(storedExpense).toEqual(expectedExpense)
+      expect(storedExpense).toEqual(expectedExpense);
     });
   });
 
@@ -63,20 +63,20 @@ describe('ExpenseService', () => {
 
     it('should remove an existing expense from its id', async () => {
       const isDeleted = await expenseService.remove({ _id: EXPENSE_ID });
-      
+
       expect(isDeleted).toEqual(true);
     });
 
     it('should remove all existing expenses from there budget id', async () => {
       const isDeleted = await expenseService.remove({ 'budgetLine._id': BUDGET_ID });
-      
+
       expect(isDeleted).toEqual(true);
       expect(ExpenseModelStub.expenseStore.length).toEqual(1);
     });
 
     it('should do nothing for a non existing budget', async () => {
       const isDeleted = await expenseService.remove('unkown');
-      
+
       expect(isDeleted).toEqual(false);
     });
   });
