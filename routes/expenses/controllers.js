@@ -18,7 +18,7 @@ class ExpenseController {
 
   async get(req, res) {
     const expenses = await this.expenseService.search({ _id: req.params.id });
-    if(expenses.length > 0) {
+    if (expenses.length > 0) {
       res.render('expense', {
         page: 'expense',
         expense: expenses[0],
@@ -55,7 +55,7 @@ class ExpenseController {
     const isExpenseRemoveFromBudget = await this.budgetService.removeExpense(
       expenseToDelete[0].budgetLine._id.toString(),
       expenseToDelete[0]._id.toString()
-      );
+    );
 
     if (isExpenseRemoveFromBudget) {
       res.status(http.NO_CONTENT).end();
@@ -68,7 +68,7 @@ class ExpenseController {
   async patch(req, res) {
     //TODO adapt the body
     const isUpdated = await this.expenseService.patch(req.params.id, req.body);
-    if(isUpdated) {
+    if (isUpdated) {
       await this.budgetService.updateExpense(req.params.id);
       this._renderExpenseListPage(res);
       return;

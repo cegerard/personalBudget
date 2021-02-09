@@ -141,13 +141,13 @@ describe('Route', () => {
     });
 
     it('should return a 500 error when the budget line does not exists', async () => {
-      let newExpense = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: 'notExist'} });
+      let newExpense = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: 'notExist' } });
       newExpense = await newExpense.save();
       await request(app).delete(`/expenses/${newExpense._id}`).expect(http.INTERNAL_SERVER_ERROR);
     });
 
     it('should return a 500 error when expense does not exist in budget line', async () => {
-      let newExpense = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: '1'} });
+      let newExpense = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: '1' } });
       newExpense = await newExpense.save();
       await request(app).delete(`/expenses/${newExpense._id}`).expect(http.INTERNAL_SERVER_ERROR);
     });
@@ -171,11 +171,11 @@ describe('Route', () => {
       await request(app)
         .post(`/expenses/${expenseId}`)
         .set('Content-Type', 'application/json')
-        .send({ 
+        .send({
           [field]: value,
           budgetLine: {
-            _id: expenseBeforeUpdate.budgetLine._id
-          }
+            _id: expenseBeforeUpdate.budgetLine._id,
+          },
         })
         .expect(http.OK);
 
@@ -190,7 +190,7 @@ describe('Route', () => {
         .send({
           budgetLine: {
             _id: 'new_budget_line_id',
-          }
+          },
         })
         .expect(http.OK);
 

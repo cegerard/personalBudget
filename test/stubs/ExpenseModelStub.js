@@ -59,22 +59,24 @@ module.exports = class ExpenseModelStub {
   }
 
   static updateOne(expenseFilter, attributes) {
-    const expenseIndex = ExpenseModelStub.expenseStore.findIndex((expense) => expense._id === expenseFilter._id);
+    const expenseIndex = ExpenseModelStub.expenseStore.findIndex(
+      (expense) => expense._id === expenseFilter._id
+    );
 
-    if(expenseIndex >= 0) {
+    if (expenseIndex >= 0) {
       const expenseToUpdate = ExpenseModelStub.expenseStore[expenseIndex];
-  
-      PATCHABLE_FIELDS.forEach(key => {
+
+      PATCHABLE_FIELDS.forEach((key) => {
         const value = attributes[key];
-        if(value !== undefined) {
+        if (value !== undefined) {
           expenseToUpdate[key] = value;
         }
       });
-  
+
       ExpenseModelStub.expenseStore[expenseIndex] = expenseToUpdate;
     }
-    
-    return Promise.resolve({ n: expenseIndex >= 0 ? 1 : 0});
+
+    return Promise.resolve({ n: expenseIndex >= 0 ? 1 : 0 });
   }
 
   save() {

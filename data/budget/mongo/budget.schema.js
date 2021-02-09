@@ -13,7 +13,7 @@ const budgetSchema = new mongoose.Schema({
   description: String,
   available: { type: Number, required: true },
   expenses: { type: [ExpenseSchema], default: [] },
-  category: { type: String }
+  category: { type: String },
 });
 
 module.exports = budgetSchema;

@@ -18,9 +18,9 @@ class Application {
     this.app = express();
     this.mode = this.app.get('env');
 
-    if(this.mode !== 'test') {
+    if (this.mode !== 'test') {
       this._setupMongo();
-    } 
+    }
     this._setupViewEngine();
     this._setupRouter();
     this._setupErrorHandling();

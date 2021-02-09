@@ -19,7 +19,7 @@ class BudgetRepository {
       description: budget.description,
       available: budget.amount,
       expenses: [],
-      category: budget.category
+      category: budget.category,
     });
     return createBudget.save();
   }
@@ -35,7 +35,7 @@ class BudgetRepository {
   }
 
   async patch(budgetId, attributes) {
-    const res = await this.BudgetModel.updateOne({ _id: budgetId },  attributes);
+    const res = await this.BudgetModel.updateOne({ _id: budgetId }, attributes);
     return res.n === 1;
   }
 }

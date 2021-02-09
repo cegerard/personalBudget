@@ -39,7 +39,7 @@ class BudgetService {
       slug: slugify(newBudget.name),
       amount: newBudget.amount,
       description: newBudget.description,
-      category: newBudget.category
+      category: newBudget.category,
     });
   }
 
@@ -58,14 +58,14 @@ class BudgetService {
 
   async patch(budgetId, attributes) {
     // TODO validate and convert attributes to update only updatable fields
-    if(attributes.name !== undefined) {
+    if (attributes.name !== undefined) {
       attributes.slug = slugify(attributes.name);
     }
 
-    if(attributes.amount !== undefined) {
+    if (attributes.amount !== undefined) {
       const budget = await this.repository.findOneById(budgetId);
-      
-      if(budget === undefined) {
+
+      if (budget === undefined) {
         return false;
       }
 
@@ -107,13 +107,15 @@ class BudgetService {
       return false;
     }
 
-    const expenseIndex = foundBudget.expenses.findIndex((expense) => expense._id.toString() === expenseId);
+    const expenseIndex = foundBudget.expenses.findIndex(
+      (expense) => expense._id.toString() === expenseId
+    );
     if (expenseIndex !== -1) {
       const deletedExpenses = foundBudget.expenses.splice(expenseIndex, 1);
       foundBudget.available += deletedExpenses[0].amount;
       return this.repository.update(foundBudget);
     }
-    
+
     return false;
   }
 
@@ -133,17 +135,19 @@ class BudgetService {
 
     const foundBudget = await this.repository.findOneById(updatedExpenses.budgetLine._id);
 
-    const expenseIndex = foundBudget.expenses.findIndex(expense => expense._id.toString() === expenseId );
+    const expenseIndex = foundBudget.expenses.findIndex(
+      (expense) => expense._id.toString() === expenseId
+    );
     const expenseToUpdate = foundBudget.expenses[expenseIndex];
 
     const amountDiff = expenseToUpdate.amount - updatedExpenses.amount;
 
-    expenseToUpdate.name = updatedExpenses.name
-    expenseToUpdate.amount = updatedExpenses.amount
-    expenseToUpdate.date = updatedExpenses.date
+    expenseToUpdate.name = updatedExpenses.name;
+    expenseToUpdate.amount = updatedExpenses.amount;
+    expenseToUpdate.date = updatedExpenses.date;
 
     foundBudget.available += amountDiff;
-    foundBudget.expenses[expenseIndex] = expenseToUpdate
+    foundBudget.expenses[expenseIndex] = expenseToUpdate;
 
     return this.repository.update(foundBudget);
   }

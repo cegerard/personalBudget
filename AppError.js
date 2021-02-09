@@ -3,4 +3,4 @@ module.exports = class AppError extends Error {
     super(message);
     this.status = errorCode;
   }
-}
+};

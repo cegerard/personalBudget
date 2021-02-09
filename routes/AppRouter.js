@@ -7,7 +7,7 @@ const expensesRoute = require('./expenses/routes');
 class AppRouter {
   constructor(budgetController, expenseController) {
     this.router = express.Router();
-    
+
     this.router.use('/', homeRoute);
     this.router.use('/budgets', budgetsRoute.init(budgetController));
     this.router.use('/expenses', expensesRoute.init(expenseController));
