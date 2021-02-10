@@ -2,7 +2,8 @@
   .card-body.d-flex.flex-column
     h5.card-title= budget.name
     .d-flex.flex-row.justify-content-between
-      p= "Amount:"
+      p Amount:
       p.align-self-end= `${budget.available}/${budget.amount} €`
+    p.card-category= `Category: ${budget.category}`
     p.card-text= budget.description
     a(class="btn btn-primary align-self-end", href=`/budgets/${budget._id}`) Details
