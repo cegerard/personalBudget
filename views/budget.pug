@@ -1,8 +1,9 @@
 extends layout
 
 block content
+  h1(class="mb-4 mt-3 col-md-9")= budget.name
   .row
-    h1(class="mb-4 mt-3 col-md-9")= budget.name
+    .col-12= budget.category
     .col-12= budget.description
     .col-10= 'Available: ' + budget.available + '€'
     .col-2.d-flex.flex-row-reverse
@@ -10,7 +11,7 @@ block content
         span(class='fas fa-trash-alt')
       button(class='btn btn-primary btn-sm mr-1' data-target="#editBudgetModal" data-toggle="modal" )
         span(class='fas fa-pencil-alt')
-    table.table(class='col-12 mt-2')
+  table.table(class='col-12 mt-2')
       thead
         tr
           th Expense
