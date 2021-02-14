@@ -39,13 +39,21 @@ class ExpenseService {
   }
 
   /**
-   * remove an existing expense from the default expense repository
+   * Remove an existing expense from the default expense repository
    * @param {Object} query
    */
   remove(query) {
     return this.repository.delete(query);
   }
 
+  /**
+   * Update expenses attributes from an expense id
+   * @param {string} expenseId
+   * @param {Object} attributes
+   * @param {string} attributes.name
+   * @param {Number} attributes.amount
+   * @param {string} attributes.date
+   */
   async patch(expenseId, attributes) {
     // TODO validate and convert attributes to update only updatable fields
     if (attributes.amount !== undefined) {

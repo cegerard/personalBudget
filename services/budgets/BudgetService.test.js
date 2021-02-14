@@ -19,6 +19,7 @@ describe('BudgetService', () => {
 
   beforeEach(() => {
     BudgetModelStub.resetStore();
+    ExpenseModelStub.resetStore();
   });
 
   describe('list', () => {
@@ -67,8 +68,8 @@ describe('BudgetService', () => {
     it('should create a new budget', async () => {
       const expectedBudget = {
         _id: expect.any(String),
-        name: 'budgetName',
-        slug: 'budgetName',
+        name: 'BudgetName',
+        slug: 'budgetname',
         amount: 100,
         available: 100,
         description: 'budget description',
@@ -101,6 +102,45 @@ describe('BudgetService', () => {
     });
   });
 
+  describe('patch', () => {
+    const budget_id = '7';
+
+    it('should update field for an existing budget', async () => {
+      const expectedBudget = {
+        _id: budget_id,
+        name: 'Rename',
+        slug: 'rename',
+        amount: 30,
+        available: 30,
+        description: 'it has been updated',
+        category: 'add cat',
+        expenses: [],
+      };
+
+      await budgetService.patch(budget_id, {
+        name: expectedBudget.name,
+        amount: expectedBudget.amount,
+        description: expectedBudget.description,
+        category: expectedBudget.category,
+      });
+
+      const updatedBudget = await BudgetModelStub.findById(budget_id, []);
+      expect(updatedBudget).toEqual(expectedBudget);
+    });
+
+    it('should return true on update', async () => {
+      const res = await budgetService.patch(budget_id, { name: 'test' });
+
+      expect(res).toBe(true);
+    });
+
+    it('should return false when update failed', async () => {
+      const res = await budgetService.patch('not exists', { name: 'test' });
+
+      expect(res).toBe(false);
+    });
+  });
+
   describe('addExpense', () => {
     const newExpense = {
       _id: '42',
@@ -109,7 +149,7 @@ describe('BudgetService', () => {
       date: '2020-12-29',
     };
 
-    it('should return that the expense has been replaced', async () => {
+    it('should return that the expense has been added', async () => {
       const isReplaced = await budgetService.addExpense(FOURTH_BUDGET_ID, newExpense);
       expect(isReplaced).toEqual(true);
     });
@@ -151,6 +191,57 @@ describe('BudgetService', () => {
       const updatedBudget = await BudgetModelStub.findById(FOURTH_BUDGET_ID, []);
 
       expect(updatedBudget.available).toEqual(120);
+    });
+  });
+
+  describe('updateExpense', () => {
+    describe('when the expense can be found in the budget line', () => {
+      const EXPENSE_ID = '100';
+      const EXPECTED_EXPENSE = {
+        _id: EXPENSE_ID,
+        name: 'new expense name',
+        amount: 100000,
+        date: '2021-01-01',
+      };
+
+      beforeEach(async () => {
+        await ExpenseModelStub.updateOne(
+          { _id: EXPENSE_ID },
+          {
+            name: EXPECTED_EXPENSE.name,
+            amount: EXPECTED_EXPENSE.amount,
+            date: EXPECTED_EXPENSE.date,
+          }
+        );
+      });
+
+      it('should return that the expense has been updated', async () => {
+        const isUpdated = await budgetService.updateExpense(EXPENSE_ID);
+        expect(isUpdated).toEqual(true);
+      });
+
+      it('should update the expense in its budget line', async () => {
+        await budgetService.updateExpense(EXPENSE_ID);
+        const updatedBudget = await BudgetModelStub.findById(FOURTH_BUDGET_ID, []);
+        expect(updatedBudget.expenses[0]).toEqual(EXPECTED_EXPENSE);
+      });
+    });
+
+    describe('when the expense does not exist', () => {
+      const UNKNOWN_EXPENSE_ID = 'unknown';
+
+      it('should return false', async () => {
+        const isUpdated = await budgetService.updateExpense(UNKNOWN_EXPENSE_ID);
+        expect(isUpdated).toEqual(false);
+      });
+    });
+
+    describe('when the expense is not found from its budget line', () => {
+      const MISSING_EXPENSE_ID = '200';
+      it('should return false', async () => {
+        const isUpdated = await budgetService.updateExpense(MISSING_EXPENSE_ID);
+        expect(isUpdated).toEqual(false);
+      });
     });
   });
 });

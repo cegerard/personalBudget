@@ -9,7 +9,7 @@ class BudgetService {
   /**
    * List all budget from the default budget repository
    * @param {string[]} select selected field from budget model
-   * @returns Promise: list of full budget objects
+   * @returns Promise: list of budget objects
    */
   list(select) {
     return this.repository.find(select);
@@ -30,13 +30,13 @@ class BudgetService {
    * @param {string} newBudget.name
    * @param {number} newBudget.amout
    * @param {string} newBudget.description
-   * @returns {number} The new number of budgets in the repository
+   * @returns {Object} Promise: the saved object
    */
   create(newBudget) {
     // TODO Validate input data using an adapter
     return this.repository.create({
       name: newBudget.name,
-      slug: slugify(newBudget.name),
+      slug: slugify(newBudget.name, { lower: true }),
       amount: newBudget.amount,
       description: newBudget.description,
       category: newBudget.category,
@@ -56,10 +56,20 @@ class BudgetService {
     return isDeleted;
   }
 
+  /**
+   * Update some attributes of a budget from its identifier
+   * @param {string} budgetId
+   * @param {Object} attributes
+   * @param {string} attributes.name
+   * @param {number} attributes.amout
+   * @param {string} attributes.description
+   * @param {string} attributes.category
+   * @return {boolean} true if the budget has been udpated, false otherwise
+   */
   async patch(budgetId, attributes) {
     // TODO validate and convert attributes to update only updatable fields
     if (attributes.name !== undefined) {
-      attributes.slug = slugify(attributes.name);
+      attributes.slug = slugify(attributes.name, { lower: true });
     }
 
     if (attributes.amount !== undefined) {
@@ -122,15 +132,14 @@ class BudgetService {
   /**
    * Update an expense in the budget line and update the available field
    * @param {string} expenseId the expense identifier
-   * @param {Object} attributes the expense attributes to update
-   * @param {string} attributes.name
-   * @param {number} attributes.amount
-   * @param {string} attributes.date
-   * @param {string} attributes.budgetlineId
    * @returns {boolean} true the expense and the budget have been updated, false otherwise
    */
   async updateExpense(expenseId) {
     const foundExpenses = await this.expenseRepository.find({ _id: expenseId });
+    if (foundExpenses.length === 0) {
+      return false;
+    }
+
     const updatedExpenses = foundExpenses[0];
 
     const foundBudget = await this.repository.findOneById(updatedExpenses.budgetLine._id);
@@ -138,6 +147,10 @@ class BudgetService {
     const expenseIndex = foundBudget.expenses.findIndex(
       (expense) => expense._id.toString() === expenseId
     );
+
+    if (expenseIndex === -1) {
+      return false;
+    }
     const expenseToUpdate = foundBudget.expenses[expenseIndex];
 
     const amountDiff = expenseToUpdate.amount - updatedExpenses.amount;

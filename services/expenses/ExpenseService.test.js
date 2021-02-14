@@ -30,6 +30,14 @@ describe('ExpenseService', () => {
       const foundExpenses = await expenseService.search(query);
       expect(foundExpenses).toEqual([expenseFixture.list[2]]);
     });
+
+    it('should return an empty array when budget name does not exist', async () => {
+      const query = {
+        'budgetLine.name': 'oups',
+      };
+      const foundExpenses = await expenseService.search(query);
+      expect(foundExpenses).toEqual([]);
+    });
   });
 
   describe('add', () => {
@@ -78,6 +86,63 @@ describe('ExpenseService', () => {
       const isDeleted = await expenseService.remove('unkown');
 
       expect(isDeleted).toEqual(false);
+    });
+  });
+
+  describe('patch', () => {
+    describe('when the expense exists', () => {
+      const EXPENSE_ID = '101';
+      const EXPECTED_EXPENSE = {
+        _id: EXPENSE_ID,
+        name: 'new name',
+        amount: 100000,
+        date: '2021-01-01',
+        budgetLine: {
+          _id: '4',
+          name: 'Essence',
+        },
+      };
+
+      let patchRes;
+
+      beforeEach(async () => {
+        patchRes = await expenseService.patch(EXPENSE_ID, {
+          name: EXPECTED_EXPENSE.name,
+          amount: EXPECTED_EXPENSE.amount,
+          date: EXPECTED_EXPENSE.date,
+        });
+      });
+
+      it('should update the expense attributes', async () => {
+        const expense = await ExpenseModelStub.findById(EXPENSE_ID);
+        expect(expense).toEqual(EXPECTED_EXPENSE);
+      });
+
+      it('should not update the budget line attributes', async () => {
+        await expenseService.patch(EXPENSE_ID, {
+          budgetLine: {
+            _id: '2000',
+            name: 'not change',
+          },
+        });
+
+        const expense = await ExpenseModelStub.findById(EXPENSE_ID);
+        expect(expense.budgetLine).toEqual(EXPECTED_EXPENSE.budgetLine);
+      });
+
+      it('should return true', async () => {
+        expect(patchRes).toEqual(true);
+      });
+    });
+
+    describe('when the expense does not exist', () => {
+      const EXPENSE_ID = 'unkown';
+
+      it('should return false', async () => {
+        const patchRes = await expenseService.patch(EXPENSE_ID, {});
+
+        expect(patchRes).toEqual(false);
+      });
     });
   });
 });
