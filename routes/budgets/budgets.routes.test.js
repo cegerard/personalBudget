@@ -75,7 +75,7 @@ describe('/budgets', () => {
       expect(budgetsFound[0]).toMatchObject({
         _id: expect.any(String),
         name: newBudget.name,
-        slug: slugify(newBudget.name),
+        slug: slugify(newBudget.name, { lower: true }),
         amount: newBudget.amount,
         description: newBudget.description,
         available: newBudget.amount,
