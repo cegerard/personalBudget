@@ -9,21 +9,22 @@ const db = require('../db/mongo');
 async function renewBudget() {
   budgetRepository = new BudgetRepository(db.budgetModel);
   budgets = await budgetRepository.find(['_id', 'amount', 'available', 'name']);
-  budgets.forEach((budget) => {
-    if (budget.amount !== budget.available) {
-      const patched = budgetRepository.patch(budget._id, {
-        available: budget.amount,
-        expenses: [],
-      });
+  await Promise.all(
+    budgets.map(async (budget) => {
+      if (budget.amount !== budget.available) {
+        const patched = await budgetRepository.patch(budget._id, {
+          available: budget.amount,
+          expenses: [],
+        });
 
-      if (patched) {
-        console.log(`Budget ${budget.name}(${budget._id}): expenses cleared`);
-      } else {
-        console.err(`Budget ${budget.name}(${budget._id}): expenses clean failed`);
+        if (patched) {
+          console.log(`Budget ${budget.name}(${budget._id}): expenses cleared`);
+        } else {
+          console.err(`Budget ${budget.name}(${budget._id}): expenses clean failed`);
+        }
       }
-    }
-
-  });
+    })
+  );
   db.disconnectDb();
 }
 
