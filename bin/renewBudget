@@ -1,14 +1,16 @@
 #! /app/.heroku/node/bin/node
 
-const BudgetRepository = require('../data/budget/BudgetRespository');
+const { BudgetRepository } = require('../data');
+const db = require('../db/mongo');
 
 // At the first of each month we reset all budget back to there amount level
 // Each budget is clear from its expenses
 // Expense are not deleted
 async function renewBudget() {
-  budgets = await BudgetRepository.find(['_id', 'amount']);
+  budgetRepository = new BudgetRepository(db.budgetModel)
+  budgets = await budgetRepository.find(['_id', 'amount', ]);
   budgets.forEach(budget => {
-    const patched = BudgetRepository.patch(budget._id, {
+    const patched = budgetRepository.patch(budget._id, {
       available: budget.amount,
       expenses: []
     });
@@ -19,4 +21,5 @@ async function renewBudget() {
   });
 }
 
-await renewBudget();
+db.connectDb();
+renewBudget();
