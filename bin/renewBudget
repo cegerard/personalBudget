@@ -9,12 +9,12 @@ async function renewBudget() {
   budgets = await BudgetRepository.find(['_id', 'amount']);
   budgets.forEach(budget => {
     const patched = BudgetRepository.patch(budget._id, {
-      available = budget.amount,
+      available: budget.amount,
       expenses: []
     });
     
     if (patched) {
-      console.log(`Budget ${budget._id}:${budget.name} expenses cleared`);
+      console.log(`Budget ${budget.name}(${budget._id}): expenses cleared`);
     }
   });
 }
