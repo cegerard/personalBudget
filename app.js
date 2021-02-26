@@ -3,10 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const mongoose = require('mongoose');
 
-const BudgetRepository = require('./data/budget/BudgetRespository');
-const ExpenseRepository = require('./data/expense/ExpenseRepository');
+const { BudgetRepository, ExpenseRepository } = require('./data');
 const BudgetService = require('./services/budgets/BudgetService');
 const ExpenseService = require('./services/expenses/ExpenseService');
 const AppRouter = require('./routes/AppRouter');
@@ -19,21 +17,13 @@ class Application {
     this.mode = this.app.get('env');
 
     if (this.mode !== 'test') {
-      this._setupMongo();
+      const { connectDb } = require('./db/mongo');
+      connectDb();
     }
+
     this._setupViewEngine();
     this._setupRouter();
     this._setupErrorHandling();
-  }
-
-  _setupMongo() {
-    const USER = process.env.USER;
-    const PASSWORD = process.env.PASSWORD;
-    const DB = process.env.DB;
-    mongoose.connect(
-      `mongodb+srv://${USER}:${PASSWORD}@dev.hw9tl.azure.mongodb.net/${DB}?retryWrites=true&w=majority`,
-      { useNewUrlParser: true, useUnifiedTopology: true }
-    );
   }
 
   _setupViewEngine() {
@@ -55,8 +45,7 @@ class Application {
       budgetModel = require('./test/stubs/BudgetModelStub');
       expenseModel = require('./test/stubs/ExpenseModelStub');
     } else {
-      budgetModel = require('./data/budget/mongo');
-      expenseModel = require('./data/expense/mongo');
+      ({budgetModel, expenseModel} = require('./db/mongo'))
     }
 
     const budgetRepository = new BudgetRepository(budgetModel);
