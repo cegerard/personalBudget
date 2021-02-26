@@ -15,8 +15,13 @@ function connectMongo() {
   );
 }
 
+function disconnectMongo() {
+  mongoose.disconnect()
+}
+
 module.exports = {
   connectDb: connectMongo,
+  disconnectDb: disconnectMongo,
   budgetModel,
   expenseModel
 }
