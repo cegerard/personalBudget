@@ -65,7 +65,7 @@ describe('BudgetService', () => {
   });
 
   describe('create', () => {
-    it('should create a new budget', async () => {
+    it('should create a new budget with default values', async () => {
       const expectedBudget = {
         _id: expect.any(String),
         name: 'BudgetName',
@@ -74,12 +74,39 @@ describe('BudgetService', () => {
         available: 100,
         description: 'budget description',
         expenses: [],
+        type: 'NORMAL'
       };
 
       const budget = await budgetService.create({
         name: expectedBudget.name,
         amount: expectedBudget.amount,
         description: expectedBudget.description,
+      });
+      const storedBudget = await BudgetModelStub.findById(budget._id, []);
+
+      expect(budget).toEqual(expectedBudget);
+      expect(storedBudget).toEqual(expectedBudget);
+    });
+
+    it('should create a new budget with all values', async () => {
+      const expectedBudget = {
+        _id: expect.any(String),
+        name: 'BudgetName',
+        slug: 'budgetname',
+        amount: 100,
+        available: 100,
+        description: 'budget description',
+        expenses: [],
+        category: 'test',
+        type: 'RESERVE'
+      };
+
+      const budget = await budgetService.create({
+        name: expectedBudget.name,
+        amount: expectedBudget.amount,
+        description: expectedBudget.description,
+        category: 'test',
+        type: 'RESERVE',
       });
       const storedBudget = await BudgetModelStub.findById(budget._id, []);
 
@@ -115,6 +142,7 @@ describe('BudgetService', () => {
         description: 'it has been updated',
         category: 'add cat',
         expenses: [],
+        type: 'RESERVE'
       };
 
       await budgetService.patch(budget_id, {
@@ -122,6 +150,7 @@ describe('BudgetService', () => {
         amount: expectedBudget.amount,
         description: expectedBudget.description,
         category: expectedBudget.category,
+        type: expectedBudget.type
       });
 
       const updatedBudget = await BudgetModelStub.findById(budget_id, []);

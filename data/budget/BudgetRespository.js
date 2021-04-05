@@ -20,6 +20,7 @@ class BudgetRepository {
       available: budget.amount,
       expenses: [],
       category: budget.category,
+      type: budget.type,
     });
     return createBudget.save();
   }

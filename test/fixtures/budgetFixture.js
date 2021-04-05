@@ -8,6 +8,7 @@ module.exports = {
       description: "Dépenses liées au contrat d'électricité de la maison",
       available: 58,
       expenses: [],
+      type: 'NORMAL'
     },
     {
       _id: '2',
@@ -17,6 +18,7 @@ module.exports = {
       description: 'Dépenses liées au crédit des voitures',
       available: 369.89,
       expenses: [],
+      type: 'NORMAL'
     },
     {
       _id: '3',
@@ -26,6 +28,7 @@ module.exports = {
       description: 'Dépenses liées au crédit de la maison',
       available: 857.12,
       expenses: [],
+      type: 'NORMAL'
     },
     {
       _id: '4',
@@ -48,6 +51,7 @@ module.exports = {
           date: '2020-08-22',
         },
       ],
+      type: 'NORMAL'
     },
     {
       _id: '5',
@@ -57,6 +61,7 @@ module.exports = {
       description: 'Assurance des voitures',
       available: 127,
       expenses: [],
+      type: 'NORMAL'
     },
     {
       _id: '6',
@@ -66,6 +71,7 @@ module.exports = {
       description: "Dépenses concernant l'alimentation (boucher, laitier, primeur et supermarché)",
       available: 500,
       expenses: [],
+      type: 'NORMAL'
     },
     {
       _id: '7',
@@ -75,6 +81,7 @@ module.exports = {
       description: 'Dépenses pour les chats',
       available: 120,
       expenses: [],
+      type: 'NORMAL'
     },
     {
       _id: '8',
@@ -83,6 +90,7 @@ module.exports = {
       amount: 0,
       available: 0,
       expenses: [],
+      type: 'NORMAL'
     },
   ],
 };

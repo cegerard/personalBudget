@@ -40,6 +40,7 @@ class BudgetService {
       amount: newBudget.amount,
       description: newBudget.description,
       category: newBudget.category,
+      type: newBudget.type,
     });
   }
 
@@ -64,6 +65,7 @@ class BudgetService {
    * @param {number} attributes.amout
    * @param {string} attributes.description
    * @param {string} attributes.category
+   * @param {string} attributes.type
    * @return {boolean} true if the budget has been udpated, false otherwise
    */
   async patch(budgetId, attributes) {
