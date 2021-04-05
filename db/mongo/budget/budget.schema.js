@@ -12,6 +12,12 @@ const budgetSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
   description: String,
   available: { type: Number, required: true },
+  type: {
+    type: String,
+    enum: ['NORMAL', 'RESERVE'],
+    default: 'NORMAL',
+    require: true
+  },
   expenses: { type: [ExpenseSchema], default: [] },
   category: { type: String },
 });
