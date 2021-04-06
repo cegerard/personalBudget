@@ -19,6 +19,7 @@ class BudgetController {
       amount: req.body.amount,
       description: req.body.description,
       category: req.body.category,
+      type: req.body.type,
     });
     renderBudgetListPage(res, this.budgetService);
   }

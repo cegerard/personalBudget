@@ -1,6 +1,9 @@
 .card
   .card-body.d-flex.flex-column
-    h5.card-title= budget.name
+    if budget.type === 'RESERVE'
+      h5.card-title.reserveTitle= budget.name
+    else
+      h5.card-title= budget.name
     .d-flex.flex-row.justify-content-between
       p Amount:
       p.align-self-end= `${budget.available}/${budget.amount} €`
