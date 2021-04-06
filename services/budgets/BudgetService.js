@@ -28,8 +28,10 @@ class BudgetService {
    * Create a new budget and add it to the default budget repository
    * @param {Object} newBudget the budget object to create
    * @param {string} newBudget.name
-   * @param {number} newBudget.amout
+   * @param {number} newBudget.amount
    * @param {string} newBudget.description
+   * @param {string} newBudget.category
+   * @param {string} newBudget.type
    * @returns {Object} Promise: the saved object
    */
   create(newBudget) {

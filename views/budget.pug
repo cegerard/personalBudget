@@ -42,6 +42,14 @@ block content
               textarea.form-control(id="budgetDescEdit" name="description")= budget.description
               label(for="budgetCategoryEdit") Category
               input.form-control(id="budgetCategoryEdit" name="category" type="text" value=`${budget.category}` aria-describedby="budgetCategoryEditHelp")
+              label(for="budgetTypeEdit") Type
+              select.form-control(id="budgetTypeEdit" name="type" aria-describedby="budgetTypeEditHelp")
+                  if budget.type === "NORMAL" 
+                    option.selected(value="NORMAL") Normal
+                    option(value="RESERVE") Réserve
+                  else 
+                    option.selected(value="RESERVE") Réserve
+                    option(value="NORMAL") Normal
             .modal-footer
               button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
               button(type="submit" class="btn btn-primary") Edit

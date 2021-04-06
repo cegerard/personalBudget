@@ -28,6 +28,10 @@ block content
                 textarea.form-control(id="budgetDesc" name="description")
                 label(for="budgetCategory") Category
                 input.form-control(id="budgetCategory" name="category" type="text" aria-describedby="budgetCategoryHelp")
+                label(for="budgetTypeEdit") Type
+                select.form-control(id="budgetTypeEdit" name="type" aria-describedby="budgetTypeEditHelp")
+                  option.selected(value="NORMAL") Normal
+                  option(value="RESERVE") Réserve
               .modal-footer
                 button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
                 button(type="submit" class="btn btn-primary") Add
