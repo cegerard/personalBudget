@@ -1,34 +1,53 @@
 #! /app/.heroku/node/bin/node
 
+// At the first of each month we reset all NORMAL budgets back to there amount level,
+// for RESERVE budget we accumulate the amount over month.
+// Each budget is clear from its expenses.
+// Expenses are not deleted.
+
 const { BudgetRepository } = require('../data');
 const db = require('../db/mongo');
-
-// At the first of each month we reset all budget back to there amount level
-// Each budget is clear from its expenses
-// Expense are not deleted
-async function renewBudget() {
-  budgetRepository = new BudgetRepository(db.budgetModel);
-  budgets = await budgetRepository.find(['_id', 'amount', 'available', 'name']);
-  await Promise.all(
-    budgets.map(async (budget) => {
-      if (budget.amount !== budget.available) {
-        const patched = await budgetRepository.patch(budget._id, {
-          available: budget.amount,
-          expenses: [],
-        });
-
-        if (patched) {
-          console.log(`Budget ${budget.name}(${budget._id}): expenses cleared`);
-        } else {
-          console.err(`Budget ${budget.name}(${budget._id}): expenses clean failed`);
-        }
-      }
-    })
-  );
-  db.disconnectDb();
-}
 
 console.log('Connecting database...');
 db.connectDb();
 console.log('Renew budgets');
-renewBudget();
+renewAllBudgets();
+
+async function renewAllBudgets() {
+  budgetRepository = new BudgetRepository(db.budgetModel);
+  budgets = await budgetRepository.find(['_id', 'amount', 'available', 'name', 'type']);
+
+  await Promise.all(
+    budgets.map(renewBudget)
+  );
+  db.disconnectDb();
+}
+
+async function renewBudget(budget) {
+  let availableAmount;
+
+  availableAmount = computeAvailableAmount(budget, availableAmount);
+  const patched = await patchBudget(budget._id, availableAmount);
+
+  if (patched) {
+    console.log(`Budget ${budget.name}(${budget._id}): expenses cleared`);
+  } else {
+    // TODO: here accumulate errors and make the script faill if there at least one budget that can not be renewed
+    console.err(`Budget ${budget.name}(${budget._id}): expenses clean failed`);
+  }
+}
+
+function computeAvailableAmount(budget) {
+  if (budget.type === 'RESERVE') {
+    return budget.available + budget.amount;
+  }
+
+  return budget.amount;
+}
+
+async function patchBudget(budgetId, available) {
+  return await budgetRepository.patch(budgetId, {
+    available: available,
+    expenses: [],
+  });
+}
