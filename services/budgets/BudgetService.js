@@ -130,7 +130,7 @@ class BudgetService {
       return this.repository.update(foundBudget);
     }
 
-    return false;
+    return true;
   }
 
   /**

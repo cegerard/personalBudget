@@ -146,10 +146,10 @@ describe('Route', () => {
       await request(app).delete(`/expenses/${newExpense._id}`).expect(http.INTERNAL_SERVER_ERROR);
     });
 
-    it('should return a 500 error when expense does not exist in budget line', async () => {
+    it('should return a 204 when expense does not exist in budget line', async () => {
       let newExpense = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: '1' } });
       newExpense = await newExpense.save();
-      await request(app).delete(`/expenses/${newExpense._id}`).expect(http.INTERNAL_SERVER_ERROR);
+      await request(app).delete(`/expenses/${newExpense._id}`).expect(http.NO_CONTENT);
     });
   });
 
