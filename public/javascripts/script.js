@@ -50,3 +50,12 @@ function filterExpenseOnBudgetName() {
     window.location.replace(`/expenses/filter?budgetName=${budgetNameQuery}`);
   }
 }
+
+function budgetTypeChange() {
+  newBudgetType = document.forms[0].budgetTypeEdit.value;
+  if(newBudgetType === 'RESERVE') {
+    document.getElementById('reserveAttributes').classList.remove('d-none');
+  } else {
+    document.getElementById('reserveAttributes').classList.add('d-none');
+  }
+}

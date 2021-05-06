@@ -112,7 +112,7 @@ describe('/budgets', () => {
     });
   });
 
-  describe('PATCH /budgets', () => {
+  describe('POST /budgets/:id', () => {
     const budgetId = '5';
 
     let budgetBeforeUpdate;
@@ -194,6 +194,18 @@ describe('/budgets', () => {
 
       const budget = await budgetRepository.findOneById(budgetWithExpenseId);
       expect(budget.available).toEqual(29);
+    });
+
+    it('should set the available value when passed as parameters', async () => {
+      const budgetWithExpenseId = '4';
+      await request(app)
+        .post(`/budgets/${budgetWithExpenseId}`)
+        .set('Content-Type', 'application/json')
+        .send({ available: 4000 })
+        .expect(http.OK);
+
+      const budget = await budgetRepository.findOneById(budgetWithExpenseId);
+      expect(budget.available).toEqual(4000);
     });
 
     it('should return 404 when budget does not exists on amount update', async () => {

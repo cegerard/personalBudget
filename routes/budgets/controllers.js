@@ -34,6 +34,10 @@ class BudgetController {
   }
 
   async patch(req, res) {
+     // TODO validate and convert attributes to update only updatable fields
+     if(req.body.available) {
+       req.body.available = +req.body.available;
+     }
     const isUpdated = await this.budgetService.patch(req.params.id, req.body);
     if (isUpdated) {
       renderBudgetPage(req, res, this.budgetService);
