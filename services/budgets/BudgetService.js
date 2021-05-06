@@ -68,15 +68,15 @@ class BudgetService {
    * @param {string} attributes.description
    * @param {string} attributes.category
    * @param {string} attributes.type
+   * @param {number} attributes.available
    * @return {boolean} true if the budget has been udpated, false otherwise
    */
   async patch(budgetId, attributes) {
-    // TODO validate and convert attributes to update only updatable fields
     if (attributes.name !== undefined) {
       attributes.slug = slugify(attributes.name, { lower: true });
     }
 
-    if (attributes.amount !== undefined) {
+    if (attributes.amount !== undefined && attributes.available === undefined) {
       const budget = await this.repository.findOneById(budgetId);
 
       if (budget === undefined) {

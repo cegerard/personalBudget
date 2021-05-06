@@ -43,13 +43,16 @@ block content
               label(for="budgetCategoryEdit") Category
               input.form-control(id="budgetCategoryEdit" name="category" type="text" value=`${budget.category}` aria-describedby="budgetCategoryEditHelp")
               label(for="budgetTypeEdit") Type
-              select.form-control(id="budgetTypeEdit" name="type" aria-describedby="budgetTypeEditHelp")
+              select.form-control(id="budgetTypeEdit" name="type" aria-describedby="budgetTypeEditHelp", onchange="budgetTypeChange()")
                   if budget.type === "NORMAL" 
                     option.selected(value="NORMAL") Normal
                     option(value="RESERVE") Réserve
                   else 
                     option.selected(value="RESERVE") Réserve
                     option(value="NORMAL") Normal
+              .form-group(id="reserveAttributes" class={"d-none": budget.type === "NORMAL"})
+                label(for="budgetAvailableEdit") Solde actuel (€)
+                input.form-control(id="budgetAvailableEdit" name="available" type="number" step="0.01" value=`${budget.available}` aria-describedby="budgetAvailableEditHelp")
             .modal-footer
               button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
               button(type="submit" class="btn btn-primary") Edit
