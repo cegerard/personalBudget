@@ -105,7 +105,7 @@ class BudgetService {
     const foundBudget = await this.repository.findOneById(budgetId);
     foundBudget.expenses.push(expense);
     // compute available field
-    foundBudget.available -= expense.amount;
+    foundBudget.available = this.substractFloat(foundBudget.available, expense.amount);
 
     return this.repository.update(foundBudget);
   }
@@ -167,6 +167,12 @@ class BudgetService {
     foundBudget.expenses[expenseIndex] = expenseToUpdate;
 
     return this.repository.update(foundBudget);
+  }
+
+  private
+
+  substractFloat(base, toSubstract) {
+    return +(base - toSubstract).toFixed(2);
   }
 }
 

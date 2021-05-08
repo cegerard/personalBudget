@@ -7,6 +7,7 @@ const BudgetService = require('./BudgetService');
 
 describe('BudgetService', () => {
   const SECOND_BUDGET_ID = '2';
+  const THIRD_BUDGET_ID = '3';
   const FOURTH_BUDGET_ID = '4';
 
   let budgetService;
@@ -196,6 +197,18 @@ describe('BudgetService', () => {
       const updatedBudget = await BudgetModelStub.findById(FOURTH_BUDGET_ID, []);
 
       expect(updatedBudget.available).toEqual(37);
+    });
+
+    it('should update the budget available field with correct parsing', async () => {
+      await budgetService.addExpense(THIRD_BUDGET_ID, {
+        _id: '42',
+        name: 'new expense',
+        amount: -1.19,
+        date: '2020-12-29',
+      });
+      const updatedBudget = await BudgetModelStub.findById(THIRD_BUDGET_ID, []);
+
+      expect(updatedBudget.available).toEqual(858.31);
     });
   });
 
