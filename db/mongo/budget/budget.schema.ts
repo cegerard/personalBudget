@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const ExpenseSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -16,10 +16,10 @@ const budgetSchema = new mongoose.Schema({
     type: String,
     enum: ['NORMAL', 'RESERVE'],
     default: 'NORMAL',
-    require: true
+    require: true,
   },
   expenses: { type: [ExpenseSchema], default: [] },
   category: { type: String },
 });
 
-module.exports = budgetSchema;
+export default budgetSchema;

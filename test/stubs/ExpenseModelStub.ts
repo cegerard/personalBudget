@@ -1,14 +1,16 @@
-const uid = require('uid');
-const { get } = require('lodash');
+import uid from 'uid';
+import { get } from 'lodash';
 
-const expenseFixture = require('../fixtures/expenseFixture');
+import expenseFixture from '../fixtures/expenseFixture';
 
 const PATCHABLE_FIELDS = ['name', 'amount', 'date'];
 
-module.exports = class ExpenseModelStub {
-  static expenseStore = [];
+export default class ExpenseModelStub {
+  static expenseStore: any[] = [];
 
-  constructor(expense) {
+  private expense: any;
+
+  constructor(expense: any) {
     this.expense = expense;
   }
 
@@ -16,7 +18,7 @@ module.exports = class ExpenseModelStub {
     ExpenseModelStub.expenseStore = JSON.parse(JSON.stringify(expenseFixture.list));
   }
 
-  static find(query) {
+  static find(query: any) {
     if (query) {
       const compareKeys = Object.keys(query);
       const filteredExpenses = ExpenseModelStub.expenseStore.filter((expense) => {
@@ -33,12 +35,12 @@ module.exports = class ExpenseModelStub {
     return Promise.resolve(ExpenseModelStub.expenseStore);
   }
 
-  static findById(id) {
+  static findById(id: string) {
     const foundExpense = ExpenseModelStub.expenseStore.find((budget) => budget._id === id);
     return Promise.resolve(foundExpense);
   }
 
-  static remove(query = {}) {
+  static remove(query: any) {
     const compareKeys = Object.keys(query);
     let deletedExpenses = 0;
 
@@ -58,7 +60,7 @@ module.exports = class ExpenseModelStub {
     return Promise.resolve({ deletedCount: deletedExpenses });
   }
 
-  static updateOne(expenseFilter, attributes) {
+  static updateOne(expenseFilter: any, attributes: any) {
     const expenseIndex = ExpenseModelStub.expenseStore.findIndex(
       (expense) => expense._id === expenseFilter._id
     );
@@ -84,4 +86,4 @@ module.exports = class ExpenseModelStub {
     ExpenseModelStub.expenseStore.push(this.expense);
     return Promise.resolve(this.expense);
   }
-};
+}

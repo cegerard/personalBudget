@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const BudgetLineSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -11,4 +11,4 @@ const expenseSchema = new mongoose.Schema({
   budgetLine: { type: BudgetLineSchema, required: true },
 });
 
-module.exports = expenseSchema;
+export default expenseSchema;

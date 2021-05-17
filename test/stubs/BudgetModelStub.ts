@@ -1,20 +1,21 @@
-const uid = require('uid');
-
-const budgetFixture = require('../fixtures/budgetFixture');
+import uid from 'uid';
+import budgetFixture from '../fixtures/budgetFixture';
 
 const PATCHABLE_FIELDS = ['name', 'slug', 'amount', 'available', 'description', 'category', 'type'];
 
-module.exports = class BudgetModelStub {
-  static budgetStore = [];
+export default class BudgetModelStub {
+  static budgetStore: any[] = [];
 
-  constructor(budget) {
+  private budget: any;
+
+  constructor(budget: any) {
     this.budget = {
       ...budget,
       amount: Number(budget.amount),
       available: Number(budget.available),
     };
 
-    if(this.budget.type === undefined) {
+    if (this.budget.type === undefined) {
       this.budget.type = 'NORMAL';
     }
   }
@@ -23,13 +24,13 @@ module.exports = class BudgetModelStub {
     BudgetModelStub.budgetStore = JSON.parse(JSON.stringify(budgetFixture.list));
   }
 
-  static find(_, selectedFields) {
+  static find(_: any, selectedFields: string[]) {
     if (selectedFields.length === 0) {
       return Promise.resolve(BudgetModelStub.budgetStore);
     }
 
     const projectedBudgets = BudgetModelStub.budgetStore.map((budget) => {
-      return selectedFields.reduce((acc, field) => {
+      return selectedFields.reduce((acc: any, field) => {
         acc[field] = budget[field];
         return acc;
       }, {});
@@ -37,20 +38,20 @@ module.exports = class BudgetModelStub {
     return Promise.resolve(projectedBudgets);
   }
 
-  static findById(id, selectedFields) {
+  static findById(id: string, selectedFields: string[]) {
     const foundBudget = BudgetModelStub.budgetStore.find((budget) => budget._id === id);
     if (selectedFields.length === 0) {
       return Promise.resolve(foundBudget);
     }
 
-    const projectedBudget = selectedFields.reduce((acc, field) => {
+    const projectedBudget = selectedFields.reduce((acc: any, field) => {
       acc[field] = foundBudget[field];
       return acc;
     }, {});
     return Promise.resolve(projectedBudget);
   }
 
-  static remove(budgetFilter) {
+  static remove(budgetFilter: any) {
     const budgetIndex = BudgetModelStub.budgetStore.findIndex(
       (budget) => budget._id === budgetFilter._id
     );
@@ -61,7 +62,7 @@ module.exports = class BudgetModelStub {
     return Promise.resolve({ deletedCount: 0 });
   }
 
-  static replaceOne(budgetFilter, newBudgetValue) {
+  static replaceOne(budgetFilter: any, newBudgetValue: any) {
     const budgetIndex = BudgetModelStub.budgetStore.findIndex(
       (budget) => budget._id === budgetFilter._id
     );
@@ -69,7 +70,7 @@ module.exports = class BudgetModelStub {
     return Promise.resolve({ nModified: budgetsReplaced.length });
   }
 
-  static updateOne(budgetFilter, attributes) {
+  static updateOne(budgetFilter: any, attributes: any) {
     const budgetIndex = BudgetModelStub.budgetStore.findIndex(
       (budget) => budget._id === budgetFilter._id
     );
@@ -95,4 +96,4 @@ module.exports = class BudgetModelStub {
     BudgetModelStub.budgetStore.push(this.budget);
     return Promise.resolve(this.budget);
   }
-};
+}

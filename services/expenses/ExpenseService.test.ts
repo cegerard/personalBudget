@@ -1,10 +1,10 @@
-const ExpenseRepository = require('../../data').ExpenseRepository;
-const expenseFixture = require('../../test/fixtures/expenseFixture');
-const ExpenseModelStub = require('../../test/stubs/ExpenseModelStub');
-const ExpenseService = require('./ExpenseService');
+import { ExpenseRepository } from '../../data';
+import expenseFixture from '../../test/fixtures/expenseFixture';
+import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
+import ExpenseService from './ExpenseService';
 
 describe('ExpenseService', () => {
-  let expenseService;
+  let expenseService: ExpenseService;
 
   beforeAll(() => {
     const expenseRepository = new ExpenseRepository(ExpenseModelStub);
@@ -103,7 +103,7 @@ describe('ExpenseService', () => {
         },
       };
 
-      let patchRes;
+      let patchRes: any;
 
       beforeEach(async () => {
         patchRes = await expenseService.patch(EXPENSE_ID, {

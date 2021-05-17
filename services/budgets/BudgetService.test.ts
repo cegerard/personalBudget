@@ -1,16 +1,15 @@
-const ExpenseRepository = require('../../data').ExpenseRepository;
-const BudgetRepository = require('../../data').BudgetRepository;
-const budgetFixture = require('../../test/fixtures/budgetFixture');
-const ExpenseModelStub = require('../../test/stubs/ExpenseModelStub');
-const BudgetModelStub = require('../../test/stubs/BudgetModelStub');
-const BudgetService = require('./BudgetService');
+import { BudgetRepository, ExpenseRepository } from '../../data';
+import budgetFixture from '../../test/fixtures/budgetFixture';
+import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
+import BudgetModelStub from '../../test/stubs/BudgetModelStub';
+import BudgetService from './BudgetService';
 
 describe('BudgetService', () => {
   const SECOND_BUDGET_ID = '2';
   const THIRD_BUDGET_ID = '3';
   const FOURTH_BUDGET_ID = '4';
 
-  let budgetService;
+  let budgetService: BudgetService;
 
   beforeAll(() => {
     const budgetRepository = new BudgetRepository(BudgetModelStub);
@@ -25,7 +24,7 @@ describe('BudgetService', () => {
 
   describe('list', () => {
     it('should return the list of budgets', async () => {
-      const list = await budgetService.list();
+      const list = await budgetService.list([]);
       expect(list).toEqual(budgetFixture.list);
     });
 
@@ -44,7 +43,7 @@ describe('BudgetService', () => {
 
   describe('getById', () => {
     it('should return a budget from its id', async () => {
-      const budget = await budgetService.getById(SECOND_BUDGET_ID);
+      const budget = await budgetService.getById(SECOND_BUDGET_ID, []);
       expect(budget).toEqual(budgetFixture.list[1]);
     });
 
@@ -75,7 +74,7 @@ describe('BudgetService', () => {
         available: 100,
         description: 'budget description',
         expenses: [],
-        type: 'NORMAL'
+        type: 'NORMAL',
       };
 
       const budget = await budgetService.create({
@@ -99,7 +98,7 @@ describe('BudgetService', () => {
         description: 'budget description',
         expenses: [],
         category: 'test',
-        type: 'RESERVE'
+        type: 'RESERVE',
       };
 
       const budget = await budgetService.create({
@@ -143,7 +142,7 @@ describe('BudgetService', () => {
         description: 'it has been updated',
         category: 'add cat',
         expenses: [],
-        type: 'RESERVE'
+        type: 'RESERVE',
       };
 
       await budgetService.patch(budget_id, {
@@ -151,7 +150,7 @@ describe('BudgetService', () => {
         amount: expectedBudget.amount,
         description: expectedBudget.description,
         category: expectedBudget.category,
-        type: expectedBudget.type
+        type: expectedBudget.type,
       });
 
       const updatedBudget = await BudgetModelStub.findById(budget_id, []);
