@@ -1,10 +1,8 @@
-'use strict';
+import mongoose from 'mongoose';
 
-const mongoose = require('mongoose');
-
-const budgetModel = require('./budget');
-const expenseModel = require('./expense');
-const migrate = require('./migration');
+import budgetModel from './budget';
+import expenseModel from './expense';
+import migrate from './migration';
 
 async function connectMongo() {
   const USER = process.env.USER;
@@ -18,12 +16,7 @@ async function connectMongo() {
 }
 
 function disconnectMongo() {
-  mongoose.disconnect()
+  mongoose.disconnect();
 }
 
-module.exports = {
-  connectDb: connectMongo,
-  disconnectDb: disconnectMongo,
-  budgetModel,
-  expenseModel,
-}
+export { connectMongo as connectDb, disconnectMongo as disconnectDb, budgetModel, expenseModel };

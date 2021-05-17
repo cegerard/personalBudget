@@ -1,5 +1,9 @@
-class ExpenseService {
-  constructor(expenseRepository) {
+import ExpenseRepository from '../../data/expense/ExpenseRepository';
+
+export default class ExpenseService {
+  private repository: ExpenseRepository;
+
+  constructor(expenseRepository: ExpenseRepository) {
     this.repository = expenseRepository;
   }
 
@@ -8,7 +12,7 @@ class ExpenseService {
    * @returns list of expense objects
    */
   list() {
-    return this.repository.find();
+    return this.repository.find(null);
   }
 
   /**
@@ -17,7 +21,7 @@ class ExpenseService {
    * @param {Object} query.budgetLine
    * @param {string} query.budgetLine.name
    */
-  search(query) {
+  search(query: any) {
     // TODO validate query
     return this.repository.find(query);
   }
@@ -33,7 +37,7 @@ class ExpenseService {
    * @param {Obstringject} expense.budgetLine.name
    * @returns {Expense} the newly created expense
    */
-  add(expense) {
+  add(expense: any) {
     // TODO validate expense
     return this.repository.create(expense);
   }
@@ -42,7 +46,7 @@ class ExpenseService {
    * Remove an existing expense from the default expense repository
    * @param {Object} query
    */
-  remove(query) {
+  remove(query: any) {
     return this.repository.delete(query);
   }
 
@@ -54,7 +58,7 @@ class ExpenseService {
    * @param {Number} attributes.amount
    * @param {string} attributes.date
    */
-  async patch(expenseId, attributes) {
+  async patch(expenseId: string, attributes: any) {
     // TODO validate and convert attributes to update only updatable fields
     if (attributes.amount !== undefined) {
       attributes.amount = Number(attributes.amount);

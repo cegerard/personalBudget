@@ -1,16 +1,17 @@
-const http = require('http-status-codes').StatusCodes;
-const slugify = require('slugify');
-const request = require('supertest');
+import StatusCodes from 'http-status-codes';
+import slugify from 'slugify';
+import request from 'supertest';
 
-const BudgetModelStub = require('../../test/stubs/BudgetModelStub');
-const ExpenseModelStub = require('../../test/stubs/ExpenseModelStub');
-const app = require('../../app').app;
-const BudgetRepository = require('../../data').BudgetRepository;
-const ExpenseRepository = require('../../data').ExpenseRepository;
+import BudgetModelStub from '../../test/stubs/BudgetModelStub';
+import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
+import application from '../../app';
+import { BudgetRepository, ExpenseRepository } from '../../data';
+
+const app = application.app;
 
 describe('/budgets', () => {
-  let budgetRepository;
-  let expenseRepository;
+  let budgetRepository: BudgetRepository;
+  let expenseRepository: ExpenseRepository;
 
   beforeAll(() => {
     budgetRepository = new BudgetRepository(BudgetModelStub);
@@ -23,7 +24,7 @@ describe('/budgets', () => {
 
   describe('GET /budgets', () => {
     it('should response with 200', async () => {
-      await request(app).get('/budgets').expect(http.OK);
+      await request(app).get('/budgets').expect(StatusCodes.OK);
     });
 
     it('should render budgets page', async () => {
@@ -40,7 +41,7 @@ describe('/budgets', () => {
     const budgetUrl = `/budgets/${budgetId}`;
 
     it('should response with 200', async () => {
-      await request(app).get(budgetUrl).expect(http.OK);
+      await request(app).get(budgetUrl).expect(StatusCodes.OK);
     });
 
     it('should render budget details page', async () => {
@@ -65,10 +66,10 @@ describe('/budgets', () => {
         .post('/budgets')
         .set('Content-Type', 'application/json')
         .send(newBudget)
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const budgets = await budgetRepository.find();
-      const budgetsFound = budgets.filter((budget) => {
+      const budgetsFound = budgets.filter((budget: any) => {
         return budget.name === newBudget.name;
       });
       expect(budgetsFound.length).toEqual(1);
@@ -89,17 +90,17 @@ describe('/budgets', () => {
     it('should remove budget line and all its expenses', async () => {
       await request(app)
         .delete('/budgets/4')
-        .expect(http.NO_CONTENT)
+        .expect(StatusCodes.NO_CONTENT)
         .then(async () => {
           const allBudgets = await budgetRepository.find();
-          const budgetNotFound = allBudgets.find((budget) => {
+          const budgetNotFound = allBudgets.find((budget: any) => {
             return budget._id === '4';
           });
 
           expect(budgetNotFound).toBeUndefined();
 
-          const allExpenses = await expenseRepository.find();
-          const expensesFound = allExpenses.filter((expense) => {
+          const allExpenses = await expenseRepository.find(undefined);
+          const expensesFound = allExpenses.filter((expense: any) => {
             return expense.budgetLine._id === '4';
           });
 
@@ -115,7 +116,7 @@ describe('/budgets', () => {
   describe('POST /budgets/:id', () => {
     const budgetId = '5';
 
-    let budgetBeforeUpdate;
+    let budgetBeforeUpdate: any;
 
     beforeEach(async () => {
       budgetBeforeUpdate = await budgetRepository.findOneById(budgetId);
@@ -132,7 +133,7 @@ describe('/budgets', () => {
         .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ [field]: value })
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const budget = await budgetRepository.findOneById(budgetId);
       expect(budget[field]).toEqual(value);
@@ -143,7 +144,7 @@ describe('/budgets', () => {
         .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ name: 'new name' })
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const budget = await budgetRepository.findOneById(budgetId);
       delete budget.name;
@@ -155,7 +156,7 @@ describe('/budgets', () => {
         .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ name: 'new name', notexist: 'should not add', dont: 'aie' })
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const budget = await budgetRepository.findOneById(budgetId);
       expect(budget.notexist).toBeUndefined();
@@ -167,7 +168,7 @@ describe('/budgets', () => {
         .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ name: 'new name' })
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const budget = await budgetRepository.findOneById(budgetId);
       expect(budget.slug).toEqual('new-name');
@@ -178,7 +179,7 @@ describe('/budgets', () => {
         .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 666 })
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const budget = await budgetRepository.findOneById(budgetId);
       expect(budget.available).toEqual(666);
@@ -190,7 +191,7 @@ describe('/budgets', () => {
         .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100 })
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const budget = await budgetRepository.findOneById(budgetWithExpenseId);
       expect(budget.available).toEqual(29);
@@ -202,7 +203,7 @@ describe('/budgets', () => {
         .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
         .send({ available: 4000 })
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const budget = await budgetRepository.findOneById(budgetWithExpenseId);
       expect(budget.available).toEqual(4000);
@@ -214,7 +215,7 @@ describe('/budgets', () => {
         .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100 })
-        .expect(http.NOT_FOUND);
+        .expect(StatusCodes.NOT_FOUND);
     });
 
     it('should render budget details page', async () => {

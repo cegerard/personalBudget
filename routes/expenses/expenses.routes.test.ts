@@ -1,15 +1,16 @@
-const http = require('http-status-codes').StatusCodes;
-const request = require('supertest');
+import StatusCodes from 'http-status-codes';
+import request from 'supertest';
 
-const ExpenseModelStub = require('../../test/stubs/ExpenseModelStub');
-const BudgetModelStub = require('../../test/stubs/BudgetModelStub');
-const app = require('../../app').app;
-const ExpenseRepository = require('../../data').ExpenseRepository;
-const BudgetRepository = require('../../data').BudgetRepository;
+import BudgetModelStub from '../../test/stubs/BudgetModelStub';
+import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
+import application from '../../app';
+import { BudgetRepository, ExpenseRepository } from '../../data';
+
+const app = application.app;
 
 describe('Route', () => {
-  let budgetRepository;
-  let expenseRepository;
+  let budgetRepository: BudgetRepository;
+  let expenseRepository: ExpenseRepository;
 
   beforeAll(() => {
     budgetRepository = new BudgetRepository(BudgetModelStub);
@@ -23,7 +24,7 @@ describe('Route', () => {
 
   describe('GET /expenses', () => {
     it('should response with 200', async () => {
-      await request(app).get('/expenses').expect(http.OK);
+      await request(app).get('/expenses').expect(StatusCodes.OK);
     });
 
     it('should render expenses page', async () => {
@@ -37,11 +38,11 @@ describe('Route', () => {
 
   describe('GET /expense/:id', () => {
     it('should response with 200', async () => {
-      await request(app).get('/expenses/100').expect(http.OK);
+      await request(app).get('/expenses/100').expect(StatusCodes.OK);
     });
 
     it('should response with 404 if expense does not exist', async () => {
-      await request(app).get('/expenses/not_found').expect(http.NOT_FOUND);
+      await request(app).get('/expenses/not_found').expect(StatusCodes.NOT_FOUND);
     });
 
     it('should render expenses page', async () => {
@@ -55,7 +56,7 @@ describe('Route', () => {
 
   describe('GET /expenses/filter', () => {
     it('should response with 200', async () => {
-      await request(app).get('/expenses/filter?budgetName=Essence').expect(http.OK);
+      await request(app).get('/expenses/filter?budgetName=Essence').expect(StatusCodes.OK);
     });
 
     it('should render expenses filtered page', async () => {
@@ -80,10 +81,10 @@ describe('Route', () => {
         .post('/expenses')
         .set('Content-Type', 'application/json')
         .send(newExpense)
-        .expect(http.OK)
+        .expect(StatusCodes.OK)
         .then(async () => {
-          const expenses = await expenseRepository.find();
-          const expensesFound = expenses.filter((expense) => {
+          const expenses = await expenseRepository.find(undefined);
+          const expensesFound = expenses.filter((expense: any) => {
             return expense.name === newExpense.name;
           });
           expect(expensesFound.length).toEqual(1);
@@ -115,20 +116,20 @@ describe('Route', () => {
     it('should remove expense from expense list and the budget line', async () => {
       await request(app)
         .delete('/expenses/100')
-        .expect(http.NO_CONTENT)
+        .expect(StatusCodes.NO_CONTENT)
         .then(async () => {
-          const allExpenses = await expenseRepository.find();
-          const expenseNotFound = allExpenses.find((expense) => {
+          const allExpenses = await expenseRepository.find(undefined);
+          const expenseNotFound = allExpenses.find((expense: any) => {
             return expense._id === 100;
           });
 
           expect(expenseNotFound).toBeUndefined();
 
           const allBudgets = await budgetRepository.find();
-          const budgetList = allBudgets.find((budget) => {
+          const budgetList = allBudgets.find((budget: any) => {
             return budget._id === '4';
           });
-          const expenseNotFoundInBudgetLine = budgetList.expenses.find((expense) => {
+          const expenseNotFoundInBudgetLine = budgetList.expenses.find((expense: any) => {
             return expense._id === 100;
           });
 
@@ -137,26 +138,31 @@ describe('Route', () => {
     });
 
     it('should return a 404 error when the expense can not be deleted', async () => {
-      await request(app).delete('/expenses/404').expect(http.NOT_FOUND);
+      await request(app).delete('/expenses/404').expect(StatusCodes.NOT_FOUND);
     });
 
     it('should return a 500 error when the budget line does not exists', async () => {
-      let newExpense = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: 'notExist' } });
-      newExpense = await newExpense.save();
-      await request(app).delete(`/expenses/${newExpense._id}`).expect(http.INTERNAL_SERVER_ERROR);
+      const expenseModel = new ExpenseModelStub({
+        name: 'todelete',
+        budgetLine: { _id: 'notExist' },
+      });
+      let newExpense = await expenseModel.save();
+      await request(app)
+        .delete(`/expenses/${newExpense._id}`)
+        .expect(StatusCodes.INTERNAL_SERVER_ERROR);
     });
 
     it('should return a 204 when expense does not exist in budget line', async () => {
-      let newExpense = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: '1' } });
-      newExpense = await newExpense.save();
-      await request(app).delete(`/expenses/${newExpense._id}`).expect(http.NO_CONTENT);
+      const expenseModel = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: '1' } });
+      let newExpense = await expenseModel.save();
+      await request(app).delete(`/expenses/${newExpense._id}`).expect(StatusCodes.NO_CONTENT);
     });
   });
 
   describe('PATCH /expenses', () => {
     const expenseId = '100';
 
-    let expenseBeforeUpdate;
+    let expenseBeforeUpdate: any;
 
     beforeEach(async () => {
       const expenses = await expenseRepository.find({ _id: expenseId });
@@ -177,7 +183,7 @@ describe('Route', () => {
             _id: expenseBeforeUpdate.budgetLine._id,
           },
         })
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const expenses = await expenseRepository.find({ _id: expenseId });
       expect(expenses[0][field]).toEqual(value);
@@ -192,7 +198,7 @@ describe('Route', () => {
             _id: 'new_budget_line_id',
           },
         })
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const expenses = await expenseRepository.find({ _id: expenseId });
       expect(expenses[0]).toEqual(expenseBeforeUpdate);
@@ -208,7 +214,7 @@ describe('Route', () => {
           dont: 'aie',
           budgetlineId: expenseBeforeUpdate.budgetLine._id,
         })
-        .expect(http.OK);
+        .expect(StatusCodes.OK);
 
       const expenses = await expenseRepository.find({ _id: expenseId });
       expect(expenses[0].notexist).toBeUndefined();
@@ -220,7 +226,7 @@ describe('Route', () => {
         .post(`/expenses/not-exists`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100 })
-        .expect(http.NOT_FOUND);
+        .expect(StatusCodes.NOT_FOUND);
     });
 
     it('should render expenses page', async () => {
@@ -228,7 +234,7 @@ describe('Route', () => {
         .post(`/expenses/${expenseId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100, budgetlineId: expenseBeforeUpdate.budgetLine._id })
-        .expect(http.OK)
+        .expect(StatusCodes.OK)
         .then((res) => {
           expect(res.text).toMatchSnapshot();
         });

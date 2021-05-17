@@ -1,0 +1,20 @@
+{
+  "extends": "@tsconfig/node14/tsconfig.json",
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "outDir": "dist/"
+  },
+  "include": [
+    "data/**/*",
+    "db/**/*",
+    "routes/**/*",
+    "services/**/*",
+    "app.ts",
+    "AppError.ts",
+    "bootstrap.ts"
+  ],
+  "exclude": ["node_modules", "**/*.test.ts"]
+}

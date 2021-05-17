@@ -1,12 +1,14 @@
-const http = require('http-status-codes').StatusCodes;
-const request = require('supertest');
+import StatusCodes from 'http-status-codes';
+import request from 'supertest';
 
-const app = require('../../app').app;
+import application from '../../app';
+
+const app = application.app;
 
 describe('Home', () => {
   describe('GET /', () => {
     it('should response with 302', async () => {
-      await request(app).get('/').expect(http.MOVED_TEMPORARILY);
+      await request(app).get('/').expect(StatusCodes.MOVED_TEMPORARILY);
     });
 
     it('should render home page', async () => {

@@ -1,6 +1,4 @@
-const { model } = require('mongoose');
-
-module.exports = {
+export default {
   list: [
     {
       _id: '100',

@@ -5,8 +5,8 @@
 // Each budget is clear from its expenses.
 // Expenses are not deleted.
 
-const { BudgetRepository } = require('../data');
-const db = require('../db/mongo');
+const { BudgetRepository } = require('../dist/data');
+const db = require('../dist/db/mongo');
 
 console.log('Connecting database...');
 db.connectDb();

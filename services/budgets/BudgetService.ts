@@ -1,26 +1,22 @@
-const slugify = require('slugify');
+import slugify from 'slugify';
 
-class BudgetService {
-  constructor(budgetRepository, expenseRepository) {
+import BudgetRepository from '../../data/budget/BudgetRespository';
+import ExpenseRepository from '../../data/expense/ExpenseRepository';
+
+export default class BudgetService {
+  private repository: BudgetRepository;
+  private expenseRepository: ExpenseRepository;
+
+  constructor(budgetRepository: BudgetRepository, expenseRepository: ExpenseRepository) {
     this.repository = budgetRepository;
     this.expenseRepository = expenseRepository;
   }
 
-  /**
-   * List all budget from the default budget repository
-   * @param {string[]} select selected field from budget model
-   * @returns Promise: list of budget objects
-   */
-  list(select) {
+  list(select: string[]) {
     return this.repository.find(select);
   }
 
-  /**
-   * Get a budget from the default budget repository
-   * @param {string} budgetId
-   * @param {string[]} select selected fields from budget model
-   */
-  getById(budgetId, select) {
+  getById(budgetId: string, select: string[]) {
     return this.repository.findOneById(budgetId, select);
   }
 
@@ -34,7 +30,7 @@ class BudgetService {
    * @param {string} newBudget.type
    * @returns {Object} Promise: the saved object
    */
-  create(newBudget) {
+  create(newBudget: any) {
     // TODO Validate input data using an adapter
     return this.repository.create({
       name: newBudget.name,
@@ -46,12 +42,7 @@ class BudgetService {
     });
   }
 
-  /**
-   * Remove a budget from its identifier and remove all related expenses
-   * @param {string} budgetId
-   * @returns {boolean} true if the budget and all its expenses have been removed, false otherwise
-   */
-  async remove(budgetId) {
+  async remove(budgetId: string) {
     const isDeleted = await this.repository.delete(budgetId);
     if (isDeleted) {
       this.expenseRepository.delete({ 'budgetLine._id': budgetId });
@@ -71,7 +62,7 @@ class BudgetService {
    * @param {number} attributes.available
    * @return {boolean} true if the budget has been udpated, false otherwise
    */
-  async patch(budgetId, attributes) {
+  async patch(budgetId: string, attributes: any) {
     if (attributes.name !== undefined) {
       attributes.slug = slugify(attributes.name, { lower: true });
     }
@@ -100,7 +91,7 @@ class BudgetService {
    * @param {string} expense.date
    * @returns {boolean} true the expense has been added to the budget, false otherwise
    */
-  async addExpense(budgetId, expense) {
+  async addExpense(budgetId: string, expense: any) {
     // TODO adapt expense to BudgetExpense sub-model
     const foundBudget = await this.repository.findOneById(budgetId);
     foundBudget.expenses.push(expense);
@@ -115,14 +106,14 @@ class BudgetService {
    * @param {string} budgetId
    * @param {string} expenseId
    */
-  async removeExpense(budgetId, expenseId) {
+  async removeExpense(budgetId: string, expenseId: string) {
     const foundBudget = await this.repository.findOneById(budgetId);
     if (!foundBudget) {
       return false;
     }
 
     const expenseIndex = foundBudget.expenses.findIndex(
-      (expense) => expense._id.toString() === expenseId
+      (expense: any) => expense._id.toString() === expenseId
     );
     if (expenseIndex !== -1) {
       const deletedExpenses = foundBudget.expenses.splice(expenseIndex, 1);
@@ -133,12 +124,7 @@ class BudgetService {
     return true;
   }
 
-  /**
-   * Update an expense in the budget line and update the available field
-   * @param {string} expenseId the expense identifier
-   * @returns {boolean} true the expense and the budget have been updated, false otherwise
-   */
-  async updateExpense(expenseId) {
+  async updateExpense(expenseId: string) {
     const foundExpenses = await this.expenseRepository.find({ _id: expenseId });
     if (foundExpenses.length === 0) {
       return false;
@@ -149,7 +135,7 @@ class BudgetService {
     const foundBudget = await this.repository.findOneById(updatedExpenses.budgetLine._id);
 
     const expenseIndex = foundBudget.expenses.findIndex(
-      (expense) => expense._id.toString() === expenseId
+      (expense: any) => expense._id.toString() === expenseId
     );
 
     if (expenseIndex === -1) {
@@ -169,11 +155,7 @@ class BudgetService {
     return this.repository.update(foundBudget);
   }
 
-  private
-
-  substractFloat(base, toSubstract) {
+  private substractFloat(base: number, toSubstract: number) {
     return +(base - toSubstract).toFixed(2);
   }
 }
-
-module.exports = BudgetService;

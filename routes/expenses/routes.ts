@@ -1,6 +1,10 @@
-const { Router } = require('express');
+import express from 'express';
 
-function init(controller) {
+import ExpenseController from './controllers';
+
+const Router = express.Router;
+
+function init(controller: ExpenseController) {
   const router = Router();
 
   router.get('/', controller.list.bind(controller));
@@ -13,4 +17,4 @@ function init(controller) {
   return router;
 }
 
-module.exports = { init };
+export default { init };

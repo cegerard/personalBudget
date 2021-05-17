@@ -1,22 +1,27 @@
-const http = require('http-status-codes').StatusCodes;
+import { StatusCodes } from 'http-status-codes';
+import BudgetService from '../../services/budgets/BudgetService';
+import ExpenseService from '../../services/expenses/ExpenseService';
 
 const selectedField = ['_id', 'name'];
 
-class ExpenseController {
-  constructor(budgetService, expenseService) {
+export default class ExpenseController {
+  private budgetService: BudgetService;
+  private expenseService: ExpenseService;
+
+  constructor(budgetService: BudgetService, expenseService: ExpenseService) {
     this.budgetService = budgetService;
     this.expenseService = expenseService;
   }
 
-  async list(_, res) {
+  async list(_: any, res: any) {
     this._renderExpenseListPage(res);
   }
 
-  async filterByBudgetLine(req, res) {
+  async filterByBudgetLine(req: any, res: any) {
     this._renderExpenseListPage(res, { 'budgetLine.name': req.query.budgetName });
   }
 
-  async get(req, res) {
+  async get(req: any, res: any) {
     const expenses = await this.expenseService.search({ _id: req.params.id });
     if (expenses.length > 0) {
       res.render('expense', {
@@ -25,10 +30,10 @@ class ExpenseController {
       });
       return;
     }
-    res.sendStatus(http.NOT_FOUND);
+    res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
-  async create(req, res) {
+  async create(req: any, res: any) {
     const budgetLineId = req.body.budgetlineId;
     const budgetLine = await this.budgetService.getById(budgetLineId, selectedField);
     const baseExpense = {
@@ -43,12 +48,12 @@ class ExpenseController {
     this._renderExpenseListPage(res);
   }
 
-  async delete(req, res) {
+  async delete(req: any, res: any) {
     const expenseToDelete = await this.expenseService.search({ _id: req.params.id });
     const isExpenseDeleted = await this.expenseService.remove({ _id: req.params.id });
 
     if (!isExpenseDeleted) {
-      res.status(http.NOT_FOUND).end();
+      res.status(StatusCodes.NOT_FOUND).end();
       return;
     }
 
@@ -58,14 +63,14 @@ class ExpenseController {
     );
 
     if (isExpenseRemoveFromBudget) {
-      res.status(http.NO_CONTENT).end();
+      res.status(StatusCodes.NO_CONTENT).end();
       return;
     }
 
-    res.status(http.INTERNAL_SERVER_ERROR).end();
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
   }
 
-  async patch(req, res) {
+  async patch(req: any, res: any) {
     //TODO adapt the body
     const isUpdated = await this.expenseService.patch(req.params.id, req.body);
     if (isUpdated) {
@@ -73,10 +78,10 @@ class ExpenseController {
       this._renderExpenseListPage(res);
       return;
     }
-    res.sendStatus(http.NOT_FOUND);
+    res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
-  async _renderExpenseListPage(res, query = null) {
+  private async _renderExpenseListPage(res: any, query: any = null) {
     let expenseList = [];
     if (query === null) {
       expenseList = await this.expenseService.list();
@@ -93,5 +98,3 @@ class ExpenseController {
     });
   }
 }
-
-module.exports = ExpenseController;

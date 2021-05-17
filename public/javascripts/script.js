@@ -53,7 +53,7 @@ function filterExpenseOnBudgetName() {
 
 function budgetTypeChange() {
   newBudgetType = document.forms[0].budgetTypeEdit.value;
-  if(newBudgetType === 'RESERVE') {
+  if (newBudgetType === 'RESERVE') {
     document.getElementById('reserveAttributes').classList.remove('d-none');
   } else {
     document.getElementById('reserveAttributes').classList.add('d-none');
