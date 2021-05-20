@@ -4,7 +4,7 @@
   "description": "App to manage your personal budget",
   "private": true,
   "scripts": {
-    "start": "tsc && node dist/bootstrap",
+    "start": "npx tsc && node dist/bootstrap",
     "test": "NODE_ENV=test npx jest",
     "test:cov": "npm run test -- --coverage",
     "test:ci": "npm run test:cov -- --ci && codecov",
