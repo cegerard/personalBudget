@@ -3,8 +3,10 @@
   "version": "0.2.0",
   "description": "App to manage your personal budget",
   "private": true,
+  "main": "dist/bootstrap.js",
   "scripts": {
-    "start": "npx tsc && node dist/bootstrap",
+    "build": "npx tsc",
+    "start": "npx tsc && node dist/bootstrap.js",
     "test": "NODE_ENV=test npx jest",
     "test:cov": "npm run test -- --coverage",
     "test:ci": "npm run test:cov -- --ci && codecov",
