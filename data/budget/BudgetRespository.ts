@@ -37,7 +37,7 @@ export default class BudgetRepository {
     return res.deletedCount === 1;
   }
 
-  async patch(budgetId: string, attributes: any) {
+  async patch(budgetId: string, attributes: any): Promise<boolean> {
     const res = await this.BudgetModel.updateOne({ _id: budgetId }, attributes);
     return res.n === 1;
   }

@@ -1,4 +1,6 @@
 import slugify from 'slugify';
+import { patchableAttributes } from '../../core/@types/types';
+import { Budget } from '../../core/Budget';
 
 import BudgetRepository from '../../data/budget/BudgetRespository';
 import ExpenseRepository from '../../data/expense/ExpenseRepository';
@@ -20,18 +22,7 @@ export default class BudgetService {
     return this.repository.findOneById(budgetId, select);
   }
 
-  /**
-   * Create a new budget and add it to the default budget repository
-   * @param {Object} newBudget the budget object to create
-   * @param {string} newBudget.name
-   * @param {number} newBudget.amount
-   * @param {string} newBudget.description
-   * @param {string} newBudget.category
-   * @param {string} newBudget.type
-   * @returns {Object} Promise: the saved object
-   */
-  create(newBudget: any) {
-    // TODO Validate input data using an adapter
+  create(newBudget: Budget) {
     return this.repository.create({
       name: newBudget.name,
       slug: slugify(newBudget.name, { lower: true }),
@@ -50,35 +41,25 @@ export default class BudgetService {
     return isDeleted;
   }
 
-  /**
-   * Update some attributes of a budget from its identifier
-   * @param {string} budgetId
-   * @param {Object} attributes
-   * @param {string} attributes.name
-   * @param {number} attributes.amout
-   * @param {string} attributes.description
-   * @param {string} attributes.category
-   * @param {string} attributes.type
-   * @param {number} attributes.available
-   * @return {boolean} true if the budget has been udpated, false otherwise
-   */
-  async patch(budgetId: string, attributes: any) {
-    if (attributes.name !== undefined) {
-      attributes.slug = slugify(attributes.name, { lower: true });
+  async patch(budgetId: string, attributes: patchableAttributes): Promise<boolean> {
+    const attributesToPatch: any = Object.assign({}, attributes);
+
+    if (attributesToPatch.name !== undefined) {
+      attributesToPatch.slug = slugify(attributesToPatch.name, { lower: true });
     }
 
-    if (attributes.amount !== undefined && attributes.available === undefined) {
+    if (attributesToPatch.amount !== undefined && attributesToPatch.available === undefined) {
       const budget = await this.repository.findOneById(budgetId);
 
       if (budget === undefined) {
         return false;
       }
 
-      const amountDiff = attributes.amount - budget.amount;
-      attributes.available = budget.available + amountDiff;
+      const amountDiff = attributesToPatch.amount - budget.amount;
+      attributesToPatch.available = budget.available + amountDiff;
     }
 
-    return this.repository.patch(budgetId, attributes);
+    return this.repository.patch(budgetId, attributesToPatch);
   }
 
   /**

@@ -1,6 +1,8 @@
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import BudgetService from '../../services/budgets/BudgetService';
 import ExpenseService from '../../services/expenses/ExpenseService';
+
 
 const selectedField = ['_id', 'name'];
 
@@ -13,15 +15,16 @@ export default class ExpenseController {
     this.expenseService = expenseService;
   }
 
-  async list(_: any, res: any) {
+  async list(_: Request, res: Response) {
     this._renderExpenseListPage(res);
   }
 
-  async filterByBudgetLine(req: any, res: any) {
+  async filterByBudgetLine(req: Request, res: Response) {
+    // TODO: validate request with DTO
     this._renderExpenseListPage(res, { 'budgetLine.name': req.query.budgetName });
   }
 
-  async get(req: any, res: any) {
+  async get(req: Request, res: Response) {
     const expenses = await this.expenseService.search({ _id: req.params.id });
     if (expenses.length > 0) {
       res.render('expense', {
@@ -33,7 +36,8 @@ export default class ExpenseController {
     res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
-  async create(req: any, res: any) {
+  async create(req: Request, res: Response) {
+    // TODO: validate request with DTO
     const budgetLineId = req.body.budgetlineId;
     const budgetLine = await this.budgetService.getById(budgetLineId, selectedField);
     const baseExpense = {
@@ -48,7 +52,8 @@ export default class ExpenseController {
     this._renderExpenseListPage(res);
   }
 
-  async delete(req: any, res: any) {
+  async delete(req: Request, res: Response) {
+    // TODO: validate request with DTO
     const expenseToDelete = await this.expenseService.search({ _id: req.params.id });
     const isExpenseDeleted = await this.expenseService.remove({ _id: req.params.id });
 
@@ -70,7 +75,7 @@ export default class ExpenseController {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
   }
 
-  async patch(req: any, res: any) {
+  async patch(req: Request, res: Response) {
     //TODO adapt the body
     const isUpdated = await this.expenseService.patch(req.params.id, req.body);
     if (isUpdated) {
@@ -81,7 +86,7 @@ export default class ExpenseController {
     res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
-  private async _renderExpenseListPage(res: any, query: any = null) {
+  private async _renderExpenseListPage(res: Response, query: any = null) {
     let expenseList = [];
     if (query === null) {
       expenseList = await this.expenseService.list();

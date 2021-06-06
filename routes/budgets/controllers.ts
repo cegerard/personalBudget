@@ -1,6 +1,9 @@
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import BudgetService from '../../services/budgets/BudgetService';
+import BudgetCreateDto from './dto/BudgetCreateDto';
+import BudgetPatchDto from './dto/BudgetPatchDto';
 
 export default class BudgetController {
   private budgetService: BudgetService;
@@ -9,26 +12,21 @@ export default class BudgetController {
     this.budgetService = budgetService;
   }
 
-  list(_: any, res: any) {
-    renderBudgetListPage(res, this.budgetService);
+  list(_: Request, res: Response) {
+    this.renderBudgetListPage(res);
   }
 
-  get(req: any, res: any) {
-    renderBudgetPage(req, res, this.budgetService);
+  get(req: Request, res: Response) {
+    this.renderBudgetPage(req, res);
   }
 
-  async create(req: any, res: any) {
-    await this.budgetService.create({
-      name: req.body.name,
-      amount: req.body.amount,
-      description: req.body.description,
-      category: req.body.category,
-      type: req.body.type,
-    });
-    renderBudgetListPage(res, this.budgetService);
+  async create(req: Request, res: Response) {
+    const budgetDto = new BudgetCreateDto(req.body);
+    await this.budgetService.create(budgetDto.toBudget());
+    this.renderBudgetListPage(res);
   }
 
-  async delete(req: any, res: any) {
+  async delete(req: Request, res: Response) {
     const isDeleted = await this.budgetService.remove(req.params.id);
     if (isDeleted) {
       res.sendStatus(StatusCodes.NO_CONTENT);
@@ -37,26 +35,25 @@ export default class BudgetController {
     res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
-  async patch(req: any, res: any) {
-    // TODO validate and convert attributes to update only updatable fields
-    if (req.body.available) {
-      req.body.available = +req.body.available;
-    }
-    const isUpdated = await this.budgetService.patch(req.params.id, req.body);
+  async patch(req: Request, res: Response) {
+    const budgetDto = new BudgetPatchDto(req.params.id, req.body);
+    
+    const isUpdated = await this.budgetService.patch(budgetDto.id, budgetDto.attributes());
     if (isUpdated) {
-      renderBudgetPage(req, res, this.budgetService);
+     this.renderBudgetPage(req, res);
       return;
     }
     res.sendStatus(StatusCodes.NOT_FOUND);
   }
+
+  private async renderBudgetListPage(res: Response) {
+    const budgetList = await this.budgetService.list([]);
+    res.render('budgets', { page: 'budgets', budgetList: budgetList });
+  }
+  
+  private async renderBudgetPage(req: Request, res: Response) {
+    const budget = await this.budgetService.getById(req.params.id, []);
+    res.render('budget', { page: 'budget', budget });
+  }
 }
 
-async function renderBudgetListPage(res: any, budgetService: BudgetService) {
-  const budgetList = await budgetService.list([]);
-  res.render('budgets', { page: 'budgets', budgetList: budgetList });
-}
-
-async function renderBudgetPage(req: any, res: any, budgetService: BudgetService) {
-  const budget = await budgetService.getById(req.params.id, []);
-  res.render('budget', { page: 'budget', budget });
-}
