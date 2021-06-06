@@ -3,6 +3,8 @@ import budgetFixture from '../../test/fixtures/budgetFixture';
 import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import BudgetModelStub from '../../test/stubs/BudgetModelStub';
 import BudgetService from './BudgetService';
+import { Budget } from '../../core/Budget';
+import { budgetType } from '../../core/@types/types';
 
 describe('BudgetService', () => {
   const SECOND_BUDGET_ID = '2';
@@ -77,11 +79,7 @@ describe('BudgetService', () => {
         type: 'NORMAL',
       };
 
-      const budget = await budgetService.create({
-        name: expectedBudget.name,
-        amount: expectedBudget.amount,
-        description: expectedBudget.description,
-      });
+      const budget = await budgetService.create(new Budget(expectedBudget.name, expectedBudget.amount, expectedBudget.description));
       const storedBudget = await BudgetModelStub.findById(budget._id, []);
 
       expect(budget).toEqual(expectedBudget);
@@ -101,13 +99,7 @@ describe('BudgetService', () => {
         type: 'RESERVE',
       };
 
-      const budget = await budgetService.create({
-        name: expectedBudget.name,
-        amount: expectedBudget.amount,
-        description: expectedBudget.description,
-        category: 'test',
-        type: 'RESERVE',
-      });
+      const budget = await budgetService.create(new Budget(expectedBudget.name,expectedBudget.amount, expectedBudget.description, 'RESERVE', 'test'));
       const storedBudget = await BudgetModelStub.findById(budget._id, []);
 
       expect(budget).toEqual(expectedBudget);
@@ -150,7 +142,7 @@ describe('BudgetService', () => {
         amount: expectedBudget.amount,
         description: expectedBudget.description,
         category: expectedBudget.category,
-        type: expectedBudget.type,
+        type: expectedBudget.type as budgetType,
       });
 
       const updatedBudget = await BudgetModelStub.findById(budget_id, []);

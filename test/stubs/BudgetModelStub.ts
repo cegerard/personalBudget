@@ -14,10 +14,6 @@ export default class BudgetModelStub {
       amount: Number(budget.amount),
       available: Number(budget.available),
     };
-
-    if (this.budget.type === undefined) {
-      this.budget.type = 'NORMAL';
-    }
   }
 
   static resetStore() {
