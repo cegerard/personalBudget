@@ -1,5 +1,5 @@
 import slugify from 'slugify';
-import { patchableAttributes } from '../../core/@types/types';
+import { patchableAttributes } from '../../core/@types/budget/types';
 import { Budget } from '../../core/Budget';
 
 import BudgetRepository from '../../data/budget/BudgetRespository';

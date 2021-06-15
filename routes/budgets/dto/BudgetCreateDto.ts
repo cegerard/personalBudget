@@ -1,4 +1,4 @@
-import { budgetType } from '../../../core/@types/types';
+import { budgetType } from '../../../core/@types/budget/types';
 import { Budget } from '../../../core/Budget'
 
 export default class BudgetCreateDto {

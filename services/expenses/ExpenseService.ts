@@ -1,3 +1,4 @@
+import { patchableAttributes } from '../../core/@types/expense/types';
 import ExpenseRepository from '../../data/expense/ExpenseRepository';
 
 export default class ExpenseService {
@@ -50,20 +51,12 @@ export default class ExpenseService {
     return this.repository.delete(query);
   }
 
-  /**
-   * Update expenses attributes from an expense id
-   * @param {string} expenseId
-   * @param {Object} attributes
-   * @param {string} attributes.name
-   * @param {Number} attributes.amount
-   * @param {string} attributes.date
-   */
-  async patch(expenseId: string, attributes: any) {
-    // TODO validate and convert attributes to update only updatable fields
-    if (attributes.amount !== undefined) {
-      attributes.amount = Number(attributes.amount);
+  async patch(expenseId: string, attributes: patchableAttributes): Promise<boolean> {
+     const attributesToPatch: any = Object.assign({}, attributes);
+
+    if (attributesToPatch.amount !== undefined) {
+      attributesToPatch.amount = Number(attributesToPatch.amount);
     }
-    delete attributes.budgetLine;
 
     return this.repository.patch(expenseId, attributes);
   }
