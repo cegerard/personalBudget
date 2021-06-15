@@ -118,18 +118,6 @@ describe('ExpenseService', () => {
         expect(expense).toEqual(EXPECTED_EXPENSE);
       });
 
-      it('should not update the budget line attributes', async () => {
-        await expenseService.patch(EXPENSE_ID, {
-          budgetLine: {
-            _id: '2000',
-            name: 'not change',
-          },
-        });
-
-        const expense = await ExpenseModelStub.findById(EXPENSE_ID);
-        expect(expense.budgetLine).toEqual(EXPECTED_EXPENSE.budgetLine);
-      });
-
       it('should return true', async () => {
         expect(patchRes).toEqual(true);
       });

@@ -4,7 +4,7 @@ import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import BudgetModelStub from '../../test/stubs/BudgetModelStub';
 import BudgetService from './BudgetService';
 import { Budget } from '../../core/Budget';
-import { budgetType } from '../../core/@types/types';
+import { budgetType } from '../../core/@types/budget/types';
 
 describe('BudgetService', () => {
   const SECOND_BUDGET_ID = '2';
