@@ -1,4 +1,4 @@
-import { budgetType } from "./@types/types";
+import { budgetType } from "./@types/budget/types";
 
 export class Budget {
   private readonly _name: string;
