@@ -37,10 +37,10 @@ export default class BudgetController {
 
   async patch(req: Request, res: Response) {
     const budgetDto = new BudgetPatchDto(req.params.id, req.body);
-    
+
     const isUpdated = await this.budgetService.patch(budgetDto.id, budgetDto.attributes());
     if (isUpdated) {
-     this.renderBudgetPage(req, res);
+      this.renderBudgetPage(req, res);
       return;
     }
     res.sendStatus(StatusCodes.NOT_FOUND);
@@ -50,10 +50,9 @@ export default class BudgetController {
     const budgetList = await this.budgetService.list([]);
     res.render('budgets', { page: 'budgets', budgetList: budgetList });
   }
-  
+
   private async renderBudgetPage(req: Request, res: Response) {
     const budget = await this.budgetService.getById(req.params.id, []);
     res.render('budget', { page: 'budget', budget });
   }
 }
-

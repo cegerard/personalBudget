@@ -5,16 +5,16 @@ import request from 'supertest';
 import BudgetModelStub from '../../test/stubs/BudgetModelStub';
 import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import application from '../../app';
-import { BudgetRepository, ExpenseRepository } from '../../data';
+import { MongoBudgetRepository, ExpenseRepository } from '../../data';
 
 const app = application.app;
 
 describe('/budgets', () => {
-  let budgetRepository: BudgetRepository;
+  let budgetRepository: MongoBudgetRepository;
   let expenseRepository: ExpenseRepository;
 
   beforeAll(() => {
-    budgetRepository = new BudgetRepository(BudgetModelStub);
+    budgetRepository = new MongoBudgetRepository(BudgetModelStub);
     expenseRepository = new ExpenseRepository(ExpenseModelStub);
   });
 
@@ -135,7 +135,7 @@ describe('/budgets', () => {
         .send({ [field]: value })
         .expect(StatusCodes.OK);
 
-      const budget = await budgetRepository.findOneById(budgetId);
+      const budget: any = await budgetRepository.findOneById(budgetId);
       expect(budget[field]).toEqual(value);
     });
 
@@ -146,7 +146,7 @@ describe('/budgets', () => {
         .send({ name: 'new name' })
         .expect(StatusCodes.OK);
 
-      const budget = await budgetRepository.findOneById(budgetId);
+      const budget: any = await budgetRepository.findOneById(budgetId);
       delete budget.name;
       expect(budget).toEqual(budgetBeforeUpdate);
     });
@@ -158,7 +158,7 @@ describe('/budgets', () => {
         .send({ name: 'new name', notexist: 'should not add', dont: 'aie' })
         .expect(StatusCodes.OK);
 
-      const budget = await budgetRepository.findOneById(budgetId);
+      const budget: any = await budgetRepository.findOneById(budgetId);
       expect(budget.notexist).toBeUndefined();
       expect(budget.dont).toBeUndefined();
     });

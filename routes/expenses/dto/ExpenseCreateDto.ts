@@ -1,16 +1,14 @@
 type baseExpense = {
-  name: string,
-  amount: number,
-  date: Date,
-}
+  name: string;
+  amount: number;
+  date: string;
+};
 
 export default class ExpenseCreateDto {
-
   private _name: string;
   private _amount: number;
-  private _date: Date;
+  private _date: string;
   private _budgetLineId: string;
-
 
   constructor(expenseToCreate: any) {
     this._name = expenseToCreate.name;
@@ -28,7 +26,6 @@ export default class ExpenseCreateDto {
       name: this._name,
       amount: this._amount,
       date: this._date,
-    }
+    };
   }
-  
 }

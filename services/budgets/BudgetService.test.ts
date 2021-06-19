@@ -1,4 +1,4 @@
-import { BudgetRepository, ExpenseRepository } from '../../data';
+import { MongoBudgetRepository, ExpenseRepository } from '../../data';
 import budgetFixture from '../../test/fixtures/budgetFixture';
 import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import BudgetModelStub from '../../test/stubs/BudgetModelStub';
@@ -14,7 +14,7 @@ describe('BudgetService', () => {
   let budgetService: BudgetService;
 
   beforeAll(() => {
-    const budgetRepository = new BudgetRepository(BudgetModelStub);
+    const budgetRepository = new MongoBudgetRepository(BudgetModelStub);
     const expenseRepository = new ExpenseRepository(ExpenseModelStub);
     budgetService = new BudgetService(budgetRepository, expenseRepository);
   });
@@ -79,10 +79,14 @@ describe('BudgetService', () => {
         type: 'NORMAL',
       };
 
-      const budget = await budgetService.create(new Budget(expectedBudget.name, expectedBudget.amount, expectedBudget.description));
-      const storedBudget = await BudgetModelStub.findById(budget._id, []);
+      await budgetService.create(
+        new Budget(expectedBudget.name, expectedBudget.amount, expectedBudget.description)
+      );
+      const res = await BudgetModelStub.find(null, []);
+      const storedBudget = (await BudgetModelStub.find(null, [])).find(
+        (budget) => budget.name === 'BudgetName'
+      );
 
-      expect(budget).toEqual(expectedBudget);
       expect(storedBudget).toEqual(expectedBudget);
     });
 
@@ -99,10 +103,19 @@ describe('BudgetService', () => {
         type: 'RESERVE',
       };
 
-      const budget = await budgetService.create(new Budget(expectedBudget.name,expectedBudget.amount, expectedBudget.description, 'RESERVE', 'test'));
-      const storedBudget = await BudgetModelStub.findById(budget._id, []);
+      await budgetService.create(
+        new Budget(
+          expectedBudget.name,
+          expectedBudget.amount,
+          expectedBudget.description,
+          'RESERVE',
+          'test'
+        )
+      );
+      const storedBudget = (await BudgetModelStub.find(null, [])).find(
+        (budget) => budget.name === 'BudgetName'
+      );
 
-      expect(budget).toEqual(expectedBudget);
       expect(storedBudget).toEqual(expectedBudget);
     });
   });

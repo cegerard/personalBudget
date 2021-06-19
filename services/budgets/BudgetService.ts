@@ -1,8 +1,14 @@
 import slugify from 'slugify';
-import { patchableAttributes } from '../../core/@types/budget/types';
+import {
+  attributesToPatch,
+  expenseInfo,
+  patchableAttributes,
+  readBudgetComplete,
+  readBudgetInfo,
+} from '../../core/@types/budget/types';
 import { Budget } from '../../core/Budget';
+import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
 
-import BudgetRepository from '../../data/budget/BudgetRespository';
 import ExpenseRepository from '../../data/expense/ExpenseRepository';
 
 export default class BudgetService {
@@ -14,15 +20,16 @@ export default class BudgetService {
     this.expenseRepository = expenseRepository;
   }
 
-  list(select: string[]) {
+  list(select: string[]): Promise<readBudgetInfo[]> {
     return this.repository.find(select);
   }
 
-  getById(budgetId: string, select: string[]) {
+  getById(budgetId: string, select: string[]): Promise<readBudgetComplete> {
     return this.repository.findOneById(budgetId, select);
   }
 
-  create(newBudget: Budget) {
+  // TODO: move to use cases
+  create(newBudget: Budget): Promise<void> {
     return this.repository.create({
       name: newBudget.name,
       slug: slugify(newBudget.name, { lower: true }),
@@ -33,7 +40,8 @@ export default class BudgetService {
     });
   }
 
-  async remove(budgetId: string) {
+  // TODO: move to use cases
+  async remove(budgetId: string): Promise<boolean> {
     const isDeleted = await this.repository.delete(budgetId);
     if (isDeleted) {
       this.expenseRepository.delete({ 'budgetLine._id': budgetId });
@@ -41,8 +49,9 @@ export default class BudgetService {
     return isDeleted;
   }
 
+  // TODO: move to use cases
   async patch(budgetId: string, attributes: patchableAttributes): Promise<boolean> {
-    const attributesToPatch: any = Object.assign({}, attributes);
+    const attributesToPatch: attributesToPatch = Object.assign({}, attributes);
 
     if (attributesToPatch.name !== undefined) {
       attributesToPatch.slug = slugify(attributesToPatch.name, { lower: true });
@@ -62,17 +71,8 @@ export default class BudgetService {
     return this.repository.patch(budgetId, attributesToPatch);
   }
 
-  /**
-   * Add an expense to an existing budget
-   * @param {string} budgetId
-   * @param {Object} expense
-   * @param {string} expense._id
-   * @param {string} expense.name
-   * @param {number} expense.amount
-   * @param {string} expense.date
-   * @returns {boolean} true the expense has been added to the budget, false otherwise
-   */
-  async addExpense(budgetId: string, expense: any) {
+  // TODO: move to use cases
+  async addExpense(budgetId: string, expense: expenseInfo): Promise<boolean> {
     // TODO adapt expense to BudgetExpense sub-model
     const foundBudget = await this.repository.findOneById(budgetId);
     foundBudget.expenses.push(expense);
@@ -82,12 +82,8 @@ export default class BudgetService {
     return this.repository.update(foundBudget);
   }
 
-  /**
-   * Remove expense from an existing budget
-   * @param {string} budgetId
-   * @param {string} expenseId
-   */
-  async removeExpense(budgetId: string, expenseId: string) {
+  // TODO: move to use cases
+  async removeExpense(budgetId: string, expenseId: string): Promise<boolean> {
     const foundBudget = await this.repository.findOneById(budgetId);
     if (!foundBudget) {
       return false;
@@ -105,15 +101,16 @@ export default class BudgetService {
     return true;
   }
 
-  async updateExpense(expenseId: string) {
+  // TODO: move to use cases
+  async updateExpense(expenseId: string): Promise<boolean> {
     const foundExpenses = await this.expenseRepository.find({ _id: expenseId });
     if (foundExpenses.length === 0) {
       return false;
     }
 
-    const updatedExpenses = foundExpenses[0];
+    const updatedExpense = foundExpenses[0];
 
-    const foundBudget = await this.repository.findOneById(updatedExpenses.budgetLine._id);
+    const foundBudget = await this.repository.findOneById(updatedExpense.budgetLine._id);
 
     const expenseIndex = foundBudget.expenses.findIndex(
       (expense: any) => expense._id.toString() === expenseId
@@ -124,11 +121,11 @@ export default class BudgetService {
     }
     const expenseToUpdate = foundBudget.expenses[expenseIndex];
 
-    const amountDiff = expenseToUpdate.amount - updatedExpenses.amount;
+    const amountDiff = expenseToUpdate.amount - updatedExpense.amount;
 
-    expenseToUpdate.name = updatedExpenses.name;
-    expenseToUpdate.amount = updatedExpenses.amount;
-    expenseToUpdate.date = updatedExpenses.date;
+    expenseToUpdate.name = updatedExpense.name;
+    expenseToUpdate.amount = updatedExpense.amount;
+    expenseToUpdate.date = updatedExpense.date;
 
     foundBudget.available += amountDiff;
     foundBudget.expenses[expenseIndex] = expenseToUpdate;
@@ -136,7 +133,7 @@ export default class BudgetService {
     return this.repository.update(foundBudget);
   }
 
-  private substractFloat(base: number, toSubstract: number) {
+  private substractFloat(base: number, toSubstract: number): number {
     return +(base - toSubstract).toFixed(2);
   }
 }
