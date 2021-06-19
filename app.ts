@@ -4,7 +4,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
-import { BudgetRepository, ExpenseRepository } from './data';
+import { MongoBudgetRepository, ExpenseRepository } from './data';
 import BudgetService from './services/budgets/BudgetService';
 import ExpenseService from './services/expenses/ExpenseService';
 import AppRouter from './routes/AppRouter';
@@ -61,7 +61,7 @@ class Application {
       ExpenseModel = expenseModel;
     }
 
-    const budgetRepository = new BudgetRepository(BudgetModel);
+    const budgetRepository = new MongoBudgetRepository(BudgetModel);
     const expenseRepository = new ExpenseRepository(ExpenseModel);
 
     const budgetService = new BudgetService(budgetRepository, expenseRepository);

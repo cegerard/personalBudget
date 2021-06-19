@@ -6,7 +6,6 @@ import BudgetService from '../../services/budgets/BudgetService';
 import ExpenseService from '../../services/expenses/ExpenseService';
 import ExpensePatchDto from './dto/ExpensePatchDto';
 
-
 const selectedField = ['_id', 'name'];
 
 export default class ExpenseController {
@@ -43,7 +42,10 @@ export default class ExpenseController {
 
     const budgetLine = await this.budgetService.getById(expenseDto.budgetLineId, selectedField);
     const newExpense = await this.expenseService.add({ ...expenseDto.baseExpense(), budgetLine });
-    await this.budgetService.addExpense(expenseDto.budgetLineId, { ...expenseDto.baseExpense(), _id: newExpense._id });
+    await this.budgetService.addExpense(expenseDto.budgetLineId, {
+      ...expenseDto.baseExpense(),
+      _id: newExpense._id,
+    });
 
     this._renderExpenseListPage(res, null);
   }
@@ -82,7 +84,7 @@ export default class ExpenseController {
     res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
-  private async _renderExpenseListPage(res: Response, query: {'budgetLine.name': string} | null) {
+  private async _renderExpenseListPage(res: Response, query: { 'budgetLine.name': string } | null) {
     let expenseList = [];
     if (query === null) {
       expenseList = await this.expenseService.list();

@@ -4,16 +4,16 @@ import request from 'supertest';
 import BudgetModelStub from '../../test/stubs/BudgetModelStub';
 import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import application from '../../app';
-import { BudgetRepository, ExpenseRepository } from '../../data';
+import { MongoBudgetRepository, ExpenseRepository } from '../../data';
 
 const app = application.app;
 
 describe('Route', () => {
-  let budgetRepository: BudgetRepository;
+  let budgetRepository: MongoBudgetRepository;
   let expenseRepository: ExpenseRepository;
 
   beforeAll(() => {
-    budgetRepository = new BudgetRepository(BudgetModelStub);
+    budgetRepository = new MongoBudgetRepository(BudgetModelStub);
     expenseRepository = new ExpenseRepository(ExpenseModelStub);
   });
 
@@ -125,10 +125,7 @@ describe('Route', () => {
 
           expect(expenseNotFound).toBeUndefined();
 
-          const allBudgets = await budgetRepository.find();
-          const budgetList = allBudgets.find((budget: any) => {
-            return budget._id === '4';
-          });
+          const budgetList = await budgetRepository.findOneById('4');
           const expenseNotFoundInBudgetLine = budgetList.expenses.find((expense: any) => {
             return expense._id === 100;
           });

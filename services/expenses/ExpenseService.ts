@@ -51,8 +51,9 @@ export default class ExpenseService {
     return this.repository.delete(query);
   }
 
+  // TODO: move to use cases
   async patch(expenseId: string, attributes: patchableAttributes): Promise<boolean> {
-     const attributesToPatch: any = Object.assign({}, attributes);
+    const attributesToPatch: any = Object.assign({}, attributes);
 
     if (attributesToPatch.amount !== undefined) {
       attributesToPatch.amount = Number(attributesToPatch.amount);
