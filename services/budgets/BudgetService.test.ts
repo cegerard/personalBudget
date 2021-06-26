@@ -1,4 +1,4 @@
-import { MongoBudgetRepository, ExpenseRepository } from '../../data';
+import { MongoBudgetRepository, MongoExpenseRepository } from '../../data';
 import budgetFixture from '../../test/fixtures/budgetFixture';
 import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import BudgetModelStub from '../../test/stubs/BudgetModelStub';
@@ -15,7 +15,7 @@ describe('BudgetService', () => {
 
   beforeAll(() => {
     const budgetRepository = new MongoBudgetRepository(BudgetModelStub);
-    const expenseRepository = new ExpenseRepository(ExpenseModelStub);
+    const expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
     budgetService = new BudgetService(budgetRepository, expenseRepository);
   });
 

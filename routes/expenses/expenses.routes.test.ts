@@ -4,17 +4,17 @@ import request from 'supertest';
 import BudgetModelStub from '../../test/stubs/BudgetModelStub';
 import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import application from '../../app';
-import { MongoBudgetRepository, ExpenseRepository } from '../../data';
+import { MongoBudgetRepository, MongoExpenseRepository } from '../../data';
 
 const app = application.app;
 
 describe('Route', () => {
   let budgetRepository: MongoBudgetRepository;
-  let expenseRepository: ExpenseRepository;
+  let expenseRepository: MongoExpenseRepository;
 
   beforeAll(() => {
     budgetRepository = new MongoBudgetRepository(BudgetModelStub);
-    expenseRepository = new ExpenseRepository(ExpenseModelStub);
+    expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
   });
 
   beforeEach(() => {
@@ -143,7 +143,7 @@ describe('Route', () => {
         name: 'todelete',
         budgetLine: { _id: 'notExist' },
       });
-      let newExpense = await expenseModel.save();
+      const newExpense = await expenseModel.save();
       await request(app)
         .delete(`/expenses/${newExpense._id}`)
         .expect(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -151,7 +151,7 @@ describe('Route', () => {
 
     it('should return a 204 when expense does not exist in budget line', async () => {
       const expenseModel = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: '1' } });
-      let newExpense = await expenseModel.save();
+      const newExpense = await expenseModel.save();
       await request(app).delete(`/expenses/${newExpense._id}`).expect(StatusCodes.NO_CONTENT);
     });
   });
@@ -182,7 +182,7 @@ describe('Route', () => {
         })
         .expect(StatusCodes.OK);
 
-      const expenses = await expenseRepository.find({ _id: expenseId });
+      const expenses: any = await expenseRepository.find({ _id: expenseId });
       expect(expenses[0][field]).toEqual(value);
     });
 
@@ -213,7 +213,7 @@ describe('Route', () => {
         })
         .expect(StatusCodes.OK);
 
-      const expenses = await expenseRepository.find({ _id: expenseId });
+      const expenses: any = await expenseRepository.find({ _id: expenseId });
       expect(expenses[0].notexist).toBeUndefined();
       expect(expenses[0].dont).toBeUndefined();
     });

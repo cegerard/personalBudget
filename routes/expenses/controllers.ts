@@ -52,7 +52,7 @@ export default class ExpenseController {
 
   async delete(req: Request, res: Response) {
     const expenseToDelete = await this.expenseService.search({ _id: req.params.id });
-    const isExpenseDeleted = await this.expenseService.remove({ _id: req.params.id });
+    const isExpenseDeleted = await this.expenseService.remove({_id: req.params.id});
 
     if (!isExpenseDeleted) {
       res.status(StatusCodes.NOT_FOUND).end();
