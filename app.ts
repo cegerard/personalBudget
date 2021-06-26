@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
 import BudgetService from './services/budgets/BudgetService';
-import ExpenseService from './services/expenses/ExpenseService';
 import AppRouter from './routes/AppRouter';
 import BudgetController from './routes/budgets/controllers';
 import ExpenseController from './routes/expenses/controllers';
@@ -70,12 +69,10 @@ class Application {
     const expenseRepository = new MongoExpenseRepository(ExpenseModel);
 
     const budgetService = new BudgetService(budgetRepository, expenseRepository);
-    const expenseService = new ExpenseService(expenseRepository);
 
     const budgetController = new BudgetController(budgetService, budgetRepository);
     const expenseController = new ExpenseController(
       budgetService,
-      expenseService,
       budgetRepository,
       expenseRepository
     );
