@@ -1,4 +1,4 @@
 import MongoBudgetRepository from './budget/MongoBudgetRespository';
-import ExpenseRepository from './expense/ExpenseRepository';
+import MongoExpenseRepository from './expense/MongoExpenseRepository';
 
-export { MongoBudgetRepository, ExpenseRepository };
+export { MongoBudgetRepository, MongoExpenseRepository };

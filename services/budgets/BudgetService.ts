@@ -8,8 +8,7 @@ import {
 } from '../../core/@types/budget/types';
 import { Budget } from '../../core/Budget';
 import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
-
-import ExpenseRepository from '../../data/expense/ExpenseRepository';
+import ExpenseRepository from '../../core/interfaces/expense/ExpenseRepository';
 
 export default class BudgetService {
   private repository: BudgetRepository;
@@ -113,7 +112,7 @@ export default class BudgetService {
     const foundBudget = await this.repository.findOneById(updatedExpense.budgetLine._id);
 
     const expenseIndex = foundBudget.expenses.findIndex(
-      (expense: any) => expense._id.toString() === expenseId
+      (expense: expenseInfo) => expense._id.toString() === expenseId
     );
 
     if (expenseIndex === -1) {

@@ -1,5 +1,5 @@
-import { patchableAttributes } from '../../core/@types/expense/types';
-import ExpenseRepository from '../../data/expense/ExpenseRepository';
+import { deleteQuery, expenseQuery, lightExpense, patchableAttributes, readExpenseInfo, writeExpense } from '../../core/@types/expense/types';
+import ExpenseRepository from '../../core/interfaces/expense/ExpenseRepository';
 
 export default class ExpenseService {
   private repository: ExpenseRepository;
@@ -8,46 +8,19 @@ export default class ExpenseService {
     this.repository = expenseRepository;
   }
 
-  /**
-   * List all expenses from the default expense repository
-   * @returns list of expense objects
-   */
-  list() {
-    return this.repository.find(null);
+  list(): Promise<readExpenseInfo[]> {
+    return this.repository.find();
   }
 
-  /**
-   * Search for expense
-   * @param {Object} query
-   * @param {Object} query.budgetLine
-   * @param {string} query.budgetLine.name
-   */
-  search(query: any) {
-    // TODO validate query
+  search(query: expenseQuery): Promise<readExpenseInfo[]> {
     return this.repository.find(query);
   }
 
-  /**
-   * Add a new expense to the default expense repository
-   * @param {Object} expense the expense object to add
-   * @param {string} expense.name
-   * @param {number} expense.amount
-   * @param {string} expense.date
-   * @param {Object} expense.budgetLine
-   * @param {string} expense.budgetLine._id
-   * @param {Obstringject} expense.budgetLine.name
-   * @returns {Expense} the newly created expense
-   */
-  add(expense: any) {
-    // TODO validate expense
+  add(expense: writeExpense): Promise<lightExpense> {
     return this.repository.create(expense);
   }
 
-  /**
-   * Remove an existing expense from the default expense repository
-   * @param {Object} query
-   */
-  remove(query: any) {
+  remove(query: deleteQuery): Promise<boolean> {
     return this.repository.delete(query);
   }
 

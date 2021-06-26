@@ -5,17 +5,17 @@ import request from 'supertest';
 import BudgetModelStub from '../../test/stubs/BudgetModelStub';
 import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import application from '../../app';
-import { MongoBudgetRepository, ExpenseRepository } from '../../data';
+import { MongoBudgetRepository, MongoExpenseRepository } from '../../data';
 
 const app = application.app;
 
 describe('/budgets', () => {
   let budgetRepository: MongoBudgetRepository;
-  let expenseRepository: ExpenseRepository;
+  let expenseRepository: MongoExpenseRepository;
 
   beforeAll(() => {
     budgetRepository = new MongoBudgetRepository(BudgetModelStub);
-    expenseRepository = new ExpenseRepository(ExpenseModelStub);
+    expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
   });
 
   beforeEach(() => {

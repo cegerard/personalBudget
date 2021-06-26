@@ -1,4 +1,4 @@
-import { ExpenseRepository } from '../../data';
+import { MongoExpenseRepository } from '../../data';
 import expenseFixture from '../../test/fixtures/expenseFixture';
 import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import ExpenseService from './ExpenseService';
@@ -7,7 +7,7 @@ describe('ExpenseService', () => {
   let expenseService: ExpenseService;
 
   beforeAll(() => {
-    const expenseRepository = new ExpenseRepository(ExpenseModelStub);
+    const expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
     expenseService = new ExpenseService(expenseRepository);
   });
 
@@ -83,7 +83,7 @@ describe('ExpenseService', () => {
     });
 
     it('should do nothing for a non existing budget', async () => {
-      const isDeleted = await expenseService.remove('unkown');
+      const isDeleted = await expenseService.remove({ 'budgetLine._id': 'unknown' });
 
       expect(isDeleted).toEqual(false);
     });
