@@ -10,7 +10,7 @@ describe('MongoBudgetRepository', () => {
     BudgetModelStub.resetStore();
   });
 
-  describe('list', () => {
+  describe('find', () => {
     it('should return the list of budgets', async () => {
       const list = await budgetRepository.find([]);
       expect(list).toEqual(budgetFixture.list);
@@ -29,7 +29,7 @@ describe('MongoBudgetRepository', () => {
     });
   });
 
-  describe('getById', () => {
+  describe('findOneById', () => {
     it('should return a budget from its id', async () => {
       const budget = await budgetRepository.findOneById(SECOND_BUDGET_ID, []);
       expect(budget).toEqual(budgetFixture.list[1]);

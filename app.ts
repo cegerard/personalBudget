@@ -67,7 +67,7 @@ class Application {
     const expenseService = new ExpenseService(expenseRepository);
 
     const budgetController = new BudgetController(budgetService, budgetRepository);
-    const expenseController = new ExpenseController(budgetService, expenseService, budgetRepository);
+    const expenseController = new ExpenseController(budgetService, expenseService, budgetRepository, expenseRepository);
     const appRouter = new AppRouter(budgetController, expenseController);
     this.app.use('/', appRouter.router);
   }
