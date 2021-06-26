@@ -4,8 +4,8 @@ import {
   readBudgetInfo,
   writeBudget,
   writeBudgetComplete,
-} from '../../core/@types/budget/types';
-import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
+} from '../../../core/@types/budget/types';
+import BudgetRepository from '../../../core/interfaces/budget/BudgetRepository';
 
 export default class MongoBudgetRepository implements BudgetRepository {
   private BudgetModel: any;

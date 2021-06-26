@@ -1,4 +1,4 @@
-import { MongoBudgetRepository, MongoExpenseRepository } from '../../data';
+import { MongoBudgetRepository, MongoExpenseRepository } from '../../db/mongo';
 import budgetFixture from '../../test/fixtures/budgetFixture';
 import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import BudgetModelStub from '../../test/stubs/BudgetModelStub';

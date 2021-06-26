@@ -4,7 +4,7 @@ import request from 'supertest';
 import BudgetModelStub from '../../test/stubs/BudgetModelStub';
 import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import application from '../../app';
-import { MongoBudgetRepository, MongoExpenseRepository } from '../../data';
+import { MongoBudgetRepository, MongoExpenseRepository } from '../../db/mongo';
 
 const app = application.app;
 

@@ -4,7 +4,6 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
-import { MongoBudgetRepository, MongoExpenseRepository } from './data';
 import BudgetService from './services/budgets/BudgetService';
 import ExpenseService from './services/expenses/ExpenseService';
 import AppRouter from './routes/AppRouter';
@@ -13,7 +12,7 @@ import ExpenseController from './routes/expenses/controllers';
 
 import BudgetModelStub from './test/stubs/BudgetModelStub';
 import ExpenseModelStub from './test/stubs/ExpenseModelStub';
-import { connectDb, budgetModel, expenseModel } from './db/mongo';
+import { connectDb, budgetModel, expenseModel, MongoBudgetRepository, MongoExpenseRepository } from './db/mongo';
 
 class Application {
   private mode: string;
