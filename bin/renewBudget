@@ -5,7 +5,7 @@
 // Each budget is clear from its expenses.
 // Expenses are not deleted.
 
-const { BudgetRepository } = require('../dist/data');
+const MongoBudgetRepository = require('../dist/db/mongo/budget/MongoBudgetRespository').default;
 const db = require('../dist/db/mongo');
 
 console.log('Connecting database...');
@@ -14,7 +14,7 @@ console.log('Renew budgets');
 renewAllBudgets();
 
 async function renewAllBudgets() {
-  budgetRepository = new BudgetRepository(db.budgetModel);
+  budgetRepository = new MongoBudgetRepository(db.budgetModel);
   budgets = await budgetRepository.find(['_id', 'amount', 'available', 'name', 'type']);
 
   await Promise.all(

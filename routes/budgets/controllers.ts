@@ -1,18 +1,22 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
 
-import BudgetService from '../../services/budgets/BudgetService';
+import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
+import ExpenseRepository from '../../core/interfaces/expense/ExpenseRepository';
+import CreateBudget from '../../core/use_cases/budget/CreateBudget';
+import RemoveBudget from '../../core/use_cases/budget/RemoveBudget';
+import UpdateBudget from '../../core/use_cases/budget/UpdateBudget';
+
 import BudgetCreateDto from './dto/BudgetCreateDto';
 import BudgetPatchDto from './dto/BudgetPatchDto';
 
 export default class BudgetController {
-  private budgetService: BudgetService;
   private budgetRepository: BudgetRepository;
+  private expenseRepository: ExpenseRepository;
 
-  constructor(budgetService: BudgetService, budgetRepository: BudgetRepository) {
-    this.budgetService = budgetService;
+  constructor(budgetRepository: BudgetRepository, expenseRepository: ExpenseRepository) {
     this.budgetRepository = budgetRepository;
+    this.expenseRepository = expenseRepository;
   }
 
   list(_: Request, res: Response) {
@@ -25,12 +29,13 @@ export default class BudgetController {
 
   async create(req: Request, res: Response) {
     const budgetDto = new BudgetCreateDto(req.body);
-    await this.budgetService.create(budgetDto.toBudget());
+    await new CreateBudget(this.budgetRepository).create(budgetDto.toBudget());
     this.renderBudgetListPage(res);
   }
 
   async delete(req: Request, res: Response) {
-    const isDeleted = await this.budgetService.remove(req.params.id);
+    const useCase = new RemoveBudget(this.budgetRepository, this.expenseRepository);
+    const isDeleted = await useCase.remove(req.params.id);
     if (isDeleted) {
       res.sendStatus(StatusCodes.NO_CONTENT);
       return;
@@ -40,8 +45,8 @@ export default class BudgetController {
 
   async patch(req: Request, res: Response) {
     const budgetDto = new BudgetPatchDto(req.params.id, req.body);
-
-    const isUpdated = await this.budgetService.patch(budgetDto.id, budgetDto.attributes());
+    const useCase = new UpdateBudget(budgetDto.id, this.budgetRepository);
+    const isUpdated = await useCase.patch(budgetDto.attributes());
     if (isUpdated) {
       this.renderBudgetPage(req, res);
       return;

@@ -1,32 +1,28 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import ExpenseCreateDto from './dto/ExpenseCreateDto';
-import ExpensePatchDto from './dto/ExpensePatchDto';
 import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
 import ExpenseRepository from '../../core/interfaces/expense/ExpenseRepository';
+import AddExpense from '../../core/use_cases/budget/expense/AddExpense';
+import RemoveExpense from '../../core/use_cases/budget/expense/RemoveExpense';
+import { default as UpdateBudgetExpense } from '../../core/use_cases/budget/expense/UpdateExpense';
 import UpdateExpense from '../../core/use_cases/expense/UpdateExpense';
-import BudgetService from '../../services/budgets/BudgetService';
+import ExpenseCreateDto from './dto/ExpenseCreateDto';
+import ExpensePatchDto from './dto/ExpensePatchDto';
 
 const selectedField = ['_id', 'name'];
 
 export default class ExpenseController {
-  private budgetService: BudgetService;
   private budgetRepository: BudgetRepository;
   private expenseRepository: ExpenseRepository;
 
-  constructor(
-    budgetService: BudgetService,
-    budgetRepository: BudgetRepository,
-    expenseRepository: ExpenseRepository
-  ) {
-    this.budgetService = budgetService;
+  constructor(budgetRepository: BudgetRepository, expenseRepository: ExpenseRepository) {
     this.budgetRepository = budgetRepository;
     this.expenseRepository = expenseRepository;
   }
 
   async list(_: Request, res: Response) {
-    this._renderExpenseListPage(res, null);
+    this._renderExpenseListPage(res);
   }
 
   async filterByBudgetLine(req: Request, res: Response) {
@@ -35,6 +31,7 @@ export default class ExpenseController {
 
   async get(req: Request, res: Response) {
     const expenses = await this.expenseRepository.find({ _id: req.params.id });
+
     if (expenses.length > 0) {
       res.render('expense', {
         page: 'expense',
@@ -42,6 +39,7 @@ export default class ExpenseController {
       });
       return;
     }
+
     res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
@@ -52,16 +50,19 @@ export default class ExpenseController {
       expenseDto.budgetLineId,
       selectedField
     );
+
     const newExpense = await this.expenseRepository.create({
       ...expenseDto.baseExpense(),
       budgetLine,
     });
-    await this.budgetService.addExpense(expenseDto.budgetLineId, {
+
+    const useCase = new AddExpense(expenseDto.budgetLineId, this.budgetRepository);
+    await useCase.add({
       ...expenseDto.baseExpense(),
       _id: newExpense._id,
     });
 
-    this._renderExpenseListPage(res, null);
+    this._renderExpenseListPage(res);
   }
 
   async delete(req: Request, res: Response) {
@@ -73,10 +74,11 @@ export default class ExpenseController {
       return;
     }
 
-    const isExpenseRemoveFromBudget = await this.budgetService.removeExpense(
+    const useCase = new RemoveExpense(
       expenseToDelete[0].budgetLine._id.toString(),
-      expenseToDelete[0]._id.toString()
+      this.budgetRepository
     );
+    const isExpenseRemoveFromBudget = await useCase.remove(expenseToDelete[0]._id.toString());
 
     if (isExpenseRemoveFromBudget) {
       res.status(StatusCodes.NO_CONTENT).end();
@@ -92,21 +94,20 @@ export default class ExpenseController {
 
     const isUpdated = await updateExpense.update(expenseDto.attributes());
     if (isUpdated) {
-      await this.budgetService.updateExpense(expenseDto.id);
-      this._renderExpenseListPage(res, null);
+      const useCase = new UpdateBudgetExpense(
+        expenseDto.id,
+        this.budgetRepository,
+        this.expenseRepository
+      );
+      await useCase.update();
+      this._renderExpenseListPage(res);
       return;
     }
     res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
-  private async _renderExpenseListPage(res: Response, query: { 'budgetLine.name': string } | null) {
-    let expenseList = [];
-    if (query === null) {
-      expenseList = await this.expenseRepository.find();
-    } else {
-      expenseList = await this.expenseRepository.find(query);
-    }
-
+  private async _renderExpenseListPage(res: Response, query?: { 'budgetLine.name': string }) {
+    const expenseList = await this.expenseRepository.find(query);
     const budgetList = await this.budgetRepository.find(selectedField);
 
     res.render('expenses', {
