@@ -16,11 +16,16 @@ export default class ExpenseController {
   private budgetRepository: BudgetRepository;
   private expenseRepository: ExpenseRepository;
 
-  constructor(budgetService: BudgetService, expenseService: ExpenseService, budgetRepository: BudgetRepository, expenseRepository: ExpenseRepository) {
+  constructor(
+    budgetService: BudgetService,
+    expenseService: ExpenseService,
+    budgetRepository: BudgetRepository,
+    expenseRepository: ExpenseRepository
+  ) {
     this.budgetService = budgetService;
     this.expenseService = expenseService;
-    this.budgetRepository = budgetRepository
-    this.expenseRepository = expenseRepository
+    this.budgetRepository = budgetRepository;
+    this.expenseRepository = expenseRepository;
   }
 
   async list(_: Request, res: Response) {
@@ -46,8 +51,14 @@ export default class ExpenseController {
   async create(req: Request, res: Response) {
     const expenseDto = new ExpenseCreateDto(req.body);
 
-    const budgetLine = await this.budgetRepository.findOneById(expenseDto.budgetLineId, selectedField);
-    const newExpense = await this.expenseRepository.create({ ...expenseDto.baseExpense(), budgetLine });
+    const budgetLine = await this.budgetRepository.findOneById(
+      expenseDto.budgetLineId,
+      selectedField
+    );
+    const newExpense = await this.expenseRepository.create({
+      ...expenseDto.baseExpense(),
+      budgetLine,
+    });
     await this.budgetService.addExpense(expenseDto.budgetLineId, {
       ...expenseDto.baseExpense(),
       _id: newExpense._id,
@@ -58,7 +69,7 @@ export default class ExpenseController {
 
   async delete(req: Request, res: Response) {
     const expenseToDelete = await this.expenseRepository.find({ _id: req.params.id });
-    const isExpenseDeleted = await this.expenseRepository.delete({_id: req.params.id});
+    const isExpenseDeleted = await this.expenseRepository.delete({ _id: req.params.id });
 
     if (!isExpenseDeleted) {
       res.status(StatusCodes.NOT_FOUND).end();
@@ -98,7 +109,7 @@ export default class ExpenseController {
       expenseList = await this.expenseRepository.find(query);
     }
 
-    const budgetList = await this.budgetRepository.find(selectedField)
+    const budgetList = await this.budgetRepository.find(selectedField);
 
     res.render('expenses', {
       page: 'expenses',

@@ -17,7 +17,6 @@ export default class BudgetService {
     this.expenseRepository = expenseRepository;
   }
 
-
   // TODO: move to use cases
   create(newBudget: Budget): Promise<void> {
     return this.repository.create({

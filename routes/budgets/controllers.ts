@@ -9,7 +9,7 @@ import BudgetPatchDto from './dto/BudgetPatchDto';
 export default class BudgetController {
   private budgetService: BudgetService;
   private budgetRepository: BudgetRepository;
-  
+
   constructor(budgetService: BudgetService, budgetRepository: BudgetRepository) {
     this.budgetService = budgetService;
     this.budgetRepository = budgetRepository;

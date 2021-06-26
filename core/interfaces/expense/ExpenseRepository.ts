@@ -1,4 +1,11 @@
-import { deleteQuery, expenseQuery, lightExpense, patchableAttributes, readExpenseInfo, writeExpense } from "../../@types/expense/types";
+import {
+  deleteQuery,
+  expenseQuery,
+  lightExpense,
+  patchableAttributes,
+  readExpenseInfo,
+  writeExpense,
+} from '../../@types/expense/types';
 
 export default interface ExpenseRepository {
   find(query?: expenseQuery): Promise<readExpenseInfo[]>;

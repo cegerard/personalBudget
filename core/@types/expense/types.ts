@@ -21,7 +21,7 @@ export type writeExpense = {
   budgetLine: {
     _id: string;
     name: string;
-  }
+  };
 };
 
 export type readExpenseInfo = {
@@ -32,9 +32,9 @@ export type readExpenseInfo = {
   budgetLine: {
     _id: string;
     name: string;
-  }
+  };
 };
 
 export type lightExpense = {
-  _id: string
-}
+  _id: string;
+};
