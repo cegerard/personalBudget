@@ -1,4 +1,4 @@
-import { deleteQuery, expenseQuery, lightExpense, patchableAttributes, readExpenseInfo, writeExpense } from '../../core/@types/expense/types';
+import { patchableAttributes } from '../../core/@types/expense/types';
 import ExpenseRepository from '../../core/interfaces/expense/ExpenseRepository';
 
 export default class ExpenseService {
@@ -6,22 +6,6 @@ export default class ExpenseService {
 
   constructor(expenseRepository: ExpenseRepository) {
     this.repository = expenseRepository;
-  }
-
-  list(): Promise<readExpenseInfo[]> {
-    return this.repository.find();
-  }
-
-  search(query: expenseQuery): Promise<readExpenseInfo[]> {
-    return this.repository.find(query);
-  }
-
-  add(expense: writeExpense): Promise<lightExpense> {
-    return this.repository.create(expense);
-  }
-
-  remove(query: deleteQuery): Promise<boolean> {
-    return this.repository.delete(query);
   }
 
   // TODO: move to use cases
