@@ -1,5 +1,5 @@
-import { deleteQuery, expenseQuery, lightExpense, patchableAttributes, readExpenseInfo, writeExpense } from '../../core/@types/expense/types';
-import ExpenseRepository from '../../core/interfaces/expense/ExpenseRepository'
+import { deleteQuery, expenseQuery, lightExpense, patchableAttributes, readExpenseInfo, writeExpense } from '../../../core/@types/expense/types';
+import ExpenseRepository from '../../../core/interfaces/expense/ExpenseRepository'
 
 export default class MongoExpenseRepository implements ExpenseRepository {
   private ExpenseModel: any;
