@@ -6,7 +6,7 @@ type baseExpense = {
 
 export default class ExpenseCreateDto {
   private _name: string;
-  private _amount: number;
+  private _amount: string;
   private _date: string;
   private _budgetLineId: string;
 
@@ -24,7 +24,7 @@ export default class ExpenseCreateDto {
   public baseExpense(): baseExpense {
     return {
       name: this._name,
-      amount: this._amount,
+      amount: +this._amount,
       date: this._date,
     };
   }
