@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
 
 import BudgetService from '../../services/budgets/BudgetService';
 import BudgetCreateDto from './dto/BudgetCreateDto';
@@ -7,9 +8,11 @@ import BudgetPatchDto from './dto/BudgetPatchDto';
 
 export default class BudgetController {
   private budgetService: BudgetService;
-
-  constructor(budgetService: BudgetService) {
+  private budgetRepository: BudgetRepository;
+  
+  constructor(budgetService: BudgetService, budgetRepository: BudgetRepository) {
     this.budgetService = budgetService;
+    this.budgetRepository = budgetRepository;
   }
 
   list(_: Request, res: Response) {
@@ -47,12 +50,12 @@ export default class BudgetController {
   }
 
   private async renderBudgetListPage(res: Response) {
-    const budgetList = await this.budgetService.list([]);
+    const budgetList = await this.budgetRepository.find([]);
     res.render('budgets', { page: 'budgets', budgetList: budgetList });
   }
 
   private async renderBudgetPage(req: Request, res: Response) {
-    const budget = await this.budgetService.getById(req.params.id, []);
+    const budget = await this.budgetRepository.findOneById(req.params.id, []);
     res.render('budget', { page: 'budget', budget });
   }
 }

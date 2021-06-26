@@ -19,13 +19,6 @@ export default class BudgetService {
     this.expenseRepository = expenseRepository;
   }
 
-  list(select: string[]): Promise<readBudgetInfo[]> {
-    return this.repository.find(select);
-  }
-
-  getById(budgetId: string, select: string[]): Promise<readBudgetComplete> {
-    return this.repository.findOneById(budgetId, select);
-  }
 
   // TODO: move to use cases
   create(newBudget: Budget): Promise<void> {
