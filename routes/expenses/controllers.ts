@@ -2,28 +2,25 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import ExpenseCreateDto from './dto/ExpenseCreateDto';
-import BudgetService from '../../services/budgets/BudgetService';
-import ExpenseService from '../../services/expenses/ExpenseService';
 import ExpensePatchDto from './dto/ExpensePatchDto';
 import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
 import ExpenseRepository from '../../core/interfaces/expense/ExpenseRepository';
+import UpdateExpense from '../../core/use_cases/expense/UpdateExpense';
+import BudgetService from '../../services/budgets/BudgetService';
 
 const selectedField = ['_id', 'name'];
 
 export default class ExpenseController {
   private budgetService: BudgetService;
-  private expenseService: ExpenseService;
   private budgetRepository: BudgetRepository;
   private expenseRepository: ExpenseRepository;
 
   constructor(
     budgetService: BudgetService,
-    expenseService: ExpenseService,
     budgetRepository: BudgetRepository,
     expenseRepository: ExpenseRepository
   ) {
     this.budgetService = budgetService;
-    this.expenseService = expenseService;
     this.budgetRepository = budgetRepository;
     this.expenseRepository = expenseRepository;
   }
@@ -91,8 +88,9 @@ export default class ExpenseController {
 
   async patch(req: Request, res: Response) {
     const expenseDto = new ExpensePatchDto(req.params.id, req.body);
+    const updateExpense = new UpdateExpense(expenseDto.id, this.expenseRepository);
 
-    const isUpdated = await this.expenseService.patch(expenseDto.id, expenseDto.attributes());
+    const isUpdated = await updateExpense.update(expenseDto.attributes());
     if (isUpdated) {
       await this.budgetService.updateExpense(expenseDto.id);
       this._renderExpenseListPage(res, null);

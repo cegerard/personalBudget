@@ -1,21 +1,16 @@
-import { MongoExpenseRepository } from '../../db/mongo';
-import expenseFixture from '../../test/fixtures/expenseFixture';
-import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
-import ExpenseService from './ExpenseService';
+import { MongoExpenseRepository } from '../../../db/mongo';
+import ExpenseModelStub from '../../../test/stubs/ExpenseModelStub';
+import UpdateExpense from './UpdateExpense';
 
-describe('ExpenseService', () => {
-  let expenseService: ExpenseService;
-
-  beforeAll(() => {
-    const expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
-    expenseService = new ExpenseService(expenseRepository);
-  });
+describe('UpdateExpense', () => {
+  const expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
+  let expenseService: UpdateExpense;
 
   beforeEach(() => {
     ExpenseModelStub.resetStore();
   });
 
-  describe('patch', () => {
+  describe('update', () => {
     describe('when the expense exists', () => {
       const EXPENSE_ID = '101';
       const EXPECTED_EXPENSE = {
@@ -32,7 +27,8 @@ describe('ExpenseService', () => {
       let patchRes: any;
 
       beforeEach(async () => {
-        patchRes = await expenseService.patch(EXPENSE_ID, {
+        expenseService = new UpdateExpense(EXPENSE_ID, expenseRepository);
+        patchRes = await expenseService.update({
           name: EXPECTED_EXPENSE.name,
           amount: EXPECTED_EXPENSE.amount,
           date: EXPECTED_EXPENSE.date,
@@ -52,8 +48,12 @@ describe('ExpenseService', () => {
     describe('when the expense does not exist', () => {
       const EXPENSE_ID = 'unkown';
 
+      beforeEach(async () => {
+        expenseService = new UpdateExpense(EXPENSE_ID, expenseRepository);
+      });
+
       it('should return false', async () => {
-        const patchRes = await expenseService.patch(EXPENSE_ID, {});
+        const patchRes = await expenseService.update({});
 
         expect(patchRes).toEqual(false);
       });
