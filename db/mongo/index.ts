@@ -21,4 +21,11 @@ function disconnectMongo() {
   mongoose.disconnect();
 }
 
-export { connectMongo as connectDb, disconnectMongo as disconnectDb, budgetModel, expenseModel, MongoBudgetRepository, MongoExpenseRepository };
+export {
+  connectMongo as connectDb,
+  disconnectMongo as disconnectDb,
+  budgetModel,
+  expenseModel,
+  MongoBudgetRepository,
+  MongoExpenseRepository,
+};

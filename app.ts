@@ -12,7 +12,13 @@ import ExpenseController from './routes/expenses/controllers';
 
 import BudgetModelStub from './test/stubs/BudgetModelStub';
 import ExpenseModelStub from './test/stubs/ExpenseModelStub';
-import { connectDb, budgetModel, expenseModel, MongoBudgetRepository, MongoExpenseRepository } from './db/mongo';
+import {
+  connectDb,
+  budgetModel,
+  expenseModel,
+  MongoBudgetRepository,
+  MongoExpenseRepository,
+} from './db/mongo';
 
 class Application {
   private mode: string;
@@ -67,7 +73,12 @@ class Application {
     const expenseService = new ExpenseService(expenseRepository);
 
     const budgetController = new BudgetController(budgetService, budgetRepository);
-    const expenseController = new ExpenseController(budgetService, expenseService, budgetRepository, expenseRepository);
+    const expenseController = new ExpenseController(
+      budgetService,
+      expenseService,
+      budgetRepository,
+      expenseRepository
+    );
     const appRouter = new AppRouter(budgetController, expenseController);
     this.app.use('/', appRouter.router);
   }
