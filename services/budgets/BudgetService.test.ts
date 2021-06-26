@@ -24,48 +24,6 @@ describe('BudgetService', () => {
     ExpenseModelStub.resetStore();
   });
 
-  describe('list', () => {
-    it('should return the list of budgets', async () => {
-      const list = await budgetService.list([]);
-      expect(list).toEqual(budgetFixture.list);
-    });
-
-    it('should return the list of projected budget fields', async () => {
-      const expectedBudgetList = budgetFixture.list.map((budget) => {
-        return {
-          _id: budget._id,
-          name: budget.name,
-          amount: budget.amount,
-        };
-      });
-      const list = await budgetService.list(['_id', 'name', 'amount']);
-      expect(list).toEqual(expectedBudgetList);
-    });
-  });
-
-  describe('getById', () => {
-    it('should return a budget from its id', async () => {
-      const budget = await budgetService.getById(SECOND_BUDGET_ID, []);
-      expect(budget).toEqual(budgetFixture.list[1]);
-    });
-
-    it('should return a projected budget from its id with fields projection', async () => {
-      const expectedProjectedBudget = {
-        description: budgetFixture.list[1].description,
-        name: budgetFixture.list[1].name,
-        amount: budgetFixture.list[1].amount,
-      };
-
-      const budget = await budgetService.getById(SECOND_BUDGET_ID, [
-        'name',
-        'amount',
-        'description',
-      ]);
-
-      expect(budget).toEqual(expectedProjectedBudget);
-    });
-  });
-
   describe('create', () => {
     it('should create a new budget with default values', async () => {
       const expectedBudget = {

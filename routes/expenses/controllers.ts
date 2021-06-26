@@ -5,16 +5,19 @@ import ExpenseCreateDto from './dto/ExpenseCreateDto';
 import BudgetService from '../../services/budgets/BudgetService';
 import ExpenseService from '../../services/expenses/ExpenseService';
 import ExpensePatchDto from './dto/ExpensePatchDto';
+import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
 
 const selectedField = ['_id', 'name'];
 
 export default class ExpenseController {
   private budgetService: BudgetService;
   private expenseService: ExpenseService;
+  private budgetRepository: BudgetRepository;
 
-  constructor(budgetService: BudgetService, expenseService: ExpenseService) {
+  constructor(budgetService: BudgetService, expenseService: ExpenseService, budgetRepository: BudgetRepository) {
     this.budgetService = budgetService;
     this.expenseService = expenseService;
+    this.budgetRepository = budgetRepository
   }
 
   async list(_: Request, res: Response) {
@@ -40,7 +43,7 @@ export default class ExpenseController {
   async create(req: Request, res: Response) {
     const expenseDto = new ExpenseCreateDto(req.body);
 
-    const budgetLine = await this.budgetService.getById(expenseDto.budgetLineId, selectedField);
+    const budgetLine = await this.budgetRepository.findOneById(expenseDto.budgetLineId, selectedField);
     const newExpense = await this.expenseService.add({ ...expenseDto.baseExpense(), budgetLine });
     await this.budgetService.addExpense(expenseDto.budgetLineId, {
       ...expenseDto.baseExpense(),
@@ -92,7 +95,7 @@ export default class ExpenseController {
       expenseList = await this.expenseService.search(query);
     }
 
-    const budgetList = await this.budgetService.list(selectedField);
+    const budgetList = await this.budgetRepository.find(selectedField)
 
     res.render('expenses', {
       page: 'expenses',
