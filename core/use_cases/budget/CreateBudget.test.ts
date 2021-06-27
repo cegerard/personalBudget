@@ -1,18 +1,18 @@
-import { MongoBudgetRepository } from '../../../db/mongo';
-import BudgetModelStub from '../../../test/stubs/BudgetModelStub';
+import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
 import { Budget } from '../../Budget';
 import CreateBudget from './CreateBudget';
 
 describe('CreateBudget', () => {
   let useCase: CreateBudget;
+  let budgetRepository: BudgetRepositoryStub;
 
   beforeAll(() => {
-    const budgetRepository = new MongoBudgetRepository(BudgetModelStub);
+    budgetRepository = new BudgetRepositoryStub();
     useCase = new CreateBudget(budgetRepository);
   });
 
   beforeEach(() => {
-    BudgetModelStub.resetStore();
+    budgetRepository.resetStore();
   });
 
   describe('create', () => {
@@ -31,8 +31,8 @@ describe('CreateBudget', () => {
       await useCase.create(
         new Budget(expectedBudget.name, expectedBudget.amount, expectedBudget.description)
       );
-      const res = await BudgetModelStub.find(null, []);
-      const storedBudget = (await BudgetModelStub.find(null, [])).find(
+      const res = await budgetRepository.find([]);
+      const storedBudget = (await budgetRepository.find([])).find(
         (budget) => budget.name === 'BudgetName'
       );
 
@@ -61,7 +61,7 @@ describe('CreateBudget', () => {
           'test'
         )
       );
-      const storedBudget = (await BudgetModelStub.find(null, [])).find(
+      const storedBudget = (await budgetRepository.find([])).find(
         (budget) => budget.name === 'BudgetName'
       );
 

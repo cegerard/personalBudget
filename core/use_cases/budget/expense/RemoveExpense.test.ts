@@ -1,13 +1,12 @@
-import { MongoBudgetRepository } from '../../../../db/mongo';
-import BudgetModelStub from '../../../../test/stubs/BudgetModelStub';
+import BudgetRepositoryStub from '../../../../test/stubs/BudgetRepositoryStub';
 import RemoveExpense from './RemoveExpense';
 
 describe('RemoveExpense', () => {
   const FOURTH_BUDGET_ID = '4';
-  const budgetRepository = new MongoBudgetRepository(BudgetModelStub);
+  const budgetRepository = new BudgetRepositoryStub();
 
   beforeEach(() => {
-    BudgetModelStub.resetStore();
+    budgetRepository.resetStore();
   });
 
   describe('remove', () => {
@@ -26,7 +25,7 @@ describe('RemoveExpense', () => {
 
     it('should remove the expense from the expenses array', async () => {
       await useCase.remove(expenseId);
-      const updatedBudget = await BudgetModelStub.findById(FOURTH_BUDGET_ID, []);
+      const updatedBudget = await budgetRepository.findOneById(FOURTH_BUDGET_ID, []);
 
       expect(updatedBudget.expenses.length).toEqual(1);
       expect(updatedBudget.expenses[0]._id).toEqual('101');
@@ -34,7 +33,7 @@ describe('RemoveExpense', () => {
 
     it('should update the available field', async () => {
       await useCase.remove(expenseId);
-      const updatedBudget = await BudgetModelStub.findById(FOURTH_BUDGET_ID, []);
+      const updatedBudget = await budgetRepository.findOneById(FOURTH_BUDGET_ID, []);
 
       expect(updatedBudget.available).toEqual(120);
     });

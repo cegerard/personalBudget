@@ -1,20 +1,19 @@
-import { MongoBudgetRepository } from '../../../../db/mongo';
+import BudgetRepositoryStub from '../../../../test/stubs/BudgetRepositoryStub';
 import ExpenseModelStub from '../../../../test/stubs/ExpenseModelStub';
-import BudgetModelStub from '../../../../test/stubs/BudgetModelStub';
 import AddExpense from './AddExpense';
 
 describe('BudgetService', () => {
   const THIRD_BUDGET_ID = '3';
   const FOURTH_BUDGET_ID = '4';
 
-  let budgetRepository: MongoBudgetRepository;
+  let budgetRepository: BudgetRepositoryStub;
 
   beforeAll(() => {
-    budgetRepository = new MongoBudgetRepository(BudgetModelStub);
+    budgetRepository = new BudgetRepositoryStub();
   });
 
   beforeEach(() => {
-    BudgetModelStub.resetStore();
+    budgetRepository.resetStore();
     ExpenseModelStub.resetStore();
   });
 
@@ -33,7 +32,7 @@ describe('BudgetService', () => {
 
     it('should add a the expense to the budget expense array', async () => {
       await new AddExpense(FOURTH_BUDGET_ID, budgetRepository).add(newExpense);
-      const updatedBudget = await BudgetModelStub.findById(FOURTH_BUDGET_ID, []);
+      const updatedBudget = await budgetRepository.findOneById(FOURTH_BUDGET_ID, []);
 
       expect(updatedBudget.expenses.length).toEqual(3);
       expect(updatedBudget.expenses[2]).toEqual(newExpense);
@@ -41,7 +40,7 @@ describe('BudgetService', () => {
 
     it('should update the budget available field', async () => {
       await new AddExpense(FOURTH_BUDGET_ID, budgetRepository).add(newExpense);
-      const updatedBudget = await BudgetModelStub.findById(FOURTH_BUDGET_ID, []);
+      const updatedBudget = await budgetRepository.findOneById(FOURTH_BUDGET_ID, []);
 
       expect(updatedBudget.available).toEqual(37);
     });
@@ -53,7 +52,7 @@ describe('BudgetService', () => {
         amount: -1.19,
         date: '2020-12-29',
       });
-      const updatedBudget = await BudgetModelStub.findById(THIRD_BUDGET_ID, []);
+      const updatedBudget = await budgetRepository.findOneById(THIRD_BUDGET_ID, []);
 
       expect(updatedBudget.available).toEqual(858.31);
     });

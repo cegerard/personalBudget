@@ -1,17 +1,17 @@
-import { MongoBudgetRepository, MongoExpenseRepository } from '../../../../db/mongo';
+import { MongoExpenseRepository } from '../../../../db/mongo';
+import BudgetRepositoryStub from '../../../../test/stubs/BudgetRepositoryStub';
 import ExpenseModelStub from '../../../../test/stubs/ExpenseModelStub';
-import BudgetModelStub from '../../../../test/stubs/BudgetModelStub';
 import UpdateExpense from './UpdateExpense';
 
 describe('UpdateExpense', () => {
   const FOURTH_BUDGET_ID = '4';
-  const budgetRepository = new MongoBudgetRepository(BudgetModelStub);
+  const budgetRepository = new BudgetRepositoryStub();
   const expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
 
   let useCase: UpdateExpense;
 
   beforeEach(() => {
-    BudgetModelStub.resetStore();
+    budgetRepository.resetStore();
     ExpenseModelStub.resetStore();
   });
 
@@ -45,7 +45,7 @@ describe('UpdateExpense', () => {
 
       it('should update the expense in its budget line', async () => {
         await useCase.update();
-        const updatedBudget = await BudgetModelStub.findById(FOURTH_BUDGET_ID, []);
+        const updatedBudget = await budgetRepository.findOneById(FOURTH_BUDGET_ID, []);
         expect(updatedBudget.expenses[0]).toEqual(EXPECTED_EXPENSE);
       });
     });

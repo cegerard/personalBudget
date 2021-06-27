@@ -1,17 +1,16 @@
-import { MongoBudgetRepository } from '../../../db/mongo';
-import BudgetModelStub from '../../../test/stubs/BudgetModelStub';
+import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
 import { budgetType } from '../../@types/budget/types';
 import UpdateBudget from './UpdateBudget';
 
 describe('UpdateBudget', () => {
-  let budgetRepository: MongoBudgetRepository;
+  let budgetRepository: BudgetRepositoryStub;
 
   beforeAll(() => {
-    budgetRepository = new MongoBudgetRepository(BudgetModelStub);
+    budgetRepository = new BudgetRepositoryStub();
   });
 
   beforeEach(() => {
-    BudgetModelStub.resetStore();
+    budgetRepository.resetStore();
   });
 
   describe('patch', () => {
@@ -45,7 +44,7 @@ describe('UpdateBudget', () => {
           type: expectedBudget.type as budgetType,
         });
 
-        const updatedBudget = await BudgetModelStub.findById(budget_id, []);
+        const updatedBudget = await budgetRepository.findOneById(budget_id, []);
         expect(updatedBudget).toEqual(expectedBudget);
       });
 
