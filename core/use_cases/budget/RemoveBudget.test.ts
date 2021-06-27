@@ -1,21 +1,22 @@
-import { MongoBudgetRepository, MongoExpenseRepository } from '../../../db/mongo';
+import { MongoExpenseRepository } from '../../../db/mongo';
+import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
 import ExpenseModelStub from '../../../test/stubs/ExpenseModelStub';
-import BudgetModelStub from '../../../test/stubs/BudgetModelStub';
 import RemoveBudget from './RemoveBudget';
 
 describe('BudgetService', () => {
   const SECOND_BUDGET_ID = '2';
 
   let useCase: RemoveBudget;
+  let budgetRepository: BudgetRepositoryStub;
 
   beforeAll(() => {
-    const budgetRepository = new MongoBudgetRepository(BudgetModelStub);
+    budgetRepository = new BudgetRepositoryStub();
     const expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
     useCase = new RemoveBudget(budgetRepository, expenseRepository);
   });
 
   beforeEach(() => {
-    BudgetModelStub.resetStore();
+    budgetRepository.resetStore();
     ExpenseModelStub.resetStore();
   });
 

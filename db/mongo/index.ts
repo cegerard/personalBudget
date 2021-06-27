@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-import budgetModel from './budget';
 import expenseModel from './expense';
 import MongoBudgetRepository from './budget/MongoBudgetRespository';
 import MongoExpenseRepository from './expense/MongoExpenseRepository';
@@ -24,7 +23,6 @@ function disconnectMongo() {
 export {
   connectMongo as connectDb,
   disconnectMongo as disconnectDb,
-  budgetModel,
   expenseModel,
   MongoBudgetRepository,
   MongoExpenseRepository,

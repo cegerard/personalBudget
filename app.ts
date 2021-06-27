@@ -4,15 +4,16 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
+import BudgetRepository from './core/interfaces/budget/BudgetRepository';
 import AppRouter from './routes/AppRouter';
 import BudgetController from './routes/budgets/controllers';
 import ExpenseController from './routes/expenses/controllers';
 
-import BudgetModelStub from './test/stubs/BudgetModelStub';
+import BudgetRepositoryStub from './test/stubs/BudgetRepositoryStub';
 import ExpenseModelStub from './test/stubs/ExpenseModelStub';
+
 import {
   connectDb,
-  budgetModel,
   expenseModel,
   MongoBudgetRepository,
   MongoExpenseRepository,
@@ -21,6 +22,7 @@ import {
 class Application {
   private mode: string;
   public app: any;
+  public budgetRepository: BudgetRepository
 
   constructor() {
     this.app = express();
@@ -30,6 +32,9 @@ class Application {
 
     if (this.mode === 'production') {
       connectDb();
+      this.budgetRepository = new MongoBudgetRepository();
+    } else {
+      this.budgetRepository = new BudgetRepositoryStub();
     }
 
     if (this.mode === 'production' || this.mode === 'dev') {
@@ -53,22 +58,18 @@ class Application {
   }
 
   _setupRouter() {
-    let BudgetModel;
     let ExpenseModel;
 
     if (this.mode !== 'production') {
-      BudgetModel = BudgetModelStub;
       ExpenseModel = ExpenseModelStub;
     } else {
-      BudgetModel = budgetModel;
       ExpenseModel = expenseModel;
     }
 
-    const budgetRepository = new MongoBudgetRepository(BudgetModel);
     const expenseRepository = new MongoExpenseRepository(ExpenseModel);
 
-    const budgetController = new BudgetController(budgetRepository, expenseRepository);
-    const expenseController = new ExpenseController(budgetRepository, expenseRepository);
+    const budgetController = new BudgetController(this.budgetRepository, expenseRepository);
+    const expenseController = new ExpenseController(this.budgetRepository, expenseRepository);
 
     const appRouter = new AppRouter(budgetController, expenseController);
 
