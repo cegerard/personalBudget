@@ -1,13 +1,13 @@
 import { MongoExpenseRepository } from '../../../db/mongo';
-import ExpenseModelStub from '../../../test/stubs/ExpenseModelStub';
+import ExpenseRepositoryStub from '../../../test/stubs/ExpenseRepositoryStub';
 import UpdateExpense from './UpdateExpense';
 
 describe('UpdateExpense', () => {
-  const expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
+  const expenseRepository = new ExpenseRepositoryStub();
   let expenseService: UpdateExpense;
 
   beforeEach(() => {
-    ExpenseModelStub.resetStore();
+    expenseRepository.resetStore();
   });
 
   describe('update', () => {
@@ -36,7 +36,7 @@ describe('UpdateExpense', () => {
       });
 
       it('should update the expense attributes', async () => {
-        const expense = await ExpenseModelStub.findById(EXPENSE_ID);
+        const expense = await expenseRepository.findById(EXPENSE_ID);
         expect(expense).toEqual(EXPECTED_EXPENSE);
       });
 

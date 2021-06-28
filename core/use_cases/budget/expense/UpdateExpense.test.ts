@@ -1,18 +1,17 @@
-import { MongoExpenseRepository } from '../../../../db/mongo';
 import BudgetRepositoryStub from '../../../../test/stubs/BudgetRepositoryStub';
-import ExpenseModelStub from '../../../../test/stubs/ExpenseModelStub';
+import ExpenseRepositoryStub from '../../../../test/stubs/ExpenseRepositoryStub';
 import UpdateExpense from './UpdateExpense';
 
 describe('UpdateExpense', () => {
   const FOURTH_BUDGET_ID = '4';
   const budgetRepository = new BudgetRepositoryStub();
-  const expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
+  const expenseRepository = new ExpenseRepositoryStub();
 
   let useCase: UpdateExpense;
 
   beforeEach(() => {
     budgetRepository.resetStore();
-    ExpenseModelStub.resetStore();
+    expenseRepository.resetStore();
   });
 
   describe('updateExpense', () => {
@@ -26,8 +25,8 @@ describe('UpdateExpense', () => {
       };
 
       beforeEach(async () => {
-        await ExpenseModelStub.updateOne(
-          { _id: EXPENSE_ID },
+        await expenseRepository.patch(
+          EXPENSE_ID,
           {
             name: EXPECTED_EXPENSE.name,
             amount: EXPECTED_EXPENSE.amount,

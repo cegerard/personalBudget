@@ -10,19 +10,20 @@ import BudgetController from './routes/budgets/controllers';
 import ExpenseController from './routes/expenses/controllers';
 
 import BudgetRepositoryStub from './test/stubs/BudgetRepositoryStub';
-import ExpenseModelStub from './test/stubs/ExpenseModelStub';
+import ExpenseRepositoryStub from './test/stubs/ExpenseRepositoryStub';
 
 import {
   connectDb,
-  expenseModel,
   MongoBudgetRepository,
   MongoExpenseRepository,
 } from './db/mongo';
+import ExpenseRepository from './core/interfaces/expense/ExpenseRepository';
 
 class Application {
   private mode: string;
   public app: any;
-  public budgetRepository: BudgetRepository
+  public budgetRepository: BudgetRepository;
+  public expenseRepository: ExpenseRepository;
 
   constructor() {
     this.app = express();
@@ -33,8 +34,10 @@ class Application {
     if (this.mode === 'production') {
       connectDb();
       this.budgetRepository = new MongoBudgetRepository();
+      this.expenseRepository = new MongoExpenseRepository();
     } else {
       this.budgetRepository = new BudgetRepositoryStub();
+      this.expenseRepository = new ExpenseRepositoryStub();
     }
 
     if (this.mode === 'production' || this.mode === 'dev') {
@@ -58,18 +61,8 @@ class Application {
   }
 
   _setupRouter() {
-    let ExpenseModel;
-
-    if (this.mode !== 'production') {
-      ExpenseModel = ExpenseModelStub;
-    } else {
-      ExpenseModel = expenseModel;
-    }
-
-    const expenseRepository = new MongoExpenseRepository(ExpenseModel);
-
-    const budgetController = new BudgetController(this.budgetRepository, expenseRepository);
-    const expenseController = new ExpenseController(this.budgetRepository, expenseRepository);
+    const budgetController = new BudgetController(this.budgetRepository, this.expenseRepository);
+    const expenseController = new ExpenseController(this.budgetRepository, this.expenseRepository);
 
     const appRouter = new AppRouter(budgetController, expenseController);
 
