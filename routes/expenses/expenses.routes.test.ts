@@ -1,24 +1,20 @@
 import StatusCodes from 'http-status-codes';
 import request from 'supertest';
 
-import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import application from '../../app';
-import { MongoExpenseRepository } from '../../db/mongo';
 import BudgetRepositoryStub from '../../test/stubs/BudgetRepositoryStub';
+import ExpenseRepositoryStub from '../../test/stubs/ExpenseRepositoryStub';
 
 const app = application.app;
 const budgetRepository = application.budgetRepository as BudgetRepositoryStub;
+const expenseRepository = application.expenseRepository as ExpenseRepositoryStub;
 
 describe('Route', () => {
-  let expenseRepository: MongoExpenseRepository;
 
-  beforeAll(() => {
-    expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
-  });
 
   beforeEach(() => {
     budgetRepository.resetStore();
-    ExpenseModelStub.resetStore();
+    expenseRepository.resetStore();
   });
 
   describe('GET /expenses', () => {
@@ -138,19 +134,26 @@ describe('Route', () => {
     });
 
     it('should return a 500 error when the budget line does not exists', async () => {
-      const expenseModel = new ExpenseModelStub({
+      const newExpense = await expenseRepository.create({
         name: 'todelete',
-        budgetLine: { _id: 'notExist' },
+        amount: 42,
+        date: '',
+        budgetLine: { _id: 'notExist', name: 'test' },
       });
-      const newExpense = await expenseModel.save();
+
       await request(app)
         .delete(`/expenses/${newExpense._id}`)
         .expect(StatusCodes.INTERNAL_SERVER_ERROR);
     });
 
     it('should return a 204 when expense does not exist in budget line', async () => {
-      const expenseModel = new ExpenseModelStub({ name: 'todelete', budgetLine: { _id: '1' } });
-      const newExpense = await expenseModel.save();
+      const newExpense = await expenseRepository.create({ 
+        name: 'todelete',
+        amount: 42,
+        date: '',
+        budgetLine: { _id: '1', name: 'test' }
+      });
+      
       await request(app).delete(`/expenses/${newExpense._id}`).expect(StatusCodes.NO_CONTENT);
     });
   });

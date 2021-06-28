@@ -1,5 +1,5 @@
 import BudgetRepositoryStub from '../../../../test/stubs/BudgetRepositoryStub';
-import ExpenseModelStub from '../../../../test/stubs/ExpenseModelStub';
+import ExpenseRepositoryStub from '../../../../test/stubs/ExpenseRepositoryStub';
 import AddExpense from './AddExpense';
 
 describe('BudgetService', () => {
@@ -7,14 +7,16 @@ describe('BudgetService', () => {
   const FOURTH_BUDGET_ID = '4';
 
   let budgetRepository: BudgetRepositoryStub;
+  let expenseRepository: ExpenseRepositoryStub;
 
   beforeAll(() => {
     budgetRepository = new BudgetRepositoryStub();
+    expenseRepository = new ExpenseRepositoryStub();
   });
 
   beforeEach(() => {
     budgetRepository.resetStore();
-    ExpenseModelStub.resetStore();
+    expenseRepository.resetStore();
   });
 
   describe('add', () => {

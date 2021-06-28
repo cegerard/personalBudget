@@ -2,21 +2,16 @@ import StatusCodes from 'http-status-codes';
 import slugify from 'slugify';
 import request from 'supertest';
 
-import ExpenseModelStub from '../../test/stubs/ExpenseModelStub';
 import application from '../../app';
-import { MongoExpenseRepository } from '../../db/mongo';
 import BudgetRepositoryStub from '../../test/stubs/BudgetRepositoryStub';
+import ExpenseRepositoryStub from '../../test/stubs/ExpenseRepositoryStub';
 
 const app = application.app;
 const budgetRepository = application.budgetRepository as BudgetRepositoryStub;
+const expenseRepository = application.expenseRepository as ExpenseRepositoryStub;
+
 
 describe('/budgets', () => {
-  let expenseRepository: MongoExpenseRepository;
-
-  beforeAll(() => {
-    expenseRepository = new MongoExpenseRepository(ExpenseModelStub);
-  });
-
   beforeEach(() => {
     budgetRepository.resetStore();
   });
