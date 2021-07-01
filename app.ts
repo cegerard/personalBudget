@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
 import BudgetRepository from './core/interfaces/budget/BudgetRepository';
+import ExpenseRepository from './core/interfaces/expense/ExpenseRepository';
 import AppRouter from './routes/AppRouter';
 import BudgetController from './routes/budgets/controllers';
 import ExpenseController from './routes/expenses/controllers';
@@ -17,7 +18,6 @@ import {
   MongoBudgetRepository,
   MongoExpenseRepository,
 } from './db/mongo';
-import ExpenseRepository from './core/interfaces/expense/ExpenseRepository';
 
 class Application {
   private mode: string;
