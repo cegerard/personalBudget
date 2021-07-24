@@ -14,3 +14,17 @@ a {
 .reserveTitle {
   color: #5f27cd;
 }
+
+.budget-card {
+  width: 250px;
+}
+
+.card-category {
+  color:darkslategray;
+  font-size: small;
+}
+
+.card-text {
+  margin-top: 1em;
+  height: 24px;
+}
