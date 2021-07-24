@@ -5,10 +5,9 @@ block content
     h1(class="mb-4 mt-3") Budgets
       button(type="button" class='btn btn-primary addBtn' data-target="#addBudgetModal" data-toggle="modal")
         span(class='fas fa-plus')
-  .row
+  .d-flex.flex-row.flex-wrap.justify-content-between
     each budget in budgetList
-      .col-md-4.mb-4
-        include components/budgets/budgetCard
+      include components/budgets/budgetCard
 
     div(id="addBudgetModal" class="modal fade")
       .modal-dialog
