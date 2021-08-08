@@ -31,24 +31,6 @@ describe('Route', () => {
     });
   });
 
-  describe('GET /expense/:id', () => {
-    it('should response with 200', async () => {
-      await request(app).get('/expenses/100').expect(StatusCodes.OK);
-    });
-
-    it('should response with 404 if expense does not exist', async () => {
-      await request(app).get('/expenses/not_found').expect(StatusCodes.NOT_FOUND);
-    });
-
-    it('should render expenses page', async () => {
-      await request(app)
-        .get('/expenses/100')
-        .then((res) => {
-          expect(res.text).toMatchSnapshot();
-        });
-    });
-  });
-
   describe('GET /expenses/filter', () => {
     it('should response with 200', async () => {
       await request(app).get('/expenses/filter?budgetName=Essence').expect(StatusCodes.OK);

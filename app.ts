@@ -6,6 +6,7 @@ import logger from 'morgan';
 
 import BudgetRepository from './core/interfaces/budget/BudgetRepository';
 import ExpenseRepository from './core/interfaces/expense/ExpenseRepository';
+import ApiRouter from './routes/api/ApiRouter';
 import AppRouter from './routes/AppRouter';
 import BudgetController from './routes/budgets/controllers';
 import ExpenseController from './routes/expenses/controllers';
@@ -18,6 +19,7 @@ import {
   MongoBudgetRepository,
   MongoExpenseRepository,
 } from './db/mongo';
+import ApiExpenseController from './routes/api/expenses/controller';
 
 class Application {
   private mode: string;
@@ -44,12 +46,13 @@ class Application {
       basePath = `${__dirname}/..`;
     }
 
-    this._setupViewEngine(basePath);
-    this._setupRouter();
-    this._setupErrorHandling();
+    this.setupViewEngine(basePath);
+    this.setupApplicationRouter();
+    this.setupApiRouter();
+    this.setupErrorHandling();
   }
 
-  _setupViewEngine(basePath: string) {
+  private setupViewEngine(basePath: string) {
     this.app.set('views', path.join(basePath, 'views'));
     this.app.set('view engine', 'pug');
 
@@ -60,7 +63,7 @@ class Application {
     this.app.use(express.static(path.join(basePath, 'public')));
   }
 
-  _setupRouter() {
+  private setupApplicationRouter() {
     const budgetController = new BudgetController(this.budgetRepository, this.expenseRepository);
     const expenseController = new ExpenseController(this.budgetRepository, this.expenseRepository);
 
@@ -69,7 +72,15 @@ class Application {
     this.app.use('/', appRouter.router);
   }
 
-  _setupErrorHandling() {
+  private setupApiRouter() {
+    const expenseController = new ApiExpenseController(this.expenseRepository);
+
+    const apiRouter = new ApiRouter(expenseController);
+
+    this.app.use('/api', apiRouter.router);
+  }
+
+  private setupErrorHandling() {
     // catch 404 and forward to error handler
     this.app.use((req: any, res: any, next: any) => {
       next(createError(404));
