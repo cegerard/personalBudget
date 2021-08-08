@@ -42,6 +42,27 @@ function deleteExpense(attr) {
   request.send();
 }
 
+function editExpense(expenseId) {
+  const request = new XMLHttpRequest();
+  request.open('GET', `/api/expenses/${expenseId}`, true);
+
+  request.onload = function () {
+    const expense = JSON.parse(request.response);
+    document.getElementById('editExpenseForm').setAttribute('action', `/expenses/${expense._id}`);
+    document.getElementById('expenseNameEdit').setAttribute('value', expense.name);
+    document.getElementById('expenseAmountEdit').setAttribute('value', expense.amount);
+    document.getElementById('expenseDateEdit').setAttribute('value', expense.date);
+    const budgetOptionTag = document.createElement('option');
+    budgetOptionTag.setAttribute('value', expense.budgetLine._id);
+    budgetOptionTag.innerHTML = expense.budgetLine.name;
+    document.getElementById('budgetLineEdit').appendChild(budgetOptionTag)
+
+    $('#editExpenseModal').modal();
+  };
+
+  request.send();
+}
+
 function filterExpenseOnBudgetName() {
   const budgetNameQuery = document.getElementById('expense-filter').value;
   if (budgetNameQuery === '') {

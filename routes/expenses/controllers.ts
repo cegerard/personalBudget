@@ -29,20 +29,6 @@ export default class ExpenseController {
     this._renderExpenseListPage(res, { 'budgetLine.name': req.query.budgetName as string });
   }
 
-  async get(req: Request, res: Response) {
-    const expenses = await this.expenseRepository.find({ _id: req.params.id });
-
-    if (expenses.length > 0) {
-      res.render('expense', {
-        page: 'expense',
-        expense: expenses[0],
-      });
-      return;
-    }
-
-    res.sendStatus(StatusCodes.NOT_FOUND);
-  }
-
   async create(req: Request, res: Response) {
     const expenseDto = new ExpenseCreateDto(req.body);
 
