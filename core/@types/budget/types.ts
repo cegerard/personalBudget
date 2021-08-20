@@ -7,6 +7,7 @@ export type patchableAttributes = {
   category?: string;
   type?: budgetType;
   available?: number;
+  expenses?: expenseInfo[];
 };
 
 export type readBudgetInfo = {
@@ -61,3 +62,16 @@ export type expenseInfo = {
   amount: number;
   date: string;
 };
+
+export type renewStatus = 'SUCCESS' | 'FAILURE';
+
+export type readBudgetSimple = {
+  _id: string;
+  name: string;
+}
+
+export type renewResponse =  {
+  status: renewStatus;
+  renewedSuccess: readBudgetSimple[];
+  renewedFaillure: readBudgetSimple[];
+}
