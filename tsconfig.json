@@ -8,6 +8,7 @@
     "outDir": "dist/"
   },
   "include": [
+    "bin/**/*",
     "data/**/*",
     "db/**/*",
     "routes/**/*",

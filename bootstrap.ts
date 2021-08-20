@@ -8,6 +8,8 @@
 import Debug from 'debug';
 import http from 'http';
 import application from './app';
+import migrate from './db/mongo/migration';
+
 
 const debug = Debug('personalbudget:server');
 
@@ -91,4 +93,7 @@ function onListening() {
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr?.port}`;
   debug(`Listening on ${bind}`);
   console.log('Personal Budget app started');
+  if (app.get('env') === 'production') {
+    migrate();
+  }
 }
