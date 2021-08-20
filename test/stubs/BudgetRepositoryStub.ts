@@ -9,7 +9,7 @@ import {
 } from '../../core/@types/budget/types';
 import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
 
-const PATCHABLE_FIELDS = ['name', 'slug', 'amount', 'available', 'description', 'category', 'type'];
+const PATCHABLE_FIELDS = ['name', 'slug', 'amount', 'available', 'description', 'category', 'type', 'expenses'];
 
 export default class BudgetRepositoryStub implements BudgetRepository {
   private budgetStore: any[];
