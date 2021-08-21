@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
-import ExpenseRepository from '../../core/interfaces/expense/ExpenseRepository';
-import AddExpense from '../../core/use_cases/budget/expense/AddExpense';
-import RemoveExpense from '../../core/use_cases/budget/expense/RemoveExpense';
-import { default as UpdateBudgetExpense } from '../../core/use_cases/budget/expense/UpdateExpense';
-import UpdateExpense from '../../core/use_cases/expense/UpdateExpense';
+import BudgetRepository from '../../../core/interfaces/budget/BudgetRepository';
+import ExpenseRepository from '../../../core/interfaces/expense/ExpenseRepository';
+import AddExpense from '../../../core/use_cases/budget/expense/AddExpense';
+import RemoveExpense from '../../../core/use_cases/budget/expense/RemoveExpense';
+import { default as UpdateBudgetExpense } from '../../../core/use_cases/budget/expense/UpdateExpense';
+import UpdateExpense from '../../../core/use_cases/expense/UpdateExpense';
 import ExpenseCreateDto from './dto/ExpenseCreateDto';
 import ExpensePatchDto from './dto/ExpensePatchDto';
 

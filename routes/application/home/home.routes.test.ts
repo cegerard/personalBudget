@@ -1,7 +1,7 @@
 import StatusCodes from 'http-status-codes';
 import request from 'supertest';
 
-import application from '../../app';
+import application from '../../../app';
 
 const app = application.app;
 

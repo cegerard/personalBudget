@@ -1,5 +1,4 @@
 import StatusCodes from 'http-status-codes';
-import { before } from 'lodash';
 import request from 'supertest';
 
 import application from '../../app';
