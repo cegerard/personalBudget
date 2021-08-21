@@ -2,9 +2,9 @@ import StatusCodes from 'http-status-codes';
 import slugify from 'slugify';
 import request from 'supertest';
 
-import application from '../../app';
-import BudgetRepositoryStub from '../../test/stubs/BudgetRepositoryStub';
-import ExpenseRepositoryStub from '../../test/stubs/ExpenseRepositoryStub';
+import application from '../../../app';
+import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
+import ExpenseRepositoryStub from '../../../test/stubs/ExpenseRepositoryStub';
 
 const app = application.app;
 const budgetRepository = application.budgetRepository as BudgetRepositoryStub;

@@ -1,4 +1,4 @@
-import { patchableAttributes } from '../../../core/@types/expense/types';
+import { patchableAttributes } from '../../../../core/@types/expense/types';
 
 export default class ExpensePatchDto {
   private _name: string;

@@ -1,4 +1,4 @@
-import { budgetType, patchableAttributes } from '../../../core/@types/budget/types';
+import { budgetType, patchableAttributes } from '../../../../core/@types/budget/types';
 
 export default class BudgetPatchDto {
   private _id: string;

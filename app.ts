@@ -7,9 +7,9 @@ import logger from 'morgan';
 import BudgetRepository from './core/interfaces/budget/BudgetRepository';
 import ExpenseRepository from './core/interfaces/expense/ExpenseRepository';
 import ApiRouter from './routes/api/ApiRouter';
-import AppRouter from './routes/AppRouter';
-import BudgetController from './routes/budgets/controllers';
-import ExpenseController from './routes/expenses/controllers';
+import AppRouter from './routes/application/AppRouter';
+import BudgetController from './routes/application/budgets/controllers';
+import ExpenseController from './routes/application/expenses/controllers';
 
 import BudgetRepositoryStub from './test/stubs/BudgetRepositoryStub';
 import ExpenseRepositoryStub from './test/stubs/ExpenseRepositoryStub';
