@@ -9,10 +9,9 @@
   },
   "include": [
     "bin/**/*",
-    "data/**/*",
+    "core/**/*",
     "db/**/*",
     "routes/**/*",
-    "services/**/*",
     "app.ts",
     "AppError.ts",
     "bootstrap.ts"
