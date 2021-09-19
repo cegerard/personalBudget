@@ -4,28 +4,30 @@ import request from 'supertest';
 import application from '../../../app';
 import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
 import ExpenseRepositoryStub from '../../../test/stubs/ExpenseRepositoryStub';
+import { authenticate } from '../../../test/authHelper'
 
-const app = application.app;
 const budgetRepository = application.budgetRepository as BudgetRepositoryStub;
 const expenseRepository = application.expenseRepository as ExpenseRepositoryStub;
 
-describe('Route', () => {
+let app: any = null;
 
+describe('Expenses with authentication', () => {
 
-  beforeEach(() => {
+  beforeEach(async () => {
     budgetRepository.resetStore();
     expenseRepository.resetStore();
+    app = await authenticate(application.app);
   });
 
   describe('GET /expenses', () => {
     it('should response with 200', async () => {
-      await request(app).get('/expenses').expect(StatusCodes.OK);
+      await app.get('/expenses').expect(StatusCodes.OK);
     });
 
     it('should render expenses page', async () => {
-      await request(app)
+      await app
         .get('/expenses')
-        .then((res) => {
+        .then((res: any) => {
           expect(res.text).toMatchSnapshot();
         });
     });
@@ -33,13 +35,13 @@ describe('Route', () => {
 
   describe('GET /expenses/filter', () => {
     it('should response with 200', async () => {
-      await request(app).get('/expenses/filter?budgetName=Essence').expect(StatusCodes.OK);
+      await app.get('/expenses/filter?budgetName=Essence').expect(StatusCodes.OK);
     });
 
     it('should render expenses filtered page', async () => {
-      await request(app)
+      await app
         .get('/expenses/filter?budgetName=Essence')
-        .then((res) => {
+        .then((res: any) => {
           expect(res.text).toMatchSnapshot();
         });
     });
@@ -54,7 +56,7 @@ describe('Route', () => {
     };
 
     it('should create a new expense', async () => {
-      await request(app)
+      await app
         .post('/expenses')
         .set('Content-Type', 'application/json')
         .send(newExpense)
@@ -91,7 +93,7 @@ describe('Route', () => {
 
   describe('DELETE /expenses', () => {
     it('should remove expense from expense list and the budget line', async () => {
-      await request(app)
+      await app
         .delete('/expenses/100')
         .expect(StatusCodes.NO_CONTENT)
         .then(async () => {
@@ -112,7 +114,7 @@ describe('Route', () => {
     });
 
     it('should return a 404 error when the expense can not be deleted', async () => {
-      await request(app).delete('/expenses/404').expect(StatusCodes.NOT_FOUND);
+      await app.delete('/expenses/404').expect(StatusCodes.NOT_FOUND);
     });
 
     it('should return a 500 error when the budget line does not exists', async () => {
@@ -123,7 +125,7 @@ describe('Route', () => {
         budgetLine: { _id: 'notExist', name: 'test' },
       });
 
-      await request(app)
+      await app
         .delete(`/expenses/${newExpense._id}`)
         .expect(StatusCodes.INTERNAL_SERVER_ERROR);
     });
@@ -136,7 +138,7 @@ describe('Route', () => {
         budgetLine: { _id: '1', name: 'test' }
       });
       
-      await request(app).delete(`/expenses/${newExpense._id}`).expect(StatusCodes.NO_CONTENT);
+      await app.delete(`/expenses/${newExpense._id}`).expect(StatusCodes.NO_CONTENT);
     });
   });
 
@@ -155,7 +157,7 @@ describe('Route', () => {
       ['amount', 42],
       ['date', '2021-02-02'],
     ])('should update the expense %s', async (field, value) => {
-      await request(app)
+      await app
         .post(`/expenses/${expenseId}`)
         .set('Content-Type', 'application/json')
         .send({
@@ -171,7 +173,7 @@ describe('Route', () => {
     });
 
     it('should not update the expense budget line ', async () => {
-      await request(app)
+      await app
         .post(`/expenses/${expenseId}`)
         .set('Content-Type', 'application/json')
         .send({
@@ -186,7 +188,7 @@ describe('Route', () => {
     });
 
     it('should not add attributes not define in schema', async () => {
-      await request(app)
+      await app
         .post(`/expenses/${expenseId}`)
         .set('Content-Type', 'application/json')
         .send({
@@ -203,7 +205,7 @@ describe('Route', () => {
     });
 
     it('should return 404 when expense does not exists', async () => {
-      await request(app)
+      await app
         .post(`/expenses/not-exists`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100 })
@@ -211,14 +213,108 @@ describe('Route', () => {
     });
 
     it('should render expenses page', async () => {
-      await request(app)
+      await app
         .post(`/expenses/${expenseId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100, budgetlineId: expenseBeforeUpdate.budgetLine._id })
         .expect(StatusCodes.OK)
-        .then((res) => {
+        .then((res: any) => {
           expect(res.text).toMatchSnapshot();
         });
     });
   });
+});
+
+describe('Expenses without authentication', () => {
+  beforeEach(() => {
+    app = request(application.app);
+  });
+
+  describe('GET /expenses', () => {
+    it('should response with 401', async () => {
+      await app.get('/expenses').expect(StatusCodes.UNAUTHORIZED);
+    });
+
+    it('should render home page', async () => {
+      await app
+        .get('/expenses')
+        .then((res: any) => {
+          expect(res.text).toMatchSnapshot();
+        });
+    });
+  });
+
+  describe('GET /expenses/filter', () => {
+    it('should response with 401', async () => {
+      await app.get('/expenses/filter?budgetName=Essence').expect(StatusCodes.UNAUTHORIZED);
+    });
+
+    it('should render the home page', async () => {
+      await app
+        .get('/expenses/filter?budgetName=Essence')
+        .then((res: any) => {
+          expect(res.text).toMatchSnapshot();
+        });
+    });
+  });
+
+  describe('POST /expenses', () => {
+    const newExpense = {
+      name: 'test expense',
+      amount: 12,
+      date: '2020-09-10',
+      budgetlineId: '1',
+    };
+
+    it('should do nothing', async () => {
+      await app
+        .post('/expenses')
+        .set('Content-Type', 'application/json')
+        .send(newExpense)
+        .expect(StatusCodes.UNAUTHORIZED)
+        .then(async () => {
+          const expenses = await expenseRepository.find(undefined);
+          const expensesFound = expenses.filter((expense: any) => {
+            return expense.name === newExpense.name;
+          });
+          expect(expensesFound.length).toEqual(0);
+        });
+    });
+  });
+
+  describe('DELETE /expenses', () => {
+    it('should return unauthorized', async () => {
+      await app
+        .delete('/expenses/100')
+        .expect(StatusCodes.UNAUTHORIZED);
+    });
+
+    it('should return a 404 error when the expense can not be deleted', async () => {
+      await app.delete('/expenses/404').expect(StatusCodes.UNAUTHORIZED);
+    });
+  });
+
+  describe('PATCH /expenses', () => {
+    const expenseId = '100';
+
+    let expenseBeforeUpdate: any;
+
+    beforeEach(async () => {
+      const expenses = await expenseRepository.find({ _id: expenseId });
+      expenseBeforeUpdate = expenses[0];
+    });
+
+    it('should return unauthorized', async () => {
+      await app
+        .post(`/expenses/${expenseId}`)
+        .set('Content-Type', 'application/json')
+        .send({
+          budgetLine: {
+            _id: 'new_budget_line_id',
+          },
+        })
+        .expect(StatusCodes.UNAUTHORIZED);
+    });
+  });
+
 });

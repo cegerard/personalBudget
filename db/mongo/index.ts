@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 import MongoBudgetRepository from './budget/MongoBudgetRespository';
 import MongoExpenseRepository from './expense/MongoExpenseRepository';
+import MongoUserRepository from './user/MongoUserRepository';
 
 function connectMongo() {
   const USER = process.env.USER;
@@ -22,4 +23,5 @@ export {
   disconnectMongo as disconnectDb,
   MongoBudgetRepository,
   MongoExpenseRepository,
+  MongoUserRepository,
 };

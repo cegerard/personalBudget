@@ -3,7 +3,9 @@ import expenseModel from '.';
 import { deleteQuery, expenseQuery, patchableAttributes, writeExpense } from '../../../core/@types/expense/types';
 import MongoExpenseRepository from './MongoExpenseRepository';
 
-const save = jest.fn();
+const save = jest.fn(() => { 
+  return Promise.resolve({ _id: '123' });
+});
 const constructor = () => {
   return { save };
 };
@@ -47,9 +49,9 @@ describe('MongoExpenseRepository', () => {
       expect(save).toHaveBeenCalled();
     });
 
-    it('should return void', async () => {
+    it('should return the expense id', async () => {
       const ret = await mongoRepository.create(expenseValue);
-      expect(ret).toBeUndefined();
+      expect(ret).toEqual({_id: '123'});
     });
   });
 

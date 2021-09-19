@@ -1,24 +1,28 @@
 import createError from 'http-errors';
 import express from 'express';
+import session from 'express-session';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
 
 import BudgetRepository from './core/interfaces/budget/BudgetRepository';
 import ExpenseRepository from './core/interfaces/expense/ExpenseRepository';
+import UserRepository from './core/interfaces/user/UserRepository';
 import ApiRouter from './routes/api/ApiRouter';
 import AppRouter from './routes/application/AppRouter';
+import HomeController from './routes/application/home/controllers';
 import BudgetController from './routes/application/budgets/controllers';
 import ExpenseController from './routes/application/expenses/controllers';
 
 import BudgetRepositoryStub from './test/stubs/BudgetRepositoryStub';
 import ExpenseRepositoryStub from './test/stubs/ExpenseRepositoryStub';
+import UserRepositoryStub from './test/stubs/UserRepositoryStub';
 
-import {
-  connectDb,
-  MongoBudgetRepository,
-  MongoExpenseRepository,
-} from './db/mongo';
+import { User } from './core/User';
+import { UserCredential } from './core/UserCredential';
+import { connectDb, MongoUserRepository, MongoBudgetRepository, MongoExpenseRepository } from './db/mongo';
 import ApiExpenseController from './routes/api/expenses/controller';
 
 class Application {
@@ -26,6 +30,7 @@ class Application {
   public app: any;
   public budgetRepository: BudgetRepository;
   public expenseRepository: ExpenseRepository;
+  public userRepository: UserRepository;
 
   constructor() {
     this.app = express();
@@ -37,37 +42,88 @@ class Application {
       connectDb();
       this.budgetRepository = new MongoBudgetRepository();
       this.expenseRepository = new MongoExpenseRepository();
+      this.userRepository = new MongoUserRepository();
     } else {
       this.budgetRepository = new BudgetRepositoryStub();
       this.expenseRepository = new ExpenseRepositoryStub();
+      this.userRepository = new UserRepositoryStub();
     }
 
     if (this.mode === 'production' || this.mode === 'dev') {
       basePath = `${__dirname}/..`;
     }
 
+    this.setupBasics();
+    this.setupAuthentication();
     this.setupViewEngine(basePath);
     this.setupApplicationRouter();
     this.setupApiRouter();
     this.setupErrorHandling();
   }
 
-  private setupViewEngine(basePath: string) {
-    this.app.set('views', path.join(basePath, 'views'));
-    this.app.set('view engine', 'pug');
-
+  private setupBasics() {
     this.app.use(logger('dev'));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(cookieParser());
+  }
+
+  private setupAuthentication() {
+    passport.use(
+      new LocalStrategy(
+        {
+          usernameField: 'email',
+          passwordField: 'password',
+        },
+        async (email, password, done) => {
+          const user = await this.userRepository.findByEmail(email);
+          const credential = new UserCredential(email, password);
+          
+          if(credential.authenticate(user)) {
+            done(null, user);
+            return;
+          }
+          
+          done(null, false, { message: 'Incorrect credentials.' });
+        }
+      )
+    );
+
+    passport.serializeUser((user: any, done) => {
+      const currentUser = user as User;
+      done(null, currentUser.id);
+    });
+
+    passport.deserializeUser(async (id: string, done) => {
+      const user = await this.userRepository.find(id);
+      done(null, user);
+    });
+
+
+    this.app.use(
+      session({
+        saveUninitialized: true,
+        resave: true,
+        secret: 'May the odds be ever in your favor.',
+      })
+    );
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
+  }
+
+  private setupViewEngine(basePath: string) {
+    this.app.set('views', path.join(basePath, 'views'));
+    this.app.set('view engine', 'pug');
+
     this.app.use(express.static(path.join(basePath, 'public')));
   }
 
   private setupApplicationRouter() {
+    const homeController = new HomeController(this.userRepository);
     const budgetController = new BudgetController(this.budgetRepository, this.expenseRepository);
     const expenseController = new ExpenseController(this.budgetRepository, this.expenseRepository);
 
-    const appRouter = new AppRouter(budgetController, expenseController);
+    const appRouter = new AppRouter(homeController, budgetController, expenseController);
 
     this.app.use('/', appRouter.router);
   }

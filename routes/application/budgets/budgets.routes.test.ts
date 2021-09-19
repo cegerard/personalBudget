@@ -5,28 +5,29 @@ import request from 'supertest';
 import application from '../../../app';
 import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
 import ExpenseRepositoryStub from '../../../test/stubs/ExpenseRepositoryStub';
+import { authenticate } from '../../../test/authHelper';
 
-const app = application.app;
+
 const budgetRepository = application.budgetRepository as BudgetRepositoryStub;
 const expenseRepository = application.expenseRepository as ExpenseRepositoryStub;
 
+let app: any = null;
 
-describe('/budgets', () => {
-  beforeEach(() => {
+describe('/budgets with authentication', () => {
+  beforeEach(async () => {
     budgetRepository.resetStore();
+    app = await authenticate(application.app);
   });
 
   describe('GET /budgets', () => {
     it('should response with 200', async () => {
-      await request(app).get('/budgets').expect(StatusCodes.OK);
+      await app.get('/budgets').expect(StatusCodes.OK);
     });
 
     it('should render budgets page', async () => {
-      await request(app)
-        .get('/budgets')
-        .then((res) => {
-          expect(res.text).toMatchSnapshot();
-        });
+      await app.get('/budgets').then((res: any) => {
+        expect(res.text).toMatchSnapshot();
+      });
     });
   });
 
@@ -35,15 +36,13 @@ describe('/budgets', () => {
     const budgetUrl = `/budgets/${budgetId}`;
 
     it('should response with 200', async () => {
-      await request(app).get(budgetUrl).expect(StatusCodes.OK);
+      await app.get(budgetUrl).expect(StatusCodes.OK);
     });
 
     it('should render budget details page', async () => {
-      await request(app)
-        .get(budgetUrl)
-        .then((res) => {
-          expect(res.text).toMatchSnapshot();
-        });
+      await app.get(budgetUrl).then((res: any) => {
+        expect(res.text).toMatchSnapshot();
+      });
     });
   });
 
@@ -56,7 +55,7 @@ describe('/budgets', () => {
     };
 
     it('should create a new budget line', async () => {
-      await request(app)
+      await app
         .post('/budgets')
         .set('Content-Type', 'application/json')
         .send(newBudget)
@@ -82,7 +81,7 @@ describe('/budgets', () => {
 
   describe('DELETE /budgets', () => {
     it('should remove budget line and all its expenses', async () => {
-      await request(app)
+      await app
         .delete('/budgets/4')
         .expect(StatusCodes.NO_CONTENT)
         .then(async () => {
@@ -103,7 +102,7 @@ describe('/budgets', () => {
     });
 
     it('should return a 404 error when the budget can not be deleted', async () => {
-      await request(app).delete('/budgets/404').expect(404);
+      await app.delete('/budgets/404').expect(404);
     });
   });
 
@@ -123,7 +122,7 @@ describe('/budgets', () => {
       ['description', 'the description'],
       ['category', 'cat'],
     ])('should update the budget %s', async (field, value) => {
-      await request(app)
+      await app
         .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ [field]: value })
@@ -134,7 +133,7 @@ describe('/budgets', () => {
     });
 
     it('should not update other budget attributes', async () => {
-      await request(app)
+      await app
         .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ name: 'new name' })
@@ -146,7 +145,7 @@ describe('/budgets', () => {
     });
 
     it('should not add attributes not define in schema', async () => {
-      await request(app)
+      await app
         .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ name: 'new name', notexist: 'should not add', dont: 'aie' })
@@ -158,7 +157,7 @@ describe('/budgets', () => {
     });
 
     it('should update the slug with the name', async () => {
-      await request(app)
+      await app
         .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ name: 'new name' })
@@ -169,7 +168,7 @@ describe('/budgets', () => {
     });
 
     it('should update the available value when amount is updated', async () => {
-      await request(app)
+      await app
         .post(`/budgets/${budgetId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 666 })
@@ -181,7 +180,7 @@ describe('/budgets', () => {
 
     it('should update the available value with expenses', async () => {
       const budgetWithExpenseId = '4';
-      await request(app)
+      await app
         .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100 })
@@ -193,7 +192,7 @@ describe('/budgets', () => {
 
     it('should set the available value when passed as parameters', async () => {
       const budgetWithExpenseId = '4';
-      await request(app)
+      await app
         .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
         .send({ available: 4000 })
@@ -205,7 +204,7 @@ describe('/budgets', () => {
 
     it('should return 404 when budget does not exists on amount update', async () => {
       const budgetWithExpenseId = 'not-exists';
-      await request(app)
+      await app
         .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100 })
@@ -214,13 +213,85 @@ describe('/budgets', () => {
 
     it('should render budget details page', async () => {
       const budgetWithExpenseId = '4';
-      await request(app)
+      await app
         .post(`/budgets/${budgetWithExpenseId}`)
         .set('Content-Type', 'application/json')
         .send({ amount: 100 })
-        .then((res) => {
+        .then((res: any) => {
           expect(res.text).toMatchSnapshot();
         });
+    });
+  });
+});
+
+describe('/budget without authentication', () => {
+  beforeEach(() => {
+    app = request(application.app);
+  });
+
+  describe('GET /budgets', () => {
+    it('should response with 401', async () => {
+      await app.get('/budgets').expect(StatusCodes.UNAUTHORIZED);
+    });
+
+    it('should render home page', async () => {
+      await app.get('/budgets').then((res: any) => {
+        expect(res.text).toMatchSnapshot();
+      });
+    });
+  });
+
+  describe('GET /budgets/:id', () => {
+    const budgetId = 4;
+    const budgetUrl = `/budgets/${budgetId}`;
+
+    it('should response with 302', async () => {
+      await app.get(budgetUrl).expect(StatusCodes.UNAUTHORIZED);
+    });
+
+    it('should render home page', async () => {
+      await app.get(budgetUrl).then((res: any) => {
+        expect(res.text).toMatchSnapshot();
+      });
+    });
+  });
+
+  describe('POST /budgets', () => {
+    const newBudget = {
+      name: 'budget Name',
+      amount: 42,
+      description: 'little description',
+      category: 'cat',
+    };
+
+    it('should not create a new budget line', async () => {
+      await app
+        .post('/budgets')
+        .set('Content-Type', 'application/json')
+        .send(newBudget)
+        .expect(StatusCodes.UNAUTHORIZED);
+
+      const budgets = await budgetRepository.find();
+      const budgetsFound = budgets.filter((budget: any) => {
+        return budget.name === newBudget.name;
+      });
+      expect(budgetsFound.length).toEqual(0);
+    });
+  });
+
+  describe('DELETE /budgets', () => {
+    it('should return unauthorized', async () => {
+      await app.delete('/budgets/4').expect(StatusCodes.UNAUTHORIZED);
+    });
+  });
+
+  describe('POST /budgets/:id', () => {
+    it('should return unauthorized', async () => {
+      await app
+        .post('/budgets/5')
+        .set('Content-Type', 'application/json')
+        .send({})
+        .expect(StatusCodes.UNAUTHORIZED);
     });
   });
 });
