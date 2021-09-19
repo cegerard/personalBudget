@@ -1,21 +1,23 @@
 import StatusCodes from 'http-status-codes';
-import request from 'supertest';
 
 import application from '../../app';
 import ExpenseRepositoryStub from '../../test/stubs/ExpenseRepositoryStub';
+import { authenticate } from '../../test/authHelper'
 
-const app = application.app;
 const expenseRepository = application.expenseRepository as ExpenseRepositoryStub;
 
+let app: any = null;
+
 describe('expenses', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     expenseRepository.resetStore();
+    app = await authenticate(application.app);
   });
 
   describe('GET /expenses/:id', () => {
     describe('when the expense exists', () => {
       it('should respond an expense', async () => {
-        await request(app)
+        await app
           .get('/api/expenses/100')
           .expect({
             _id: '100',
@@ -32,7 +34,7 @@ describe('expenses', () => {
 
     describe('when the expense does not exists', () => {
       it('should respond not found', async () => {
-        await request(app).get('/api/expenses/not-exist').expect(StatusCodes.NOT_FOUND);
+        await app.get('/api/expenses/not-exist').expect(StatusCodes.NOT_FOUND);
       });
     });
   });

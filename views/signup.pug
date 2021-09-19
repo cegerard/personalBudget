@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  section.vh-100
+    .container.py-5.h-100
+      .row.d-flex.justify-content-center.align-items-center.h-100
+        .col-12.col-md-8.col-lg-6.col-xl-5
+          .card.bg-dark.text-white(style="border-radius: 1rem;")
+            .card-body.p-5.text-center
+              form.mb-md-5.mt-md-4.pb-5(action="/sign_up", method="post")
+                h2.fw-bold.mb-2.text-uppercase Sign Up
+                p.text-white-50.mb-5 Create an account to manage your budgets
+
+                .form-outline.form-white.mb-4
+                  input.form-control.form-control-lg(type="text" id="firstname" name='firstName')
+                  label.form-label(for="firstname") First name
+
+                  .form-outline.form-white.mb-4
+                  input.form-control.form-control-lg(type="text" id="lastname" name='lastName')
+                  label.form-label(for="lastname") Last name
+
+                .form-outline.form-white.mb-4
+                  input.form-control.form-control-lg(type="email" id="email" name='email')
+                  label.form-label(for="email") Email
+
+                .form-outline.form-white.mb-4
+                  input.form-control.form-control-lg(type="password" id="pass" name="password")
+                  label.form-label(for="pass") Password
+
+                .form-outline.form-white.mb-4
+                  input.form-control.form-control-lg(type="password" id="pass2" name="password2")
+                  label.form-label(for="pass2") Retype password
+
+                <p class="mb-3">Have already an account?  <a href="/" class="text-white-50 fw-bold"><u>Login here</u></a></p>
+
+                button.btn.btn-outline-light.btn-lg.px-5(type="submit") Create Account
+  

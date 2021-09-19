@@ -20,7 +20,7 @@ export default class MongoBudgetRepository implements BudgetRepository {
     return budgetModel.findById(budgetId, selectedFields);
   }
 
-  create(budget: writeBudget): Promise<void> {
+  async create(budget: writeBudget): Promise<void> {
     const createBudget = new budgetModel({
       name: budget.name,
       slug: budget.slug,
@@ -31,7 +31,8 @@ export default class MongoBudgetRepository implements BudgetRepository {
       category: budget.category,
       type: budget.type,
     });
-    return createBudget.save();
+    await createBudget.save();
+    return Promise.resolve();
   }
 
   async update(budgetToUpdate: writeBudgetComplete): Promise<boolean> {

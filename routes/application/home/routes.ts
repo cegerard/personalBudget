@@ -1,7 +1,28 @@
 import express from 'express';
+import passport from 'passport';
 
-const router = express.Router();
+import HomeController from './controllers';
+import Authentication from '../../../lib/security/authentication'
 
-router.get('/', (req, res) => res.redirect(`${req.baseUrl}/budgets`));
 
-export default router;
+const Router = express.Router;
+
+function init(controller: HomeController) {
+  const router = Router();
+
+  router.get('/', Authentication.forwardAuthenticated, controller.get.bind(controller));
+  router.post(
+    '/login',
+    passport.authenticate('local', {
+      successRedirect: '/budgets',
+      failureRedirect: '/',
+      failureFlash: false,
+    })
+  );
+  router.get('/sign_up', controller.signUpForm.bind(controller));
+  router.post('/sign_up', controller.signUp.bind(controller));
+
+  return router;
+}
+
+export default { init };

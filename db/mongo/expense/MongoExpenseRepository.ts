@@ -16,10 +16,11 @@ export default class MongoExpenseRepository implements ExpenseRepository {
     return expenseModel.find(query as any);
   }
 
-  create(expenseValue: writeExpense): Promise<lightExpense> {
+  async create(expenseValue: writeExpense): Promise<lightExpense> {
     const newExpense = new expenseModel(expenseValue);
     // TODO convert to light expense
-    return newExpense.save();
+    const savedExpense = await newExpense.save();
+    return Promise.resolve({ _id: savedExpense._id });
   }
 
   async delete(query: deleteQuery): Promise<boolean> {
