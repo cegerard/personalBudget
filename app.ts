@@ -1,11 +1,12 @@
-import createError from 'http-errors';
+import MongoDBStore from 'connect-mongodb-session';
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import session from 'express-session';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import logger from 'morgan';
+import createError from 'http-errors';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
+import path from 'path';
+import logger from 'morgan';
 
 import BudgetRepository from './core/interfaces/budget/BudgetRepository';
 import ExpenseRepository from './core/interfaces/expense/ExpenseRepository';
@@ -99,14 +100,26 @@ class Application {
       done(null, user);
     });
 
+    const sessionOptions: any = {
+      saveUninitialized: true,
+      resave: true,
+      secret: 'May the odds be ever in your favor.',
+      cookie: {
+        maxAge: 3600 * 24 * 4, // 4 days
+      }
+    };
 
-    this.app.use(
-      session({
-        saveUninitialized: true,
-        resave: true,
-        secret: 'May the odds be ever in your favor.',
-      })
-    );
+    if (this.mode === 'production') {
+      const SessionStore = MongoDBStore(session);
+      const store = new SessionStore({
+        uri:`mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@dev.hw9tl.azure.mongodb.net/${process.env.DB}`,
+        collection: 'clientSessions',
+      });
+
+      sessionOptions.store = store;
+    }
+
+    this.app.use(session(sessionOptions));
     this.app.use(passport.initialize());
     this.app.use(passport.session());
   }
