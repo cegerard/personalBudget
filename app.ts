@@ -103,7 +103,7 @@ class Application {
     const sessionOptions: any = {
       saveUninitialized: true,
       resave: true,
-      secret: 'May the odds be ever in your favor.',
+      secret: process.env.SESSION_SECRET || 'May the odds be ever in your favor.',
       cookie: {
         maxAge: 3600 * 24 * 4, // 4 days
       }
@@ -114,6 +114,10 @@ class Application {
       const store = new SessionStore({
         uri:`mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@dev.hw9tl.azure.mongodb.net/${process.env.DB}`,
         collection: 'clientSessions',
+      });
+  
+      store.on('error', function(error) {
+        console.log(error);
       });
 
       sessionOptions.store = store;
