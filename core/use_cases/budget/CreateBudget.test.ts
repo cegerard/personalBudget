@@ -16,56 +16,56 @@ describe('CreateBudget', () => {
   });
 
   describe('create', () => {
-    it('should create a new budget with default values', async () => {
-      const expectedBudget = {
+    const budgetName = 'BudgetName';
+    const budgetSlug = 'budgetname';
+    const value = 100;
+    const description = 'budget description';
+
+    let expectedBudget: any;
+
+    beforeEach(() => {
+      expectedBudget = {
         _id: expect.any(String),
-        name: 'BudgetName',
-        slug: 'budgetname',
-        amount: 100,
-        available: 100,
-        description: 'budget description',
+        name: budgetName,
+        slug: budgetSlug,
+        amount: value,
+        available: value,
+        description: description,
         expenses: [],
         type: 'NORMAL',
       };
-
-      await useCase.create(
-        new Budget(expectedBudget.name, expectedBudget.amount, expectedBudget.description)
-      );
-      const res = await budgetRepository.find([]);
-      const storedBudget = (await budgetRepository.find([])).find(
-        (budget) => budget.name === 'BudgetName'
-      );
-
-      expect(storedBudget).toEqual(expectedBudget);
     });
 
-    it('should create a new budget with all values', async () => {
-      const expectedBudget = {
-        _id: expect.any(String),
-        name: 'BudgetName',
-        slug: 'budgetname',
-        amount: 100,
-        available: 100,
-        description: 'budget description',
-        expenses: [],
-        category: 'test',
-        type: 'RESERVE',
-      };
+    async function findBudget() {
+      const budgets = await budgetRepository.find([]);
+      return budgets.find((budget) => budget.name === budgetName);
+    }
 
-      await useCase.create(
-        new Budget(
-          expectedBudget.name,
-          expectedBudget.amount,
-          expectedBudget.description,
-          'RESERVE',
-          'test'
-        )
-      );
-      const storedBudget = (await budgetRepository.find([])).find(
-        (budget) => budget.name === 'BudgetName'
-      );
+    describe('with only mandatory parameters', () => {
+      beforeEach(async () => {
+        await useCase.create(new Budget(budgetName, value, description));
+      });
 
-      expect(storedBudget).toEqual(expectedBudget);
+      it('should create a new budget with default values', async () => {
+        expect(findBudget()).resolves.toEqual(expectedBudget);
+      });
+    });
+
+    describe('with all parameters', () => {
+      beforeEach(async () => {
+        const type = 'RESERVE';
+        const category = 'test';
+
+        await useCase.create(new Budget(budgetName, value, description, type, category));
+
+        expectedBudget.category = category;
+        expectedBudget.type = type;
+      });
+
+      it('should create a new budget with all values', async () => {
+        expect(findBudget()).resolves.toEqual(expectedBudget);
+      });
     });
   });
 });
+
