@@ -6,6 +6,11 @@ const ExpenseSchema = new mongoose.Schema({
   date: { type: String, required: true },
 });
 
+const OwnerSchema = new mongoose.Schema({
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+});
+
 const budgetSchema = new mongoose.Schema({
   name: { type: String, required: true },
   slug: { type: String, required: true },
@@ -20,6 +25,7 @@ const budgetSchema = new mongoose.Schema({
   },
   expenses: { type: [ExpenseSchema], default: [] },
   category: { type: String },
+  owner: { type: OwnerSchema, required: true },
 });
 
 export default budgetSchema;

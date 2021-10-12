@@ -1,3 +1,5 @@
+import { owner } from '../user/types';
+
 export type budgetType = 'NORMAL' | 'RESERVE';
 
 export type patchableAttributes = {
@@ -40,6 +42,7 @@ export type writeBudget = {
   type: budgetType;
   description: string;
   category?: string;
+  owner: owner;
 };
 
 export type writeBudgetComplete = {

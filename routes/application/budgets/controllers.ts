@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import BudgetRepository from '../../../core/interfaces/budget/BudgetRepository';
 import ExpenseRepository from '../../../core/interfaces/expense/ExpenseRepository';
+import { User } from '../../../core/User';
 import CreateBudget from '../../../core/use_cases/budget/CreateBudget';
 import RemoveBudget from '../../../core/use_cases/budget/RemoveBudget';
 import UpdateBudget from '../../../core/use_cases/budget/UpdateBudget';
@@ -29,7 +30,9 @@ export default class BudgetController {
 
   async create(req: Request, res: Response) {
     const budgetDto = new BudgetCreateDto(req.body);
-    await new CreateBudget(this.budgetRepository).create(budgetDto.toBudget());
+    const owner = req.user! as User;
+
+    await new CreateBudget(this.budgetRepository).create(budgetDto.toBudget(), owner);
     this.renderBudgetListPage(res);
   }
 

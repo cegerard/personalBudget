@@ -52,6 +52,10 @@ describe('MongoBudgetRepository', () => {
       amount: 42,
       type: 'NORMAL',
       description: 'blabla',
+      owner: {
+        id: '123',
+        name: 'test',
+      },
     };
 
     it('should create a new budget', async () => {
