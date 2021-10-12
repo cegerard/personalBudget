@@ -67,7 +67,7 @@ describe('RenewBudget', () => {
       expect(updatedBudget.available).toEqual(150);
     });
 
-    it('update clear expenses from budget 4', async () => {
+    it('clear expenses from budget 4', async () => {
       await useCase.renewAll();
       const updatedBudget = await budgetRepository.findOneById('4');
 
@@ -82,6 +82,10 @@ describe('RenewBudget', () => {
           amount: 50,
           type: 'RESERVE',
           description: 'test reserve budget',
+          owner: {
+            id: '123',
+            name: 'renew test',
+          },
         });
       });
 

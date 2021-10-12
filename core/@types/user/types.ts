@@ -4,3 +4,8 @@ export type userCreate = {
   email: string;
   password: string;
 };
+
+export type owner = {
+  id: string;
+  name: string;
+};

@@ -29,6 +29,7 @@ export default class MongoBudgetRepository implements BudgetRepository {
       expenses: [],
       category: budget.category,
       type: budget.type,
+      owner: budget.owner,
     });
     await createBudget.save();
     return Promise.resolve();

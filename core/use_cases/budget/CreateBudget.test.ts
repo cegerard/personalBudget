@@ -1,5 +1,6 @@
 import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
 import { Budget } from '../../Budget';
+import { User } from '../../User';
 import CreateBudget from './CreateBudget';
 
 describe('CreateBudget', () => {
@@ -20,6 +21,7 @@ describe('CreateBudget', () => {
     const budgetSlug = 'budgetname';
     const value = 100;
     const description = 'budget description';
+    const owner = new User('123456', 'budget', 'owner', '', '');
 
     let expectedBudget: any;
 
@@ -33,6 +35,10 @@ describe('CreateBudget', () => {
         description: description,
         expenses: [],
         type: 'NORMAL',
+        owner: {
+          id: expect.any(String),
+          name: 'budget owner',
+        },
       };
     });
 
@@ -43,11 +49,11 @@ describe('CreateBudget', () => {
 
     describe('with only mandatory parameters', () => {
       beforeEach(async () => {
-        await useCase.create(new Budget(budgetName, value, description));
+        await useCase.create(new Budget(budgetName, value, description), owner);
       });
 
       it('should create a new budget with default values', async () => {
-        expect(findBudget()).resolves.toEqual(expectedBudget);
+        await expect(findBudget()).resolves.toEqual(expectedBudget);
       });
     });
 
@@ -56,16 +62,15 @@ describe('CreateBudget', () => {
         const type = 'RESERVE';
         const category = 'test';
 
-        await useCase.create(new Budget(budgetName, value, description, type, category));
+        await useCase.create(new Budget(budgetName, value, description, type, category), owner);
 
         expectedBudget.category = category;
         expectedBudget.type = type;
       });
 
       it('should create a new budget with all values', async () => {
-        expect(findBudget()).resolves.toEqual(expectedBudget);
+        await expect(findBudget()).resolves.toEqual(expectedBudget);
       });
     });
   });
 });
-

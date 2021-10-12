@@ -1,6 +1,7 @@
 import slugify from 'slugify';
 
 import { Budget } from '../../Budget';
+import { User } from '../../User';
 import BudgetRepository from '../../interfaces/budget/BudgetRepository';
 
 export default class CreateBudget {
@@ -10,7 +11,7 @@ export default class CreateBudget {
     this.repository = budgetRepository;
   }
 
-  create(newBudget: Budget): Promise<void> {
+  create(newBudget: Budget, user: User): Promise<void> {
     const slug = this.generateslug(newBudget.name);
 
     return this.repository.create({
@@ -20,6 +21,10 @@ export default class CreateBudget {
       description: newBudget.description,
       category: newBudget.category,
       type: newBudget.type,
+      owner: {
+        id: user.id,
+        name: user.fullName,
+      },
     });
   }
 

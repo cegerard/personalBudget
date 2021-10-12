@@ -21,6 +21,10 @@ export class User {
     return this._login;
   }
 
+  public get fullName(): string {
+    return [this._firstName, this._lastName].join(' ').trim();
+  }
+
   public get encryptedPassword(): string {
     return this._password;
   }

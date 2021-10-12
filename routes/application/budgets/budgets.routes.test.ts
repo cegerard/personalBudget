@@ -65,7 +65,7 @@ describe('/budgets with authentication', () => {
         return budget.name === newBudget.name;
       });
       expect(budgetsFound.length).toEqual(1);
-      expect(budgetsFound[0]).toMatchObject({
+      expect(budgetsFound[0]).toEqual({
         _id: expect.any(String),
         name: newBudget.name,
         slug: slugify(newBudget.name, { lower: true }),
@@ -74,6 +74,11 @@ describe('/budgets with authentication', () => {
         available: newBudget.amount,
         expenses: [],
         category: 'cat',
+        type: 'NORMAL',
+        owner: {
+          id: '0001',
+          name: 'admin istrator',
+        },
       });
     });
   });
