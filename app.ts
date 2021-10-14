@@ -104,8 +104,10 @@ class Application {
       saveUninitialized: true,
       resave: true,
       secret: process.env.SESSION_SECRET || 'May the odds be ever in your favor.',
+      name: 'session',
+      httpOnly: true,
       cookie: {
-        maxAge: 3600 * 24 * 4, // 4 days
+        expires: 1000 * 3600 * 2, // 24 hours in miliseconds
       }
     };
 
@@ -121,6 +123,7 @@ class Application {
       });
 
       sessionOptions.store = store;
+      //sessionOptions.secure = true; // TODO: use this option when https is available
     }
 
     this.app.use(session(sessionOptions));

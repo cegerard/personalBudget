@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
 
 import UserRepository from '../../../core/interfaces/user/UserRepository';
 import { UserCredential } from '../../../core/UserCredential';
@@ -23,12 +22,12 @@ export default class HomeController {
     const userData = req.body;
 
     if (!userData.password || userData.password !== userData.password2) {
-      return res.redirect(StatusCodes.BAD_REQUEST, '/sign_up');
+      return res.redirect('/sign_up');
     }
 
     const existingUser = await this.userRepository.findByEmail(userData.email);
     if(existingUser) {
-      return res.redirect(StatusCodes.CONFLICT, '/sign_up');
+      return res.redirect('/sign_up');
     }
 
     const cryptedPassword = UserCredential.cipher(userData.password);

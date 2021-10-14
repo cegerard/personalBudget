@@ -171,7 +171,7 @@ describe('Home', () => {
           .post('/sign_up')
           .set('Content-Type', 'application/json')
           .send(newUser)
-          .expect(StatusCodes.BAD_REQUEST);
+          .expect(StatusCodes.MOVED_TEMPORARILY);
       });
 
       it('should render sign up page', async () => {
@@ -196,7 +196,7 @@ describe('Home', () => {
           .post('/sign_up')
           .set('Content-Type', 'application/json')
           .send(newUser)
-          .expect(StatusCodes.BAD_REQUEST);
+          .expect(StatusCodes.MOVED_TEMPORARILY);
       });
 
       it('should render sign up page', async () => {
@@ -221,7 +221,7 @@ describe('Home', () => {
           .post('/sign_up')
           .set('Content-Type', 'application/json')
           .send(newUser)
-          .expect(StatusCodes.BAD_REQUEST);
+          .expect(StatusCodes.MOVED_TEMPORARILY);
       });
 
       it('should render sign up page', async () => {
@@ -246,7 +246,7 @@ describe('Home', () => {
           .post('/sign_up')
           .set('Content-Type', 'application/json')
           .send(newUser)
-          .expect(StatusCodes.BAD_REQUEST);
+          .expect(StatusCodes.MOVED_TEMPORARILY);
       });
 
       it('should render sign up page', async () => {
@@ -270,7 +270,7 @@ describe('Home', () => {
           .post('/sign_up')
           .set('Content-Type', 'application/json')
           .send(newUser)
-          .expect(StatusCodes.CONFLICT);
+          .expect(StatusCodes.MOVED_TEMPORARILY);
       });
 
       it('should render sign up page', async () => {

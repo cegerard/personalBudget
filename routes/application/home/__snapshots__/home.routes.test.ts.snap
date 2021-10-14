@@ -16,14 +16,14 @@ exports[`Home POST /login when the user exists when the credentials are not vali
 
 exports[`Home POST /login when the user exists when the credentials are valid should render the budget list page 1`] = `"Found. Redirecting to /budgets"`;
 
-exports[`Home POST /sign_up when password is empty should render sign up page 1`] = `"Bad Request. Redirecting to /sign_up"`;
+exports[`Home POST /sign_up when password is empty should render sign up page 1`] = `"Found. Redirecting to /sign_up"`;
 
-exports[`Home POST /sign_up when password is null should render sign up page 1`] = `"Bad Request. Redirecting to /sign_up"`;
+exports[`Home POST /sign_up when password is null should render sign up page 1`] = `"Found. Redirecting to /sign_up"`;
 
-exports[`Home POST /sign_up when password is undefined should render sign up page 1`] = `"Bad Request. Redirecting to /sign_up"`;
+exports[`Home POST /sign_up when password is undefined should render sign up page 1`] = `"Found. Redirecting to /sign_up"`;
 
-exports[`Home POST /sign_up when passwords does not match should render sign up page 1`] = `"Bad Request. Redirecting to /sign_up"`;
+exports[`Home POST /sign_up when passwords does not match should render sign up page 1`] = `"Found. Redirecting to /sign_up"`;
 
 exports[`Home POST /sign_up when the sign up is successful should render budgets list page 1`] = `"Found. Redirecting to /budgets"`;
 
-exports[`Home POST /sign_up when user already exists should render sign up page 1`] = `"Conflict. Redirecting to /sign_up"`;
+exports[`Home POST /sign_up when user already exists should render sign up page 1`] = `"Found. Redirecting to /sign_up"`;
