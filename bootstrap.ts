@@ -10,7 +10,6 @@ import http from 'http';
 import application from './app';
 import migrate from './db/mongo/migration';
 
-
 const debug = Debug('personalbudget:server');
 
 const app = application.app;

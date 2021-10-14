@@ -2,7 +2,7 @@ import StatusCodes from 'http-status-codes';
 
 import application from '../../app';
 import ExpenseRepositoryStub from '../../test/stubs/ExpenseRepositoryStub';
-import { authenticate } from '../../test/authHelper'
+import { authenticate } from '../../test/authHelper';
 
 const expenseRepository = application.expenseRepository as ExpenseRepositoryStub;
 
@@ -17,18 +17,16 @@ describe('expenses', () => {
   describe('GET /expenses/:id', () => {
     describe('when the expense exists', () => {
       it('should respond an expense', async () => {
-        await app
-          .get('/api/expenses/100')
-          .expect({
-            _id: '100',
-            name: 'Cmax',
-            amount: 41,
-            date: '2020-08-29',
-            budgetLine: {
-              _id: '4',
-              name: 'Essence',
-            },
-          });
+        await app.get('/api/expenses/100').expect({
+          _id: '100',
+          name: 'Cmax',
+          amount: 41,
+          date: '2020-08-29',
+          budgetLine: {
+            _id: '4',
+            name: 'Essence',
+          },
+        });
       });
     });
 

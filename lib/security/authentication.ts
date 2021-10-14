@@ -1,7 +1,6 @@
-import { Request, Response } from 'express'
+import { Request, Response } from 'express';
 
 export default class Authentication {
-
   static PASSPHRASE = process.env.PASSPHRASE || 'secret';
 
   static ensureAuthenticated(req: Request, res: Response, next: any) {
@@ -11,10 +10,10 @@ export default class Authentication {
     res.redirect('/');
   }
 
-  static forwardAuthenticated(req: Request, res:Response, next: any) {
+  static forwardAuthenticated(req: Request, res: Response, next: any) {
     if (!req.isAuthenticated()) {
-      return next()
+      return next();
     }
-    res.redirect('/budgets');    
+    res.redirect('/budgets');
   }
 }

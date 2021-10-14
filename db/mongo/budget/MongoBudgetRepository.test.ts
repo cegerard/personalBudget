@@ -1,6 +1,10 @@
 jest.mock('.');
 import budgetModel from '.';
-import { attributesToPatch, writeBudget, writeBudgetComplete } from '../../../core/@types/budget/types';
+import {
+  attributesToPatch,
+  writeBudget,
+  writeBudgetComplete,
+} from '../../../core/@types/budget/types';
 import MongoBudgetRepository from './MongoBudgetRespository';
 
 const save = jest.fn();

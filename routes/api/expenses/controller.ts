@@ -3,7 +3,6 @@ import { StatusCodes } from 'http-status-codes';
 
 import ExpenseRepository from '../../../core/interfaces/expense/ExpenseRepository';
 
-
 export default class ApiExpenseController {
   private expenseRepository: ExpenseRepository;
 

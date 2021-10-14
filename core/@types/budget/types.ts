@@ -68,10 +68,10 @@ export type renewStatus = 'SUCCESS' | 'FAILURE';
 export type readBudgetSimple = {
   _id: string;
   name: string;
-}
+};
 
-export type renewResponse =  {
+export type renewResponse = {
   status: renewStatus;
   renewedSuccess: readBudgetSimple[];
   renewedFaillure: readBudgetSimple[];
-}
+};

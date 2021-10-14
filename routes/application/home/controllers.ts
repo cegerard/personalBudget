@@ -26,7 +26,7 @@ export default class HomeController {
     }
 
     const existingUser = await this.userRepository.findByEmail(userData.email);
-    if(existingUser) {
+    if (existingUser) {
       return res.redirect('/sign_up');
     }
 
@@ -36,8 +36,10 @@ export default class HomeController {
       lastName: userData.lastName,
       email: userData.email,
       password: cryptedPassword,
-    });    
+    });
 
-    req.login(user, (_) => { return res.redirect('/budgets'); });
+    req.login(user, (_) => {
+      return res.redirect('/budgets');
+    });
   }
 }

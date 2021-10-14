@@ -55,7 +55,7 @@ function editExpense(expenseId) {
     const budgetOptionTag = document.createElement('option');
     budgetOptionTag.setAttribute('value', expense.budgetLine._id);
     budgetOptionTag.innerHTML = expense.budgetLine.name;
-    document.getElementById('budgetLineEdit').appendChild(budgetOptionTag)
+    document.getElementById('budgetLineEdit').appendChild(budgetOptionTag);
 
     $('#editExpenseModal').modal();
   };
