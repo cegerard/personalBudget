@@ -232,7 +232,7 @@ describe('Expenses without authentication', () => {
 
   describe('GET /expenses', () => {
     it('should response with 401', async () => {
-      await app.get('/expenses').expect(StatusCodes.UNAUTHORIZED);
+      await app.get('/expenses').expect(StatusCodes.MOVED_TEMPORARILY);
     });
 
     it('should render home page', async () => {
@@ -246,7 +246,7 @@ describe('Expenses without authentication', () => {
 
   describe('GET /expenses/filter', () => {
     it('should response with 401', async () => {
-      await app.get('/expenses/filter?budgetName=Essence').expect(StatusCodes.UNAUTHORIZED);
+      await app.get('/expenses/filter?budgetName=Essence').expect(StatusCodes.MOVED_TEMPORARILY);
     });
 
     it('should render the home page', async () => {
@@ -271,7 +271,7 @@ describe('Expenses without authentication', () => {
         .post('/expenses')
         .set('Content-Type', 'application/json')
         .send(newExpense)
-        .expect(StatusCodes.UNAUTHORIZED)
+        .expect(StatusCodes.MOVED_TEMPORARILY)
         .then(async () => {
           const expenses = await expenseRepository.find(undefined);
           const expensesFound = expenses.filter((expense: any) => {
@@ -286,11 +286,11 @@ describe('Expenses without authentication', () => {
     it('should return unauthorized', async () => {
       await app
         .delete('/expenses/100')
-        .expect(StatusCodes.UNAUTHORIZED);
+        .expect(StatusCodes.MOVED_TEMPORARILY);
     });
 
     it('should return a 404 error when the expense can not be deleted', async () => {
-      await app.delete('/expenses/404').expect(StatusCodes.UNAUTHORIZED);
+      await app.delete('/expenses/404').expect(StatusCodes.MOVED_TEMPORARILY);
     });
   });
 
@@ -313,7 +313,7 @@ describe('Expenses without authentication', () => {
             _id: 'new_budget_line_id',
           },
         })
-        .expect(StatusCodes.UNAUTHORIZED);
+        .expect(StatusCodes.MOVED_TEMPORARILY);
     });
   });
 

@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import { StatusCodes } from 'http-status-codes';
 
 export default class Authentication {
 
@@ -7,9 +6,9 @@ export default class Authentication {
 
   static ensureAuthenticated(req: Request, res: Response, next: any) {
     if (req.isAuthenticated()) {
-      return next()
+      return next();
     }
-    res.redirect('/', StatusCodes.UNAUTHORIZED);
+    res.redirect('/');
   }
 
   static forwardAuthenticated(req: Request, res:Response, next: any) {

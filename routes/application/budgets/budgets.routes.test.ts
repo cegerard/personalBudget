@@ -231,7 +231,7 @@ describe('/budget without authentication', () => {
 
   describe('GET /budgets', () => {
     it('should response with 401', async () => {
-      await app.get('/budgets').expect(StatusCodes.UNAUTHORIZED);
+      await app.get('/budgets').expect(StatusCodes.MOVED_TEMPORARILY);
     });
 
     it('should render home page', async () => {
@@ -246,7 +246,7 @@ describe('/budget without authentication', () => {
     const budgetUrl = `/budgets/${budgetId}`;
 
     it('should response with 302', async () => {
-      await app.get(budgetUrl).expect(StatusCodes.UNAUTHORIZED);
+      await app.get(budgetUrl).expect(StatusCodes.MOVED_TEMPORARILY);
     });
 
     it('should render home page', async () => {
@@ -269,7 +269,7 @@ describe('/budget without authentication', () => {
         .post('/budgets')
         .set('Content-Type', 'application/json')
         .send(newBudget)
-        .expect(StatusCodes.UNAUTHORIZED);
+        .expect(StatusCodes.MOVED_TEMPORARILY);
 
       const budgets = await budgetRepository.find();
       const budgetsFound = budgets.filter((budget: any) => {
@@ -281,7 +281,7 @@ describe('/budget without authentication', () => {
 
   describe('DELETE /budgets', () => {
     it('should return unauthorized', async () => {
-      await app.delete('/budgets/4').expect(StatusCodes.UNAUTHORIZED);
+      await app.delete('/budgets/4').expect(StatusCodes.MOVED_TEMPORARILY);
     });
   });
 
@@ -291,7 +291,7 @@ describe('/budget without authentication', () => {
         .post('/budgets/5')
         .set('Content-Type', 'application/json')
         .send({})
-        .expect(StatusCodes.UNAUTHORIZED);
+        .expect(StatusCodes.MOVED_TEMPORARILY);
     });
   });
 });
