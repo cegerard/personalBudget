@@ -7,7 +7,6 @@ import { User } from '../../core/User';
 import Authentication from '../../lib/security/authentication';
 
 export default class UserRepositoryStub implements UserRepository {
-
   private userStore: User[];
 
   constructor() {
@@ -26,13 +25,7 @@ export default class UserRepositoryStub implements UserRepository {
   }
 
   create(user: userCreate): Promise<User> {
-    const newUser = new User(
-      uid(),
-      user.firstName,
-      user.lastName,
-      user.email,
-      user.password
-    );
+    const newUser = new User(uid(), user.firstName, user.lastName, user.email, user.password);
 
     this.userStore.push(newUser);
 
@@ -41,7 +34,13 @@ export default class UserRepositoryStub implements UserRepository {
 
   public resetStore() {
     const encryptedPassword = AES.encrypt('pass', Authentication.PASSPHRASE).toString();
-    const defaultUser = new User('0001','admin', 'istrator', 'admin@d2velop.fr', encryptedPassword);
+    const defaultUser = new User(
+      '0001',
+      'admin',
+      'istrator',
+      'admin@d2velop.fr',
+      encryptedPassword
+    );
     this.userStore = [defaultUser];
   }
 }

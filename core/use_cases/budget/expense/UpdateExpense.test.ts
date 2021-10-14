@@ -25,14 +25,11 @@ describe('UpdateExpense', () => {
       };
 
       beforeEach(async () => {
-        await expenseRepository.patch(
-          EXPENSE_ID,
-          {
-            name: EXPECTED_EXPENSE.name,
-            amount: EXPECTED_EXPENSE.amount,
-            date: EXPECTED_EXPENSE.date,
-          }
-        );
+        await expenseRepository.patch(EXPENSE_ID, {
+          name: EXPECTED_EXPENSE.name,
+          amount: EXPECTED_EXPENSE.amount,
+          date: EXPECTED_EXPENSE.date,
+        });
 
         useCase = new UpdateExpense(EXPENSE_ID, budgetRepository, expenseRepository);
       });

@@ -1,2 +1,1 @@
-export function authenticate(app: any): Promise<any>
-
+export function authenticate(app: any): Promise<any>;

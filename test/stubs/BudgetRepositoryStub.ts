@@ -9,7 +9,16 @@ import {
 } from '../../core/@types/budget/types';
 import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
 
-const PATCHABLE_FIELDS = ['name', 'slug', 'amount', 'available', 'description', 'category', 'type', 'expenses'];
+const PATCHABLE_FIELDS = [
+  'name',
+  'slug',
+  'amount',
+  'available',
+  'description',
+  'category',
+  'type',
+  'expenses',
+];
 
 export default class BudgetRepositoryStub implements BudgetRepository {
   private budgetStore: any[];
@@ -56,9 +65,7 @@ export default class BudgetRepositoryStub implements BudgetRepository {
   }
 
   public delete(budgetId: string): Promise<boolean> {
-    const budgetIndex = this.budgetStore.findIndex(
-      (budget) => budget._id === budgetId
-    );
+    const budgetIndex = this.budgetStore.findIndex((budget) => budget._id === budgetId);
 
     let deletedCount = 0;
 
@@ -69,12 +76,10 @@ export default class BudgetRepositoryStub implements BudgetRepository {
 
     return Promise.resolve(deletedCount === 1);
   }
-  
+
   public patch(budgetId: string, attr: attributesToPatch): Promise<boolean> {
     const attributes: any = attr;
-    const budgetIndex = this.budgetStore.findIndex(
-      (budget) => budget._id === budgetId
-    );
+    const budgetIndex = this.budgetStore.findIndex((budget) => budget._id === budgetId);
 
     if (budgetIndex >= 0) {
       const budgetToUpdate = this.budgetStore[budgetIndex];
@@ -93,10 +98,8 @@ export default class BudgetRepositoryStub implements BudgetRepository {
   }
 
   public update(writeBudget: writeBudgetComplete): Promise<boolean> {
-    const budgetIndex = this.budgetStore.findIndex(
-      (budget) => budget._id === writeBudget._id
-    );
-    
+    const budgetIndex = this.budgetStore.findIndex((budget) => budget._id === writeBudget._id);
+
     const budgetsReplaced = this.budgetStore.splice(budgetIndex, 1, writeBudget);
     return Promise.resolve(budgetsReplaced.length === 1);
   }
@@ -104,5 +107,4 @@ export default class BudgetRepositoryStub implements BudgetRepository {
   public resetStore() {
     this.budgetStore = JSON.parse(JSON.stringify(budgetFixture.list));
   }
-
 }

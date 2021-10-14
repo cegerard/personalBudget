@@ -6,11 +6,7 @@
 // Expenses are not deleted.
 
 import RenewBudgets from '../core/use_cases/budget/RenewBudgets';
-import {
-  connectDb,
-  disconnectDb,
-  MongoBudgetRepository,
-} from '../db/mongo';
+import { connectDb, disconnectDb, MongoBudgetRepository } from '../db/mongo';
 
 console.log('Starts renew budgets task');
 execute();
@@ -29,7 +25,7 @@ async function execute() {
     console.log(`${budget.name}(${budget._id})`);
   });
 
-  if(result.status === 'SUCCESS') {
+  if (result.status === 'SUCCESS') {
     console.log('\nAll budgets are successfuly renewed.');
   } else {
     console.log('\nThere is some errors renewing budgets');

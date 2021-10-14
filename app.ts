@@ -23,7 +23,12 @@ import UserRepositoryStub from './test/stubs/UserRepositoryStub';
 
 import { User } from './core/User';
 import { UserCredential } from './core/UserCredential';
-import { connectDb, MongoUserRepository, MongoBudgetRepository, MongoExpenseRepository } from './db/mongo';
+import {
+  connectDb,
+  MongoUserRepository,
+  MongoBudgetRepository,
+  MongoExpenseRepository,
+} from './db/mongo';
 import ApiExpenseController from './routes/api/expenses/controller';
 
 class Application {
@@ -79,12 +84,12 @@ class Application {
         async (email, password, done) => {
           const user = await this.userRepository.findByEmail(email);
           const credential = new UserCredential(email, password);
-          
-          if(credential.authenticate(user)) {
+
+          if (credential.authenticate(user)) {
             done(null, user);
             return;
           }
-          
+
           done(null, false, { message: 'Incorrect credentials.' });
         }
       )
@@ -108,17 +113,17 @@ class Application {
       httpOnly: true,
       cookie: {
         expires: 1000 * 3600 * 2, // 24 hours in miliseconds
-      }
+      },
     };
 
     if (this.mode === 'production') {
       const SessionStore = MongoDBStore(session);
       const store = new SessionStore({
-        uri:`mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@dev.hw9tl.azure.mongodb.net/${process.env.DB}`,
+        uri: `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@dev.hw9tl.azure.mongodb.net/${process.env.DB}`,
         collection: 'clientSessions',
       });
-  
-      store.on('error', function(error) {
+
+      store.on('error', function (error) {
         console.log(error);
       });
 

@@ -1,9 +1,14 @@
 jest.mock('.');
 import expenseModel from '.';
-import { deleteQuery, expenseQuery, patchableAttributes, writeExpense } from '../../../core/@types/expense/types';
+import {
+  deleteQuery,
+  expenseQuery,
+  patchableAttributes,
+  writeExpense,
+} from '../../../core/@types/expense/types';
 import MongoExpenseRepository from './MongoExpenseRepository';
 
-const save = jest.fn(() => { 
+const save = jest.fn(() => {
   return Promise.resolve({ _id: '123' });
 });
 const constructor = () => {
@@ -20,7 +25,7 @@ describe('MongoExpenseRepository', () => {
   });
 
   describe('find', () => {
-    const query: expenseQuery = { _id: '123'};
+    const query: expenseQuery = { _id: '123' };
 
     it('should retreive expenses with the query', async () => {
       await mongoRepository.find(query);
@@ -51,7 +56,7 @@ describe('MongoExpenseRepository', () => {
 
     it('should return the expense id', async () => {
       const ret = await mongoRepository.create(expenseValue);
-      expect(ret).toEqual({_id: '123'});
+      expect(ret).toEqual({ _id: '123' });
     });
   });
 
@@ -104,8 +109,8 @@ describe('MongoExpenseRepository', () => {
 
   describe('delete', () => {
     const query: deleteQuery = {
-      "budgetLine._id": '123'
-    }
+      'budgetLine._id': '123',
+    };
 
     describe('when only one expense is deleted', () => {
       beforeEach(() => {

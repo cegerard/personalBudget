@@ -4,7 +4,7 @@ import request from 'supertest';
 import application from '../../../app';
 import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
 import ExpenseRepositoryStub from '../../../test/stubs/ExpenseRepositoryStub';
-import { authenticate } from '../../../test/authHelper'
+import { authenticate } from '../../../test/authHelper';
 
 const budgetRepository = application.budgetRepository as BudgetRepositoryStub;
 const expenseRepository = application.expenseRepository as ExpenseRepositoryStub;
@@ -12,7 +12,6 @@ const expenseRepository = application.expenseRepository as ExpenseRepositoryStub
 let app: any = null;
 
 describe('Expenses with authentication', () => {
-
   beforeEach(async () => {
     budgetRepository.resetStore();
     expenseRepository.resetStore();
@@ -25,11 +24,9 @@ describe('Expenses with authentication', () => {
     });
 
     it('should render expenses page', async () => {
-      await app
-        .get('/expenses')
-        .then((res: any) => {
-          expect(res.text).toMatchSnapshot();
-        });
+      await app.get('/expenses').then((res: any) => {
+        expect(res.text).toMatchSnapshot();
+      });
     });
   });
 
@@ -39,11 +36,9 @@ describe('Expenses with authentication', () => {
     });
 
     it('should render expenses filtered page', async () => {
-      await app
-        .get('/expenses/filter?budgetName=Essence')
-        .then((res: any) => {
-          expect(res.text).toMatchSnapshot();
-        });
+      await app.get('/expenses/filter?budgetName=Essence').then((res: any) => {
+        expect(res.text).toMatchSnapshot();
+      });
     });
   });
 
@@ -125,19 +120,17 @@ describe('Expenses with authentication', () => {
         budgetLine: { _id: 'notExist', name: 'test' },
       });
 
-      await app
-        .delete(`/expenses/${newExpense._id}`)
-        .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+      await app.delete(`/expenses/${newExpense._id}`).expect(StatusCodes.INTERNAL_SERVER_ERROR);
     });
 
     it('should return a 204 when expense does not exist in budget line', async () => {
-      const newExpense = await expenseRepository.create({ 
+      const newExpense = await expenseRepository.create({
         name: 'todelete',
         amount: 42,
         date: '',
-        budgetLine: { _id: '1', name: 'test' }
+        budgetLine: { _id: '1', name: 'test' },
       });
-      
+
       await app.delete(`/expenses/${newExpense._id}`).expect(StatusCodes.NO_CONTENT);
     });
   });
@@ -236,11 +229,9 @@ describe('Expenses without authentication', () => {
     });
 
     it('should render home page', async () => {
-      await app
-        .get('/expenses')
-        .then((res: any) => {
-          expect(res.text).toMatchSnapshot();
-        });
+      await app.get('/expenses').then((res: any) => {
+        expect(res.text).toMatchSnapshot();
+      });
     });
   });
 
@@ -250,11 +241,9 @@ describe('Expenses without authentication', () => {
     });
 
     it('should render the home page', async () => {
-      await app
-        .get('/expenses/filter?budgetName=Essence')
-        .then((res: any) => {
-          expect(res.text).toMatchSnapshot();
-        });
+      await app.get('/expenses/filter?budgetName=Essence').then((res: any) => {
+        expect(res.text).toMatchSnapshot();
+      });
     });
   });
 
@@ -284,9 +273,7 @@ describe('Expenses without authentication', () => {
 
   describe('DELETE /expenses', () => {
     it('should return unauthorized', async () => {
-      await app
-        .delete('/expenses/100')
-        .expect(StatusCodes.MOVED_TEMPORARILY);
+      await app.delete('/expenses/100').expect(StatusCodes.MOVED_TEMPORARILY);
     });
 
     it('should return a 404 error when the expense can not be deleted', async () => {
@@ -316,5 +303,4 @@ describe('Expenses without authentication', () => {
         .expect(StatusCodes.MOVED_TEMPORARILY);
     });
   });
-
 });

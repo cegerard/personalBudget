@@ -4,7 +4,6 @@ import { User } from '../../../core/User';
 import userModel from '.';
 import MongoUserRepository from './MongoUserRepository';
 
-
 const save = jest.fn();
 const constructor = () => {
   return { save };
@@ -35,15 +34,14 @@ describe('MongoUserRepository', () => {
           lastName: 'test',
           email: 'test@d2velop.fr',
           password: 'USB$68787=',
-        });  
+        });
       });
 
-      it('should return the user', async () => {  
+      it('should return the user', async () => {
         const user = await mongoRepository.find('123');
         expect(user).toBeDefined();
       });
     });
-
   });
 
   describe('findByEmail', () => {
@@ -64,7 +62,7 @@ describe('MongoUserRepository', () => {
           lastName: 'test',
           email: 'test@d2velop.fr',
           password: 'USB$68787=',
-        });  
+        });
       });
 
       it('should return the user', async () => {

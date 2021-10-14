@@ -71,7 +71,6 @@ describe('Home', () => {
       const userEmail = 'admin@d2velop.fr';
       const userPassword = 'pass';
 
-
       describe('when the credentials are not valid', () => {
         it('should response with 302', async () => {
           await request(app)

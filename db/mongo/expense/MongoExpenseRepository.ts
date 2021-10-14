@@ -10,7 +10,6 @@ import ExpenseRepository from '../../../core/interfaces/expense/ExpenseRepositor
 import expenseModel from '.';
 
 export default class MongoExpenseRepository implements ExpenseRepository {
-
   find(query?: expenseQuery): Promise<readExpenseInfo[]> {
     // TODO: convert to readExpense array
     return expenseModel.find(query as any);

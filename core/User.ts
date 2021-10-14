@@ -4,7 +4,7 @@ export class User {
   private readonly _lastName: string;
   private readonly _login: string;
   private readonly _password: string;
-  
+
   constructor(id: string, firstName: string, lastName: string, login: string, password: string) {
     this._id = id;
     this._firstName = firstName;
@@ -13,7 +13,7 @@ export class User {
     this._password = password;
   }
 
-  public get id(): string{
+  public get id(): string {
     return this._id;
   }
 

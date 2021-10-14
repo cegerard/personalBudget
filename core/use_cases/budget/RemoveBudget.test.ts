@@ -9,7 +9,6 @@ describe('BudgetService', () => {
   let budgetRepository: BudgetRepositoryStub;
   let expenseRepository: ExpenseRepositoryStub;
 
-
   beforeAll(() => {
     budgetRepository = new BudgetRepositoryStub();
     expenseRepository = new ExpenseRepositoryStub();

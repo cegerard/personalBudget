@@ -67,13 +67,7 @@ export default class RenewBudgets {
   }
 
   private findRenewableBudgets(): Promise<readBudgetInfo[]> {
-    return this.budgetRepository.find([
-      '_id',
-      'amount',
-      'available',
-      'name',
-      'type',
-    ]);
+    return this.budgetRepository.find(['_id', 'amount', 'available', 'name', 'type']);
   }
 
   private async renewBudget(budget: readBudgetInfo): Promise<RenewStatus> {

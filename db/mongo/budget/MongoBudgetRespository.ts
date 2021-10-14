@@ -9,7 +9,6 @@ import BudgetRepository from '../../../core/interfaces/budget/BudgetRepository';
 import budgetModel from '.';
 
 export default class MongoBudgetRepository implements BudgetRepository {
-
   find(selectedFields: string[] = []): Promise<readBudgetInfo[]> {
     // TODO: convert to readBudget array
     return budgetModel.find({}, selectedFields);

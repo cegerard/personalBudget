@@ -7,7 +7,6 @@ import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
 import ExpenseRepositoryStub from '../../../test/stubs/ExpenseRepositoryStub';
 import { authenticate } from '../../../test/authHelper';
 
-
 const budgetRepository = application.budgetRepository as BudgetRepositoryStub;
 const expenseRepository = application.expenseRepository as ExpenseRepositoryStub;
 

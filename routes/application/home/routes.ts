@@ -2,8 +2,7 @@ import express from 'express';
 import passport from 'passport';
 
 import HomeController from './controllers';
-import Authentication from '../../../lib/security/authentication'
-
+import Authentication from '../../../lib/security/authentication';
 
 const Router = express.Router;
 
