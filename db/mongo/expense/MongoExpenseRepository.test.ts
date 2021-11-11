@@ -47,6 +47,10 @@ describe('MongoExpenseRepository', () => {
         _id: '123',
         name: 'expense',
       },
+      owner: {
+        id: '456',
+        name: 'admin',
+      }
     };
 
     it('should create a new expense', async () => {
