@@ -1,3 +1,5 @@
+import { owner } from '../user/types';
+
 export type patchableAttributes = {
   name?: string;
   amount?: number;
@@ -22,6 +24,7 @@ export type writeExpense = {
     _id: string;
     name: string;
   };
+  owner: owner;
 };
 
 export type readExpenseInfo = {

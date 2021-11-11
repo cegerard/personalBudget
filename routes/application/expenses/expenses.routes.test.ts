@@ -71,6 +71,10 @@ describe('Expenses with authentication', () => {
               _id: newExpense.budgetlineId,
               name: 'Electricité',
             },
+            owner: {
+              id: '0001',
+              name: 'admin istrator',
+            },
           });
         });
     });
@@ -118,6 +122,7 @@ describe('Expenses with authentication', () => {
         amount: 42,
         date: '',
         budgetLine: { _id: 'notExist', name: 'test' },
+        owner: { id: '0001', name: 'admin istrator' },
       });
 
       await app.delete(`/expenses/${newExpense._id}`).expect(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -129,6 +134,7 @@ describe('Expenses with authentication', () => {
         amount: 42,
         date: '',
         budgetLine: { _id: '1', name: 'test' },
+        owner: { id: '0001', name: 'admin istrator' },
       });
 
       await app.delete(`/expenses/${newExpense._id}`).expect(StatusCodes.NO_CONTENT);

@@ -7,6 +7,7 @@ import AddExpense from '../../../core/use_cases/budget/expense/AddExpense';
 import RemoveExpense from '../../../core/use_cases/budget/expense/RemoveExpense';
 import { default as UpdateBudgetExpense } from '../../../core/use_cases/budget/expense/UpdateExpense';
 import UpdateExpense from '../../../core/use_cases/expense/UpdateExpense';
+import { User } from '../../../core/User';
 import ExpenseCreateDto from './dto/ExpenseCreateDto';
 import ExpensePatchDto from './dto/ExpensePatchDto';
 
@@ -31,6 +32,7 @@ export default class ExpenseController {
 
   async create(req: Request, res: Response) {
     const expenseDto = new ExpenseCreateDto(req.body);
+    const owner = req.user! as User;
 
     const budgetLine = await this.budgetRepository.findOneById(
       expenseDto.budgetLineId,
@@ -40,6 +42,10 @@ export default class ExpenseController {
     const newExpense = await this.expenseRepository.create({
       ...expenseDto.baseExpense(),
       budgetLine,
+      owner: {
+        id: owner.id,
+        name: owner.fullName,
+      },
     });
 
     const useCase = new AddExpense(expenseDto.budgetLineId, this.budgetRepository);
