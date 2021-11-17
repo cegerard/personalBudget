@@ -9,14 +9,20 @@ import BudgetRepository from '../../../core/interfaces/budget/BudgetRepository';
 import budgetModel from '.';
 
 export default class MongoBudgetRepository implements BudgetRepository {
-  find(selectedFields: string[] = []): Promise<readBudgetInfo[]> {
+  find(userId: string, selectedFields: string[] = []): Promise<readBudgetInfo[]> {
+    // TODO: convert to readBudget array
+    return budgetModel.find({'owner.id': userId}, selectedFields);
+  }
+
+  findAll(selectedFields: string[] = []): Promise<readBudgetInfo[]> {
     // TODO: convert to readBudget array
     return budgetModel.find({}, selectedFields);
   }
 
-  findOneById(budgetId: string, selectedFields: string[] = []): Promise<readBudgetComplete> {
+  async findOneById(userId: string, budgetId: string, selectedFields: string[] = []): Promise<readBudgetComplete> {
     // TODO: convert to readBudget
-    return budgetModel.findById(budgetId, selectedFields);
+    const foundBudget = await budgetModel.find({ 'owner.id': userId, _id: budgetId }, selectedFields);
+    return foundBudget[0];
   }
 
   async create(budget: writeBudget): Promise<void> {

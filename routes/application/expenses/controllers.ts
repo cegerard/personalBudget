@@ -22,12 +22,16 @@ export default class ExpenseController {
     this.expenseRepository = expenseRepository;
   }
 
-  async list(_: Request, res: Response) {
-    this._renderExpenseListPage(res);
+  async list(req: Request, res: Response) {
+    const owner = req.user! as User;
+
+    this._renderExpenseListPage(res, owner.id);
   }
 
   async filterByBudgetLine(req: Request, res: Response) {
-    this._renderExpenseListPage(res, { 'budgetLine.name': req.query.budgetName as string });
+    const owner = req.user! as User;
+
+    this._renderExpenseListPage(res, owner.id, { 'budgetLine.name': req.query.budgetName as string });
   }
 
   async create(req: Request, res: Response) {
@@ -35,8 +39,8 @@ export default class ExpenseController {
     const owner = req.user! as User;
 
     const budgetLine = await this.budgetRepository.findOneById(
-      expenseDto.budgetLineId,
-      selectedField
+      owner.id,
+      expenseDto.budgetLineId
     );
 
     const newExpense = await this.expenseRepository.create({
@@ -48,16 +52,17 @@ export default class ExpenseController {
       },
     });
 
-    const useCase = new AddExpense(expenseDto.budgetLineId, this.budgetRepository);
+    const useCase = new AddExpense(budgetLine, this.budgetRepository);
     await useCase.add({
       ...expenseDto.baseExpense(),
       _id: newExpense._id,
     });
 
-    this._renderExpenseListPage(res);
+    this._renderExpenseListPage(res, owner.id);
   }
 
   async delete(req: Request, res: Response) {
+    const owner = req.user! as User;
     const expenseToDelete = await this.expenseRepository.find({ _id: req.params.id });
     const isExpenseDeleted = await this.expenseRepository.delete({ _id: req.params.id });
 
@@ -68,6 +73,7 @@ export default class ExpenseController {
 
     const useCase = new RemoveExpense(
       expenseToDelete[0].budgetLine._id.toString(),
+      owner.id,
       this.budgetRepository
     );
     const isExpenseRemoveFromBudget = await useCase.remove(expenseToDelete[0]._id.toString());
@@ -81,6 +87,7 @@ export default class ExpenseController {
   }
 
   async patch(req: Request, res: Response) {
+    const owner = req.user! as User;
     const expenseDto = new ExpensePatchDto(req.params.id, req.body);
     const updateExpense = new UpdateExpense(expenseDto.id, this.expenseRepository);
 
@@ -88,19 +95,21 @@ export default class ExpenseController {
     if (isUpdated) {
       const useCase = new UpdateBudgetExpense(
         expenseDto.id,
+        owner.id,
         this.budgetRepository,
         this.expenseRepository
       );
       await useCase.update();
-      this._renderExpenseListPage(res);
+
+      this._renderExpenseListPage(res, owner.id);
       return;
     }
     res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
-  private async _renderExpenseListPage(res: Response, query?: { 'budgetLine.name': string }) {
+  private async _renderExpenseListPage(res: Response, userId: string, query?: { 'budgetLine.name': string }) {
     const expenseList = await this.expenseRepository.find(query);
-    const budgetList = await this.budgetRepository.find(selectedField);
+    const budgetList = await this.budgetRepository.find(userId, selectedField);
 
     res.render('expenses', {
       page: 'expenses',

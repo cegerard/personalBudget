@@ -13,19 +13,35 @@ const expenseRepository = application.expenseRepository as ExpenseRepositoryStub
 let app: any = null;
 
 describe('/budgets with authentication', () => {
+  let userId = '0001';
+
   beforeEach(async () => {
     budgetRepository.resetStore();
     app = await authenticate(application.app);
   });
 
   describe('GET /budgets', () => {
-    it('should response with 200', async () => {
-      await app.get('/budgets').expect(StatusCodes.OK);
+    describe('when the user have budget lists', () => {
+      it('should response with 200', async () => {
+        await app.get('/budgets').expect(StatusCodes.OK);
+      });
+  
+      it('should render the budgets list', async () => {
+        await app.get('/budgets').then((res: any) => {
+          expect(res.text).toMatchSnapshot();
+        });
+      });
     });
 
-    it('should render budgets page', async () => {
-      await app.get('/budgets').then((res: any) => {
-        expect(res.text).toMatchSnapshot();
+    describe('when the user does not have budget lists', () => {
+      it('should response with 200', async () => {
+        await app.get('/budgets').expect(StatusCodes.OK);
+      });
+  
+      it('should render the budgets page without budgets', async () => {
+        await app.get('/budgets').then((res: any) => {
+          expect(res.text).toMatchSnapshot();
+        });
       });
     });
   });
@@ -34,15 +50,28 @@ describe('/budgets with authentication', () => {
     const budgetId = 4;
     const budgetUrl = `/budgets/${budgetId}`;
 
-    it('should response with 200', async () => {
-      await app.get(budgetUrl).expect(StatusCodes.OK);
-    });
+    describe('when the user have a budget', () => {
+      it('should response with 200', async () => {
+        await app.get(budgetUrl).expect(StatusCodes.OK);
+      });
 
-    it('should render budget details page', async () => {
-      await app.get(budgetUrl).then((res: any) => {
-        expect(res.text).toMatchSnapshot();
+      it('should render budget details page', async () => {
+        await app.get(budgetUrl).then((res: any) => {
+          expect(res.text).toMatchSnapshot();
+        });
       });
     });
+
+    describe('when the user does not have a budget', () => {
+
+      beforeEach(() => {
+        budgetRepository.clearStore();
+      });
+
+      it('should response with 404', async () => {
+        await app.get(budgetUrl).expect(StatusCodes.NOT_FOUND);
+      });
+    })
   });
 
   describe('POST /budgets', () => {
@@ -60,7 +89,7 @@ describe('/budgets with authentication', () => {
         .send(newBudget)
         .expect(StatusCodes.OK);
 
-      const budgets = await budgetRepository.find();
+      const budgets = await budgetRepository.find(userId);
       const budgetsFound = budgets.filter((budget: any) => {
         return budget.name === newBudget.name;
       });
@@ -89,7 +118,7 @@ describe('/budgets with authentication', () => {
         .delete('/budgets/4')
         .expect(StatusCodes.NO_CONTENT)
         .then(async () => {
-          const allBudgets = await budgetRepository.find();
+          const allBudgets = await budgetRepository.find(userId);
           const budgetNotFound = allBudgets.find((budget: any) => {
             return budget._id === '4';
           });
@@ -116,7 +145,7 @@ describe('/budgets with authentication', () => {
     let budgetBeforeUpdate: any;
 
     beforeEach(async () => {
-      budgetBeforeUpdate = await budgetRepository.findOneById(budgetId);
+      budgetBeforeUpdate = await budgetRepository.findOneById(userId, budgetId);
       delete budgetBeforeUpdate.name;
     });
 
@@ -132,7 +161,7 @@ describe('/budgets with authentication', () => {
         .send({ [field]: value })
         .expect(StatusCodes.OK);
 
-      const budget: any = await budgetRepository.findOneById(budgetId);
+      const budget: any = await budgetRepository.findOneById(userId, budgetId);
       expect(budget[field]).toEqual(value);
     });
 
@@ -143,7 +172,7 @@ describe('/budgets with authentication', () => {
         .send({ name: 'new name' })
         .expect(StatusCodes.OK);
 
-      const budget: any = await budgetRepository.findOneById(budgetId);
+      const budget: any = await budgetRepository.findOneById(userId, budgetId);
       delete budget.name;
       expect(budget).toEqual(budgetBeforeUpdate);
     });
@@ -155,7 +184,7 @@ describe('/budgets with authentication', () => {
         .send({ name: 'new name', notexist: 'should not add', dont: 'aie' })
         .expect(StatusCodes.OK);
 
-      const budget: any = await budgetRepository.findOneById(budgetId);
+      const budget: any = await budgetRepository.findOneById(userId, budgetId);
       expect(budget.notexist).toBeUndefined();
       expect(budget.dont).toBeUndefined();
     });
@@ -167,7 +196,7 @@ describe('/budgets with authentication', () => {
         .send({ name: 'new name' })
         .expect(StatusCodes.OK);
 
-      const budget = await budgetRepository.findOneById(budgetId);
+      const budget = await budgetRepository.findOneById(userId, budgetId);
       expect(budget.slug).toEqual('new-name');
     });
 
@@ -178,7 +207,7 @@ describe('/budgets with authentication', () => {
         .send({ amount: 666 })
         .expect(StatusCodes.OK);
 
-      const budget = await budgetRepository.findOneById(budgetId);
+      const budget = await budgetRepository.findOneById(userId, budgetId);
       expect(budget.available).toEqual(666);
     });
 
@@ -190,7 +219,7 @@ describe('/budgets with authentication', () => {
         .send({ amount: 100 })
         .expect(StatusCodes.OK);
 
-      const budget = await budgetRepository.findOneById(budgetWithExpenseId);
+      const budget = await budgetRepository.findOneById(userId, budgetWithExpenseId);
       expect(budget.available).toEqual(29);
     });
 
@@ -202,7 +231,7 @@ describe('/budgets with authentication', () => {
         .send({ available: 4000 })
         .expect(StatusCodes.OK);
 
-      const budget = await budgetRepository.findOneById(budgetWithExpenseId);
+      const budget = await budgetRepository.findOneById(userId, budgetWithExpenseId);
       expect(budget.available).toEqual(4000);
     });
 
@@ -275,7 +304,7 @@ describe('/budget without authentication', () => {
         .send(newBudget)
         .expect(StatusCodes.MOVED_TEMPORARILY);
 
-      const budgets = await budgetRepository.find();
+      const budgets = await budgetRepository.find('0001');
       const budgetsFound = budgets.filter((budget: any) => {
         return budget.name === newBudget.name;
       });

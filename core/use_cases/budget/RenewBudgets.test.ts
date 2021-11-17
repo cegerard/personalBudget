@@ -1,4 +1,3 @@
-import { bindKey } from 'lodash';
 import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
 import { renewResponse } from '../../@types/budget/types';
 import RenewBudgets from './RenewBudgets';
@@ -62,14 +61,14 @@ describe('RenewBudget', () => {
 
     it('update the available field of the budget 4', async () => {
       await useCase.renewAll();
-      const updatedBudget = await budgetRepository.findOneById('4');
+      const updatedBudget = await budgetRepository.getById('4');
 
       expect(updatedBudget.available).toEqual(150);
     });
 
     it('clear expenses from budget 4', async () => {
       await useCase.renewAll();
-      const updatedBudget = await budgetRepository.findOneById('4');
+      const updatedBudget = await budgetRepository.getById('4');
 
       expect(updatedBudget.expenses).toEqual([]);
     });
@@ -91,7 +90,7 @@ describe('RenewBudget', () => {
 
       it('increments the available field of the reserved budget', async () => {
         await useCase.renewAll();
-        const budgets = await budgetRepository.find(['name', 'available']);
+        const budgets = await budgetRepository.findAll(['name', 'available']);
         const reservedBudget = budgets.find((budget) => {
           return budget.name === 'reserve';
         });

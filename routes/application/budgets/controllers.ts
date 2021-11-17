@@ -20,8 +20,10 @@ export default class BudgetController {
     this.expenseRepository = expenseRepository;
   }
 
-  list(_: Request, res: Response) {
-    this.renderBudgetListPage(res);
+  list(req: Request, res: Response) {
+    const owner = req.user! as User;
+
+    this.renderBudgetListPage(res, owner.id);
   }
 
   get(req: Request, res: Response) {
@@ -33,7 +35,7 @@ export default class BudgetController {
     const owner = req.user! as User;
 
     await new CreateBudget(this.budgetRepository).create(budgetDto.toBudget(), owner);
-    this.renderBudgetListPage(res);
+    this.renderBudgetListPage(res, owner.id);
   }
 
   async delete(req: Request, res: Response) {
@@ -47,8 +49,9 @@ export default class BudgetController {
   }
 
   async patch(req: Request, res: Response) {
+    const owner = req.user! as User;
     const budgetDto = new BudgetPatchDto(req.params.id, req.body);
-    const useCase = new UpdateBudget(budgetDto.id, this.budgetRepository);
+    const useCase = new UpdateBudget(budgetDto.id, owner.id, this.budgetRepository);
     const isUpdated = await useCase.patch(budgetDto.attributes());
     if (isUpdated) {
       this.renderBudgetPage(req, res);
@@ -57,13 +60,20 @@ export default class BudgetController {
     res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
-  private async renderBudgetListPage(res: Response) {
-    const budgetList = await this.budgetRepository.find([]);
+  private async renderBudgetListPage(res: Response, userId: string) {  
+    const budgetList = await this.budgetRepository.find(userId, []);
     res.render('budgets', { page: 'budgets', budgetList: budgetList });
   }
 
   private async renderBudgetPage(req: Request, res: Response) {
-    const budget = await this.budgetRepository.findOneById(req.params.id, []);
-    res.render('budget', { page: 'budget', budget });
+    const owner = req.user! as User;
+
+    const budget = await this.budgetRepository.findOneById(owner.id, req.params.id, []);
+
+    if (budget) {
+      return res.render('budget', { page: 'budget', budget });
+    }
+
+    res.sendStatus(StatusCodes.NOT_FOUND);
   }
 }

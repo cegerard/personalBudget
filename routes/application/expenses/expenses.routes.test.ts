@@ -57,7 +57,7 @@ describe('Expenses with authentication', () => {
         .send(newExpense)
         .expect(StatusCodes.OK)
         .then(async () => {
-          const expenses = await expenseRepository.find(undefined);
+          const expenses = await expenseRepository.find();
           const expensesFound = expenses.filter((expense: any) => {
             return expense.name === newExpense.name;
           });
@@ -103,7 +103,7 @@ describe('Expenses with authentication', () => {
 
           expect(expenseNotFound).toBeUndefined();
 
-          const budgetList = await budgetRepository.findOneById('4');
+          const budgetList = await budgetRepository.getById('4');
           const expenseNotFoundInBudgetLine = budgetList.expenses.find((expense: any) => {
             return expense._id === 100;
           });

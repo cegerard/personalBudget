@@ -9,6 +9,10 @@ export default {
       available: 58,
       expenses: [],
       type: 'NORMAL',
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
+      },
     },
     {
       _id: '2',
@@ -19,6 +23,10 @@ export default {
       available: 369.89,
       expenses: [],
       type: 'NORMAL',
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
+      },
     },
     {
       _id: '3',
@@ -29,6 +37,10 @@ export default {
       available: 857.12,
       expenses: [],
       type: 'NORMAL',
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
+      },
     },
     {
       _id: '4',
@@ -52,6 +64,10 @@ export default {
         },
       ],
       type: 'NORMAL',
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
+      },
     },
     {
       _id: '5',
@@ -62,6 +78,10 @@ export default {
       available: 127,
       expenses: [],
       type: 'NORMAL',
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
+      },
     },
     {
       _id: '6',
@@ -72,6 +92,10 @@ export default {
       available: 500,
       expenses: [],
       type: 'NORMAL',
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
+      },
     },
     {
       _id: '7',
@@ -82,6 +106,10 @@ export default {
       available: 120,
       expenses: [],
       type: 'NORMAL',
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
+      },
     },
     {
       _id: '8',
@@ -91,6 +119,10 @@ export default {
       available: 0,
       expenses: [],
       type: 'NORMAL',
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
+      },
     },
   ],
 };
