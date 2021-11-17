@@ -6,10 +6,12 @@ import BudgetRepository from '../../interfaces/budget/BudgetRepository';
 export default class UpdateBudget {
   private repository: BudgetRepository;
   private budgetId: string;
+  private userId: string;
 
-  constructor(budgetId: string, budgetRepository: BudgetRepository) {
+  constructor(budgetId: string, userId: string, budgetRepository: BudgetRepository) {
     this.repository = budgetRepository;
     this.budgetId = budgetId;
+    this.userId = userId;
   }
 
   async patch(attributes: patchableAttributes): Promise<boolean> {
@@ -20,7 +22,7 @@ export default class UpdateBudget {
     }
 
     if (attributesToPatch.amount !== undefined && attributesToPatch.available === undefined) {
-      const budget = await this.repository.findOneById(this.budgetId);
+      const budget = await this.repository.findOneById(this.userId, this.budgetId);
       if (budget === undefined) {
         return false;
       }

@@ -36,14 +36,14 @@ describe('CreateBudget', () => {
         expenses: [],
         type: 'NORMAL',
         owner: {
-          id: expect.any(String),
+          id: owner.id,
           name: 'budget owner',
         },
       };
     });
 
     async function findBudget() {
-      const budgets = await budgetRepository.find([]);
+      const budgets = await budgetRepository.find(owner.id, []);
       return budgets.find((budget) => budget.name === budgetName);
     }
 

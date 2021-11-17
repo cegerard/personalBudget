@@ -16,32 +16,59 @@ const constructor = () => {
 
 describe('MongoBudgetRepository', () => {
   let mongoRepository: MongoBudgetRepository;
+  let userId = '123';
 
   beforeEach(() => {
     mongoRepository = new MongoBudgetRepository();
   });
 
+  afterEach(() => {
+    (budgetModel as any).mockClear();
+  });
+
   describe('find', () => {
     it('should retreive budgets with all field', async () => {
-      await mongoRepository.find([]);
+      await mongoRepository.find(userId, []);
+      expect(budgetModel.find).toHaveBeenCalledWith({'owner.id': userId}, []);
+    });
+
+    it('should retreive budgets with default parameter', async () => {
+      await mongoRepository.find(userId);
+      expect(budgetModel.find).toHaveBeenCalledWith({'owner.id': userId}, []);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should retreive all budgets with all field', async () => {
+      await mongoRepository.findAll([]);
+      expect(budgetModel.find).toHaveBeenCalledWith({}, []);
+    });
+
+    it('should retreive budgets with selected fields', async () => {
+      await mongoRepository.findAll();
       expect(budgetModel.find).toHaveBeenCalledWith({}, []);
     });
 
     it('should retreive budgets with default parameter', async () => {
-      await mongoRepository.find();
-      expect(budgetModel.find).toHaveBeenCalledWith({}, []);
+      await mongoRepository.findAll(['id', 'name']);
+      expect(budgetModel.find).toHaveBeenCalledWith({}, ['id', 'name']);
     });
   });
 
   describe('findOneById', () => {
+
+    beforeEach(() => {
+      budgetModel.find = jest.fn().mockResolvedValue([]);
+    });
+
     it('should retreive one budgets from its id with all field', async () => {
-      await mongoRepository.findOneById('123');
-      expect(budgetModel.findById).toHaveBeenCalledWith('123', []);
+      await mongoRepository.findOneById('0001', '123');
+      expect(budgetModel.find).toHaveBeenCalledWith({'owner.id': '0001', _id: '123'}, []);
     });
 
     it('should retreive one budgets from its id with selected field', async () => {
-      await mongoRepository.findOneById('123', ['id', 'name']);
-      expect(budgetModel.findById).toHaveBeenCalledWith('123', ['id', 'name']);
+      await mongoRepository.findOneById('0001', '123', ['id', 'name']);
+      expect(budgetModel.find).toHaveBeenCalledWith({'owner.id': '0001', _id: '123'}, ['id', 'name']);
     });
   });
 

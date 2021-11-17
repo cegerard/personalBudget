@@ -14,13 +14,14 @@ describe('UpdateBudget', () => {
   });
 
   describe('patch', () => {
+    const userId = '0001';
+
     let useCase: UpdateBudget;
 
     describe('when the budget exists', () => {
       const budget_id = '7';
-
       beforeEach(() => {
-        useCase = new UpdateBudget(budget_id, budgetRepository);
+        useCase = new UpdateBudget(budget_id, userId, budgetRepository);
       });
 
       it('should update field for an existing budget', async () => {
@@ -34,6 +35,10 @@ describe('UpdateBudget', () => {
           category: 'add cat',
           expenses: [],
           type: 'RESERVE',
+          owner: {
+            id: '0001',
+            name: 'admin istrator',
+          },
         };
 
         await useCase.patch({
@@ -44,7 +49,7 @@ describe('UpdateBudget', () => {
           type: expectedBudget.type as budgetType,
         });
 
-        const updatedBudget = await budgetRepository.findOneById(budget_id, []);
+        const updatedBudget = await budgetRepository.getById(budget_id);
         expect(updatedBudget).toEqual(expectedBudget);
       });
 
@@ -57,7 +62,7 @@ describe('UpdateBudget', () => {
 
     describe('when the budget does not exist', () => {
       beforeEach(() => {
-        useCase = new UpdateBudget('unknown', budgetRepository);
+        useCase = new UpdateBudget('unknown', userId, budgetRepository);
       });
 
       describe('when the amount is not modified', () => {

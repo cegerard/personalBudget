@@ -4,6 +4,7 @@ import UpdateExpense from './UpdateExpense';
 
 describe('UpdateExpense', () => {
   const FOURTH_BUDGET_ID = '4';
+  const USER_ID = '0001';
   const budgetRepository = new BudgetRepositoryStub();
   const expenseRepository = new ExpenseRepositoryStub();
 
@@ -31,7 +32,7 @@ describe('UpdateExpense', () => {
           date: EXPECTED_EXPENSE.date,
         });
 
-        useCase = new UpdateExpense(EXPENSE_ID, budgetRepository, expenseRepository);
+        useCase = new UpdateExpense(EXPENSE_ID, USER_ID, budgetRepository, expenseRepository);
       });
 
       it('should return that the expense has been updated', async () => {
@@ -41,7 +42,7 @@ describe('UpdateExpense', () => {
 
       it('should update the expense in its budget line', async () => {
         await useCase.update();
-        const updatedBudget = await budgetRepository.findOneById(FOURTH_BUDGET_ID, []);
+        const updatedBudget = await budgetRepository.getById(FOURTH_BUDGET_ID);
         expect(updatedBudget.expenses[0]).toEqual(EXPECTED_EXPENSE);
       });
     });
@@ -50,7 +51,7 @@ describe('UpdateExpense', () => {
       const UNKNOWN_EXPENSE_ID = 'unknown';
 
       beforeEach(async () => {
-        useCase = new UpdateExpense(UNKNOWN_EXPENSE_ID, budgetRepository, expenseRepository);
+        useCase = new UpdateExpense(UNKNOWN_EXPENSE_ID, USER_ID,budgetRepository, expenseRepository);
       });
 
       it('should return false', async () => {
@@ -63,7 +64,7 @@ describe('UpdateExpense', () => {
       const MISSING_EXPENSE_ID = '200';
 
       beforeEach(async () => {
-        useCase = new UpdateExpense(MISSING_EXPENSE_ID, budgetRepository, expenseRepository);
+        useCase = new UpdateExpense(MISSING_EXPENSE_ID, USER_ID, budgetRepository, expenseRepository);
       });
 
       it('should return false', async () => {

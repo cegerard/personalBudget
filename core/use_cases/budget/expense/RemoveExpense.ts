@@ -3,14 +3,16 @@ import BudgetRepository from '../../../interfaces/budget/BudgetRepository';
 export default class RemoveExpense {
   private repository: BudgetRepository;
   private budgetId: string;
+  private userId: string;
 
-  constructor(budgetId: string, budgetRepository: BudgetRepository) {
+  constructor(budgetId: string, userId: string, budgetRepository: BudgetRepository) {
     this.budgetId = budgetId;
+    this.userId = userId;
     this.repository = budgetRepository;
   }
 
   async remove(expenseId: string): Promise<boolean> {
-    const foundBudget = await this.repository.findOneById(this.budgetId);
+    const foundBudget = await this.repository.findOneById(this.userId, this.budgetId);
     if (!foundBudget) {
       return false;
     }

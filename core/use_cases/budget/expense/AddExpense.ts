@@ -1,22 +1,21 @@
-import { expenseInfo } from '../../../@types/budget/types';
+import { expenseInfo, readBudgetComplete } from '../../../@types/budget/types';
 import BudgetRepository from '../../../interfaces/budget/BudgetRepository';
 
 export default class AddExpense {
   private repository: BudgetRepository;
-  private budgetId: string;
+  private budget: readBudgetComplete;
 
-  constructor(budgetId: string, budgetRepository: BudgetRepository) {
-    this.budgetId = budgetId;
+  constructor(budget: readBudgetComplete, budgetRepository: BudgetRepository) {
+    this.budget = budget;
     this.repository = budgetRepository;
   }
 
   async add(expense: expenseInfo): Promise<boolean> {
     // TODO adapt expense to BudgetExpense sub-model
-    const foundBudget = await this.repository.findOneById(this.budgetId);
-    foundBudget.expenses.push(expense);
-    foundBudget.available = this.substractFloat(foundBudget.available, expense.amount);
+    this.budget.expenses.push(expense);
+    this.budget.available = this.substractFloat(this.budget.available, expense.amount);
 
-    return this.repository.update(foundBudget);
+    return this.repository.update(this.budget);
   }
 
   private substractFloat(base: number, toSubstract: number): number {

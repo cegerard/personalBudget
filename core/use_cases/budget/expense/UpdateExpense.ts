@@ -6,15 +6,18 @@ export default class UpdateExpense {
   private repository: BudgetRepository;
   private expenseRepository: ExpenseRepository;
   private expenseId: string;
+  private userId: string;
 
   constructor(
     expenseId: string,
+    userId: string,
     budgetRepository: BudgetRepository,
     expenseRepository: ExpenseRepository
   ) {
     this.repository = budgetRepository;
     this.expenseRepository = expenseRepository;
     this.expenseId = expenseId;
+    this.userId = userId;
   }
 
   async update(): Promise<boolean> {
@@ -25,7 +28,7 @@ export default class UpdateExpense {
 
     const updatedExpense = foundExpenses[0];
 
-    const foundBudget = await this.repository.findOneById(updatedExpense.budgetLine._id);
+    const foundBudget = await this.repository.findOneById(this.userId, updatedExpense.budgetLine._id);
 
     const expenseIndex = foundBudget.expenses.findIndex(
       (expense: expenseInfo) => expense._id.toString() === this.expenseId
