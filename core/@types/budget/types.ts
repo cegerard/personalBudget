@@ -55,6 +55,7 @@ export type writeBudgetComplete = {
   expenses?: expenseInfo[];
   description?: string;
   category?: string;
+  owner: owner;
 };
 
 export type attributesToPatch = patchableAttributes & { slug?: string };

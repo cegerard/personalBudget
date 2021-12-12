@@ -1,4 +1,4 @@
-import { expenseInfo, readBudgetComplete } from '../../../@types/budget/types';
+import { expenseInfo, readBudgetComplete, writeBudgetComplete } from '../../../@types/budget/types';
 import BudgetRepository from '../../../interfaces/budget/BudgetRepository';
 
 export default class AddExpense {
@@ -15,7 +15,7 @@ export default class AddExpense {
     this.budget.expenses.push(expense);
     this.budget.available = this.substractFloat(this.budget.available, expense.amount);
 
-    return this.repository.update(this.budget);
+    return this.repository.update(this.budget as writeBudgetComplete);
   }
 
   private substractFloat(base: number, toSubstract: number): number {

@@ -39,8 +39,9 @@ export default class BudgetController {
   }
 
   async delete(req: Request, res: Response) {
+    const owner = req.user! as User;
     const useCase = new RemoveBudget(this.budgetRepository, this.expenseRepository);
-    const isDeleted = await useCase.remove(req.params.id);
+    const isDeleted = await useCase.remove(req.params.id, owner.id);
     if (isDeleted) {
       res.sendStatus(StatusCodes.NO_CONTENT);
       return;
