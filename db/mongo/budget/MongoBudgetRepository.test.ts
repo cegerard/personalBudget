@@ -105,6 +105,10 @@ describe('MongoBudgetRepository', () => {
       available: 42,
       description: 'description',
       type: 'NORMAL',
+      owner: {
+        id: '1',
+        name: 'test',
+      }
     };
 
     describe('when only one budget is updated', () => {
@@ -205,7 +209,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns true', async () => {
-        const res = await mongoRepository.delete(budgetId);
+        const res = await mongoRepository.delete('1', budgetId);
         expect(res).toEqual(true);
       });
     });
@@ -218,7 +222,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.delete(budgetId);
+        const res = await mongoRepository.delete('1', budgetId);
         expect(res).toEqual(false);
       });
     });
@@ -231,7 +235,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.delete(budgetId);
+        const res = await mongoRepository.delete('1', budgetId);
         expect(res).toEqual(false);
       });
     });

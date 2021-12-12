@@ -1,3 +1,4 @@
+import { writeBudgetComplete } from '../../../@types/budget/types';
 import BudgetRepository from '../../../interfaces/budget/BudgetRepository';
 
 export default class RemoveExpense {
@@ -23,7 +24,7 @@ export default class RemoveExpense {
     if (expenseIndex !== -1) {
       const deletedExpenses = foundBudget.expenses.splice(expenseIndex, 1);
       foundBudget.available += deletedExpenses[0].amount;
-      return this.repository.update(foundBudget);
+      return this.repository.update(foundBudget as writeBudgetComplete);
     }
 
     return true;

@@ -1,4 +1,4 @@
-import { expenseInfo } from '../../../@types/budget/types';
+import { expenseInfo, writeBudgetComplete } from '../../../@types/budget/types';
 import BudgetRepository from '../../../interfaces/budget/BudgetRepository';
 import ExpenseRepository from '../../../interfaces/expense/ExpenseRepository';
 
@@ -48,6 +48,6 @@ export default class UpdateExpense {
     foundBudget.available += amountDiff;
     foundBudget.expenses[expenseIndex] = expenseToUpdate;
 
-    return this.repository.update(foundBudget);
+    return this.repository.update(foundBudget as writeBudgetComplete);
   }
 }

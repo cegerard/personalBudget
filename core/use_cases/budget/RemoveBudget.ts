@@ -10,9 +10,9 @@ export default class BudgetService {
     this.expenseRepository = expenseRepository;
   }
 
-  async remove(budgetId: string): Promise<boolean> {
+  async remove(budgetId: string, userId: string): Promise<boolean> {
     // TODO: look for transaction mechanism
-    const isDeleted = await this.repository.delete(budgetId);
+    const isDeleted = await this.repository.delete(userId, budgetId);
     if (isDeleted) {
       this.expenseRepository.delete({ 'budgetLine._id': budgetId });
     }

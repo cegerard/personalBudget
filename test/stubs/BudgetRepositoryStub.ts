@@ -75,8 +75,10 @@ export default class BudgetRepositoryStub implements BudgetRepository {
     return Promise.resolve();
   }
   
-  public delete(budgetId: string): Promise<boolean> {
-    const budgetIndex = this.budgetStore.findIndex((budget) => budget._id === budgetId);
+  public delete(userId: string, budgetId: string): Promise<boolean> {
+    const budgetIndex = this.budgetStore.findIndex((budget) => { 
+      return budget._id === budgetId && budget.owner.id === userId
+    });
     
     let deletedCount = 0;
     
