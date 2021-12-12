@@ -68,7 +68,7 @@ export default class BudgetController {
   private async renderBudgetPage(req: Request, res: Response) {
     const owner = req.user! as User;
 
-    const budget = await this.budgetRepository.findOneById(owner.id, req.params.id, []);
+    const budget = await this.budgetRepository.findOneById(owner.id, req.params.id);
 
     if (budget) {
       return res.render('budget', { page: 'budget', budget });

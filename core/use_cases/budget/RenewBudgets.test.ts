@@ -90,7 +90,7 @@ describe('RenewBudget', () => {
 
       it('increments the available field of the reserved budget', async () => {
         await useCase.renewAll();
-        const budgets = await budgetRepository.findAll(['name', 'available']);
+        const budgets = await budgetRepository.findAll();
         const reservedBudget = budgets.find((budget) => {
           return budget.name === 'reserve';
         });

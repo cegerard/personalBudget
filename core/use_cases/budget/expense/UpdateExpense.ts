@@ -21,7 +21,7 @@ export default class UpdateExpense {
   }
 
   async update(): Promise<boolean> {
-    const foundExpenses = await this.expenseRepository.find({ _id: this.expenseId });
+    const foundExpenses = await this.expenseRepository.find(this.userId, { _id: this.expenseId });
     if (foundExpenses.length === 0) {
       return false;
     }

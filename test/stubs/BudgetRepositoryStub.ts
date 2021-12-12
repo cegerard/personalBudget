@@ -57,19 +57,11 @@ export default class BudgetRepositoryStub implements BudgetRepository {
     return Promise.resolve(projectedBudgets);
   }
 
-  public findOneById(userId: string, budgetId: string, selectedFields: string[] = []): Promise<readBudgetComplete> {
+  public findOneById(userId: string, budgetId: string): Promise<readBudgetComplete> {
     const budgets = this.filterUserBudgets(userId);
 
     const foundBudget = budgets.find((budget) => budget._id === budgetId);
-    if (selectedFields.length === 0) {
-      return Promise.resolve(foundBudget);
-    }
-
-    const projectedBudget = selectedFields.reduce((acc: any, field) => {
-      acc[field] = foundBudget[field];
-      return acc;
-    }, {});
-    return Promise.resolve(projectedBudget);
+    return Promise.resolve(foundBudget);
   }
 
   

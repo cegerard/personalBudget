@@ -26,6 +26,10 @@ describe('expenses', () => {
             _id: '4',
             name: 'Essence',
           },
+          owner: {
+            id: '0001',
+            name: 'admin istrator',
+          },
         });
       });
     });

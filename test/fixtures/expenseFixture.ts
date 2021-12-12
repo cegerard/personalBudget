@@ -9,6 +9,10 @@ export default {
         _id: '4',
         name: 'Essence',
       },
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
+      },
     },
     {
       _id: '101',
@@ -19,6 +23,10 @@ export default {
         _id: '4',
         name: 'Essence',
       },
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
+      },
     },
     {
       _id: '200',
@@ -28,6 +36,10 @@ export default {
       budgetLine: {
         _id: '1',
         name: 'Course',
+      },
+      owner: {
+        id: '0001',
+        name: 'admin istrator',
       },
     },
   ],
