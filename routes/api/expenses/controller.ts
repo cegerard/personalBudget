@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { User } from '../../../core/User';
 
 import ExpenseRepository from '../../../core/interfaces/expense/ExpenseRepository';
 
@@ -11,7 +12,9 @@ export default class ApiExpenseController {
   }
 
   async findById(req: Request, res: Response) {
-    const expenses = await this.expenseRepository.find({ _id: req.params.id });
+    const owner = req.user! as User;
+
+    const expenses = await this.expenseRepository.find(owner.id, { _id: req.params.id });
 
     if (expenses.length > 0) {
       res.send(expenses[0]);

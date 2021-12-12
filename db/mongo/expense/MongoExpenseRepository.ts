@@ -10,9 +10,12 @@ import ExpenseRepository from '../../../core/interfaces/expense/ExpenseRepositor
 import expenseModel from '.';
 
 export default class MongoExpenseRepository implements ExpenseRepository {
-  find(query?: expenseQuery): Promise<readExpenseInfo[]> {
+  find(userId: string, query?: expenseQuery): Promise<readExpenseInfo[]> {
     // TODO: convert to readExpense array
-    return expenseModel.find(query as any);
+    return expenseModel.find({
+      'owner.id': userId,
+      ...query,
+    });
   }
 
   async create(expenseValue: writeExpense): Promise<lightExpense> {
@@ -21,7 +24,6 @@ export default class MongoExpenseRepository implements ExpenseRepository {
     const savedExpense = await newExpense.save();
     return Promise.resolve({ _id: savedExpense._id });
   }
-
   async delete(query: deleteQuery): Promise<boolean> {
     const res = await expenseModel.remove(query);
     return res.deletedCount > 0;

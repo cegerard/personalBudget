@@ -125,7 +125,7 @@ describe('/budgets with authentication', () => {
 
           expect(budgetNotFound).toBeUndefined();
 
-          const allExpenses = await expenseRepository.find(undefined);
+          const allExpenses = await expenseRepository.find(userId);
           const expensesFound = allExpenses.filter((expense: any) => {
             return expense.budgetLine._id === '4';
           });

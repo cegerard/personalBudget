@@ -21,10 +21,12 @@ export default class ExpenseRepositoryStub implements ExpenseRepository {
     this.expenseStore = [];
   }
 
-  public find(query?: expenseQuery): Promise<readExpenseInfo[]> {
+  public find(userId: string, query?: expenseQuery): Promise<readExpenseInfo[]> {
+    const expenses = this.filterUserExpenses(userId);
+
     if (query) {
       const compareKeys = Object.keys(query);
-      const filteredExpenses = this.expenseStore.filter((expense) => {
+      const filteredExpenses = expenses.filter((expense) => {
         let keepExpense = true;
         compareKeys.forEach((key) => {
           if (get(expense, key) !== get(query, key)) {
@@ -36,7 +38,7 @@ export default class ExpenseRepositoryStub implements ExpenseRepository {
       return Promise.resolve(filteredExpenses);
     }
 
-    return Promise.resolve(this.expenseStore);
+    return Promise.resolve(expenses);
   }
 
   public create(newExpense: writeExpense): Promise<lightExpense> {
@@ -93,5 +95,9 @@ export default class ExpenseRepositoryStub implements ExpenseRepository {
 
   public resetStore() {
     this.expenseStore = JSON.parse(JSON.stringify(expenseFixture.list));
+  }
+
+  private filterUserExpenses(userId: string) {
+    return this.expenseStore.filter((expense) => expense.owner.id === userId);
   }
 }
