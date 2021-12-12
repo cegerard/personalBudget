@@ -40,7 +40,7 @@ export default class ExpenseController {
 
     const budgetLine = await this.budgetRepository.findOneById(
       owner.id,
-      expenseDto.budgetLineId
+      expenseDto.budgetLineId,
     );
 
     const newExpense = await this.expenseRepository.create({
@@ -63,7 +63,7 @@ export default class ExpenseController {
 
   async delete(req: Request, res: Response) {
     const owner = req.user! as User;
-    const expenseToDelete = await this.expenseRepository.find({ _id: req.params.id });
+    const expenseToDelete = await this.expenseRepository.find(owner.id, { _id: req.params.id });
     const isExpenseDeleted = await this.expenseRepository.delete({ _id: req.params.id });
 
     if (!isExpenseDeleted) {
@@ -108,7 +108,7 @@ export default class ExpenseController {
   }
 
   private async _renderExpenseListPage(res: Response, userId: string, query?: { 'budgetLine.name': string }) {
-    const expenseList = await this.expenseRepository.find(query);
+    const expenseList = await this.expenseRepository.find(userId, query);
     const budgetList = await this.budgetRepository.find(userId, selectedField);
 
     res.render('expenses', {

@@ -5,11 +5,13 @@ import application from '../../../app';
 import BudgetRepositoryStub from '../../../test/stubs/BudgetRepositoryStub';
 import ExpenseRepositoryStub from '../../../test/stubs/ExpenseRepositoryStub';
 import { authenticate } from '../../../test/authHelper';
+import user from '../../../db/mongo/user';
 
 const budgetRepository = application.budgetRepository as BudgetRepositoryStub;
 const expenseRepository = application.expenseRepository as ExpenseRepositoryStub;
 
 let app: any = null;
+let userId = '0001';
 
 describe('Expenses with authentication', () => {
   beforeEach(async () => {
@@ -57,7 +59,7 @@ describe('Expenses with authentication', () => {
         .send(newExpense)
         .expect(StatusCodes.OK)
         .then(async () => {
-          const expenses = await expenseRepository.find();
+          const expenses = await expenseRepository.find(userId);
           const expensesFound = expenses.filter((expense: any) => {
             return expense.name === newExpense.name;
           });
@@ -96,7 +98,7 @@ describe('Expenses with authentication', () => {
         .delete('/expenses/100')
         .expect(StatusCodes.NO_CONTENT)
         .then(async () => {
-          const allExpenses = await expenseRepository.find(undefined);
+          const allExpenses = await expenseRepository.find(userId);
           const expenseNotFound = allExpenses.find((expense: any) => {
             return expense._id === 100;
           });
@@ -147,7 +149,7 @@ describe('Expenses with authentication', () => {
     let expenseBeforeUpdate: any;
 
     beforeEach(async () => {
-      const expenses = await expenseRepository.find({ _id: expenseId });
+      const expenses = await expenseRepository.find(userId, { _id: expenseId });
       expenseBeforeUpdate = expenses[0];
     });
 
@@ -167,7 +169,7 @@ describe('Expenses with authentication', () => {
         })
         .expect(StatusCodes.OK);
 
-      const expenses: any = await expenseRepository.find({ _id: expenseId });
+      const expenses: any = await expenseRepository.find(userId, { _id: expenseId });
       expect(expenses[0][field]).toEqual(value);
     });
 
@@ -182,7 +184,7 @@ describe('Expenses with authentication', () => {
         })
         .expect(StatusCodes.OK);
 
-      const expenses = await expenseRepository.find({ _id: expenseId });
+      const expenses = await expenseRepository.find(userId, { _id: expenseId });
       expect(expenses[0]).toEqual(expenseBeforeUpdate);
     });
 
@@ -198,7 +200,7 @@ describe('Expenses with authentication', () => {
         })
         .expect(StatusCodes.OK);
 
-      const expenses: any = await expenseRepository.find({ _id: expenseId });
+      const expenses: any = await expenseRepository.find(userId, { _id: expenseId });
       expect(expenses[0].notexist).toBeUndefined();
       expect(expenses[0].dont).toBeUndefined();
     });
@@ -268,7 +270,7 @@ describe('Expenses without authentication', () => {
         .send(newExpense)
         .expect(StatusCodes.MOVED_TEMPORARILY)
         .then(async () => {
-          const expenses = await expenseRepository.find(undefined);
+          const expenses = await expenseRepository.find(userId);
           const expensesFound = expenses.filter((expense: any) => {
             return expense.name === newExpense.name;
           });
@@ -293,7 +295,7 @@ describe('Expenses without authentication', () => {
     let expenseBeforeUpdate: any;
 
     beforeEach(async () => {
-      const expenses = await expenseRepository.find({ _id: expenseId });
+      const expenses = await expenseRepository.find(userId, { _id: expenseId });
       expenseBeforeUpdate = expenses[0];
     });
 

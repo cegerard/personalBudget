@@ -9,7 +9,7 @@ import {
 export default interface BudgetRepository {
   find(userId: string, selectedFields?: string[]): Promise<readBudgetInfo[]>;
   findAll(selectedFields?: string[]): Promise<readBudgetInfo[]>;
-  findOneById(userId: string, budgetId: string, selectedFields?: string[]): Promise<readBudgetComplete>;
+  findOneById(userId: string, budgetId: string): Promise<readBudgetComplete>;
   create(newBudget: writeBudget): Promise<void>;
   delete(budgetId: string): Promise<boolean>;
   patch(budgetId: string, attributes: attributesToPatch): Promise<boolean>;

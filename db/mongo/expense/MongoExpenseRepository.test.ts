@@ -19,6 +19,7 @@ const constructor = () => {
 
 describe('MongoExpenseRepository', () => {
   let mongoRepository: MongoExpenseRepository;
+  let userId = '123';
 
   beforeEach(() => {
     mongoRepository = new MongoExpenseRepository();
@@ -27,14 +28,18 @@ describe('MongoExpenseRepository', () => {
   describe('find', () => {
     const query: expenseQuery = { _id: '123' };
 
-    it('should retreive expenses with the query', async () => {
-      await mongoRepository.find(query);
-      expect(expenseModel.find).toHaveBeenCalledWith(query);
+    it('should retreive user expenses with the query', async () => {
+      const expectedQuery = {
+        'owner.id': userId,
+        ...query,
+      }
+      await mongoRepository.find(userId, query);
+      expect(expenseModel.find).toHaveBeenCalledWith(expectedQuery);
     });
 
-    it('should retreive all expenses', async () => {
-      await mongoRepository.find();
-      expect(expenseModel.find).toHaveBeenCalledWith(undefined);
+    it('should retreive all user expenses', async () => {
+      await mongoRepository.find(userId);
+      expect(expenseModel.find).toHaveBeenCalledWith({'owner.id': userId});
     });
   });
 
