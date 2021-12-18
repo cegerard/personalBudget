@@ -24,8 +24,11 @@ export default class MongoExpenseRepository implements ExpenseRepository {
     const savedExpense = await newExpense.save();
     return Promise.resolve({ _id: savedExpense._id });
   }
-  async delete(query: deleteQuery): Promise<boolean> {
-    const res = await expenseModel.remove(query);
+  async delete(userId: string, query: deleteQuery): Promise<boolean> {
+    const res = await expenseModel.remove({
+      'owner.id': userId,
+      ...query,
+    });
     return res.deletedCount > 0;
   }
 

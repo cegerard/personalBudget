@@ -48,20 +48,26 @@ export default class ExpenseRepositoryStub implements ExpenseRepository {
     return Promise.resolve(expenseToCreate);
   }
 
-  public delete(query: deleteQuery): Promise<boolean> {
+  public delete(userId: string, query: deleteQuery): Promise<boolean> {
     const compareKeys = Object.keys(query);
     let deletedExpenses = 0;
 
     this.expenseStore = this.expenseStore.filter((expense) => {
+      if(userId !== expense.owner.id) {
+        return true;
+      }
+
       let keepExpense = false;
       compareKeys.forEach((key) => {
         if (get(expense, key) !== get(query, key)) {
           keepExpense = true;
         }
       });
+
       if (!keepExpense) {
         deletedExpenses++;
       }
+      
       return keepExpense;
     });
 
