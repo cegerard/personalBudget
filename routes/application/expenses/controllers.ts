@@ -52,7 +52,7 @@ export default class ExpenseController {
       },
     });
 
-    const useCase = new AddExpense(budgetLine, this.budgetRepository);
+    const useCase = new AddExpense(budgetLine, owner.id, this.budgetRepository);
     await useCase.add({
       ...expenseDto.baseExpense(),
       _id: newExpense._id,

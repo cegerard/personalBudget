@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 import MongoBudgetRepository from './budget/MongoBudgetRespository';
+import MongoAdminBudgetRepository from './budget/MongoAdminBudgetRespository';
 import MongoExpenseRepository from './expense/MongoExpenseRepository';
 import MongoUserRepository from './user/MongoUserRepository';
 
@@ -22,6 +23,7 @@ export {
   connectMongo as connectDb,
   disconnectMongo as disconnectDb,
   MongoBudgetRepository,
+  MongoAdminBudgetRepository,
   MongoExpenseRepository,
   MongoUserRepository,
 };
