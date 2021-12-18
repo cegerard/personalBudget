@@ -6,6 +6,7 @@ import AddExpense from './AddExpense';
 describe('BudgetService', () => {
   const THIRD_BUDGET_ID = '3';
   const FOURTH_BUDGET_ID = '4';
+  const USER_ID = '0001';
 
   let budgetRepository: BudgetRepositoryStub;
   let expenseRepository: ExpenseRepositoryStub;
@@ -35,12 +36,12 @@ describe('BudgetService', () => {
     };
 
     it('should return that the expense has been added', async () => {
-      const isReplaced = await new AddExpense(fourthBudget, budgetRepository).add(newExpense);
+      const isReplaced = await new AddExpense(fourthBudget, USER_ID, budgetRepository).add(newExpense);
       expect(isReplaced).toEqual(true);
     });
 
     it('should add a the expense to the budget expense array', async () => {
-      await new AddExpense(fourthBudget, budgetRepository).add(newExpense);
+      await new AddExpense(fourthBudget, USER_ID, budgetRepository).add(newExpense);
       const updatedBudget = await budgetRepository.getById(FOURTH_BUDGET_ID);
 
       expect(updatedBudget.expenses.length).toEqual(3);
@@ -48,14 +49,14 @@ describe('BudgetService', () => {
     });
 
     it('should update the budget available field', async () => {
-      await new AddExpense(fourthBudget, budgetRepository).add(newExpense);
+      await new AddExpense(fourthBudget, USER_ID, budgetRepository).add(newExpense);
       const updatedBudget = await budgetRepository.getById(FOURTH_BUDGET_ID);
 
       expect(updatedBudget.available).toEqual(37);
     });
 
     it('should update the budget available field with correct parsing', async () => {
-      await new AddExpense(thirdBudget, budgetRepository).add({
+      await new AddExpense(thirdBudget, USER_ID, budgetRepository).add({
         _id: '42',
         name: 'new expense',
         amount: -1.19,

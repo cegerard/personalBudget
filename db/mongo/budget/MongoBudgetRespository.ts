@@ -14,11 +14,6 @@ export default class MongoBudgetRepository implements BudgetRepository {
     return budgetModel.find({'owner.id': userId}, selectedFields);
   }
 
-  findAll(selectedFields: string[] = []): Promise<readBudgetInfo[]> {
-    // TODO: convert to readBudget array
-    return budgetModel.find({}, selectedFields);
-  }
-
   async findOneById(userId: string, budgetId: string, selectedFields: string[] = []): Promise<readBudgetComplete> {
     // TODO: convert to readBudget
     const foundBudget = await budgetModel.find({ 'owner.id': userId, _id: budgetId }, selectedFields);
@@ -41,8 +36,8 @@ export default class MongoBudgetRepository implements BudgetRepository {
     return Promise.resolve();
   }
 
-  async update(budgetToUpdate: writeBudgetComplete): Promise<boolean> {
-    const res = await budgetModel.replaceOne({ _id: budgetToUpdate._id }, budgetToUpdate);
+  async update(userId: string, budgetToUpdate: writeBudgetComplete): Promise<boolean> {
+    const res = await budgetModel.replaceOne({ _id: budgetToUpdate._id, 'owner.id': userId  }, budgetToUpdate);
     return res.nModified === 1;
   }
 
@@ -51,8 +46,8 @@ export default class MongoBudgetRepository implements BudgetRepository {
     return res.deletedCount === 1;
   }
 
-  async patch(budgetId: string, attributes: attributesToPatch): Promise<boolean> {
-    const res = await budgetModel.updateOne({ _id: budgetId }, attributes);
+  async patch(userId: string, budgetId: string, attributes: attributesToPatch): Promise<boolean> {
+    const res = await budgetModel.updateOne({ _id: budgetId, 'owner.id': userId }, attributes);
     return res.n === 1;
   }
 }

@@ -6,7 +6,7 @@
 // Expenses are not deleted.
 
 import RenewBudgets from '../core/use_cases/budget/RenewBudgets';
-import { connectDb, disconnectDb, MongoBudgetRepository } from '../db/mongo';
+import { connectDb, disconnectDb, MongoAdminBudgetRepository } from '../db/mongo';
 
 console.log('Starts renew budgets task');
 execute();
@@ -16,7 +16,7 @@ async function execute() {
   await connectDb();
 
   console.log('Renew budgets');
-  const budgetRepository = new MongoBudgetRepository();
+  const budgetRepository = new MongoAdminBudgetRepository();
   const useCase = new RenewBudgets(budgetRepository);
   const result = await useCase.renewAll();
 

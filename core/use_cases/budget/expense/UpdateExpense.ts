@@ -48,6 +48,6 @@ export default class UpdateExpense {
     foundBudget.available += amountDiff;
     foundBudget.expenses[expenseIndex] = expenseToUpdate;
 
-    return this.repository.update(foundBudget as writeBudgetComplete);
+    return this.repository.update(this.userId, foundBudget as writeBudgetComplete);
   }
 }

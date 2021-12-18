@@ -1,5 +1,5 @@
 import { readBudgetInfo, renewResponse } from '../../@types/budget/types';
-import BudgetRepository from '../../interfaces/budget/BudgetRepository';
+import AdminBudgetRepository from '../../interfaces/budget/AdminBudgetRepository';
 
 type RenewStatus = {
   success: boolean;
@@ -16,11 +16,8 @@ type globalStatus = {
 };
 
 export default class RenewBudgets {
-  private budgetRepository: BudgetRepository;
 
-  constructor(budgetRepository: BudgetRepository) {
-    this.budgetRepository = budgetRepository;
-  }
+  constructor(private readonly adminBudgetRepository: AdminBudgetRepository) {}
 
   public async renewAll(): Promise<renewResponse> {
     const budgets = await this.findRenewableBudgets();
@@ -67,7 +64,7 @@ export default class RenewBudgets {
   }
 
   private findRenewableBudgets(): Promise<readBudgetInfo[]> {
-    return this.budgetRepository.findAll(['_id', 'amount', 'available', 'name', 'type']);
+    return this.adminBudgetRepository.findAll(['_id', 'amount', 'available', 'name', 'type']);
   }
 
   private async renewBudget(budget: readBudgetInfo): Promise<RenewStatus> {
@@ -90,9 +87,6 @@ export default class RenewBudgets {
   }
 
   private async patchBudget(budgetId: string, available: number): Promise<boolean> {
-    return this.budgetRepository.patch(budgetId, {
-      available: available,
-      expenses: [],
-    });
+    return this.adminBudgetRepository.renew(budgetId, available, []);
   }
 }

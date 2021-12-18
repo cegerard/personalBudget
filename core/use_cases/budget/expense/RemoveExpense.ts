@@ -24,7 +24,7 @@ export default class RemoveExpense {
     if (expenseIndex !== -1) {
       const deletedExpenses = foundBudget.expenses.splice(expenseIndex, 1);
       foundBudget.available += deletedExpenses[0].amount;
-      return this.repository.update(foundBudget as writeBudgetComplete);
+      return this.repository.update(this.userId, foundBudget as writeBudgetComplete);
     }
 
     return true;

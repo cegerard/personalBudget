@@ -8,6 +8,7 @@ import {
   writeBudgetComplete,
 } from '../../core/@types/budget/types';
 import BudgetRepository from '../../core/interfaces/budget/BudgetRepository';
+import AdminBudgetRepository from '../../core/interfaces/budget/AdminBudgetRepository';
 
 const PATCHABLE_FIELDS = [
   'name',
@@ -20,7 +21,7 @@ const PATCHABLE_FIELDS = [
   'expenses',
 ];
 
-export default class BudgetRepositoryStub implements BudgetRepository {
+export default class BudgetRepositoryStub implements BudgetRepository, AdminBudgetRepository {
   private budgetStore: any[];
 
   constructor() {
@@ -90,9 +91,11 @@ export default class BudgetRepositoryStub implements BudgetRepository {
     return Promise.resolve(deletedCount === 1);
   }
   
-  public patch(budgetId: string, attr: attributesToPatch): Promise<boolean> {
+  public patch(userId: string, budgetId: string, attr: attributesToPatch): Promise<boolean> {
     const attributes: any = attr;
-    const budgetIndex = this.budgetStore.findIndex((budget) => budget._id === budgetId);
+    const budgetIndex = this.budgetStore.findIndex((budget) => { 
+      return budget._id === budgetId && budget.owner.id === userId
+    });
 
     if (budgetIndex >= 0) {
       const budgetToUpdate = this.budgetStore[budgetIndex];
@@ -110,11 +113,27 @@ export default class BudgetRepositoryStub implements BudgetRepository {
     return Promise.resolve(budgetIndex >= 0);
   }
   
-  public update(writeBudget: writeBudgetComplete): Promise<boolean> {
-    const budgetIndex = this.budgetStore.findIndex((budget) => budget._id === writeBudget._id);
+  public update(userId: string, writeBudget: writeBudgetComplete): Promise<boolean> {
+    const budgetIndex = this.budgetStore.findIndex((budget) => { 
+      return budget._id === writeBudget._id && budget.owner.id === userId
+    });
 
     const budgetsReplaced = this.budgetStore.splice(budgetIndex, 1, writeBudget);
     return Promise.resolve(budgetsReplaced.length === 1);
+  }
+
+  public renew(budgetId: string, available: number, expenses: unknown[]): Promise<boolean> {
+    const budgetIndex = this.budgetStore.findIndex((budget) => budget._id === budgetId);
+
+    if (budgetIndex >= 0) {
+      const budgetToUpdate = this.budgetStore[budgetIndex];
+      budgetToUpdate.available = available;
+      budgetToUpdate.expenses = expenses;
+
+      this.budgetStore[budgetIndex] = budgetToUpdate;
+    }
+    
+    return Promise.resolve(budgetIndex >= 0);
   }
   
   public getById(budgetId: string): Promise<readBudgetComplete> {

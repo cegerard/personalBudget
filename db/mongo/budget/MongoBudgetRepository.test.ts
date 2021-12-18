@@ -38,23 +38,6 @@ describe('MongoBudgetRepository', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should retreive all budgets with all field', async () => {
-      await mongoRepository.findAll([]);
-      expect(budgetModel.find).toHaveBeenCalledWith({}, []);
-    });
-
-    it('should retreive budgets with selected fields', async () => {
-      await mongoRepository.findAll();
-      expect(budgetModel.find).toHaveBeenCalledWith({}, []);
-    });
-
-    it('should retreive budgets with default parameter', async () => {
-      await mongoRepository.findAll(['id', 'name']);
-      expect(budgetModel.find).toHaveBeenCalledWith({}, ['id', 'name']);
-    });
-  });
-
   describe('findOneById', () => {
 
     beforeEach(() => {
@@ -119,7 +102,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns true', async () => {
-        const res = await mongoRepository.update(budget);
+        const res = await mongoRepository.update(userId, budget);
         expect(res).toEqual(true);
       });
     });
@@ -132,7 +115,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.update(budget);
+        const res = await mongoRepository.update(userId, budget);
         expect(res).toEqual(false);
       });
     });
@@ -145,7 +128,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.update(budget);
+        const res = await mongoRepository.update(userId, budget);
         expect(res).toEqual(false);
       });
     });
@@ -166,7 +149,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns true', async () => {
-        const res = await mongoRepository.patch(budgetId, attributes);
+        const res = await mongoRepository.patch(userId, budgetId, attributes);
         expect(res).toEqual(true);
       });
     });
@@ -179,7 +162,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.patch(budgetId, attributes);
+        const res = await mongoRepository.patch(userId, budgetId, attributes);
         expect(res).toEqual(false);
       });
     });
@@ -192,7 +175,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.patch(budgetId, attributes);
+        const res = await mongoRepository.patch(userId, budgetId, attributes);
         expect(res).toEqual(false);
       });
     });
