@@ -26,7 +26,7 @@ describe('UpdateExpense', () => {
       };
 
       beforeEach(async () => {
-        await expenseRepository.patch(EXPENSE_ID, {
+        await expenseRepository.patch(USER_ID, EXPENSE_ID, {
           name: EXPECTED_EXPENSE.name,
           amount: EXPECTED_EXPENSE.amount,
           date: EXPECTED_EXPENSE.date,

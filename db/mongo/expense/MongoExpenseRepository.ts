@@ -32,8 +32,8 @@ export default class MongoExpenseRepository implements ExpenseRepository {
     return res.deletedCount > 0;
   }
 
-  async patch(expenseId: string, attributes: patchableAttributes): Promise<boolean> {
-    const res = await expenseModel.updateOne({ _id: expenseId }, attributes);
+  async patch(userId: string, expenseId: string, attributes: patchableAttributes): Promise<boolean> {
+    const res = await expenseModel.updateOne({ _id: expenseId, 'owner.id': userId }, attributes);
     return res.n === 1;
   }
 }

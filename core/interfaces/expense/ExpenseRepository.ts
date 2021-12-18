@@ -10,6 +10,6 @@ import {
 export default interface ExpenseRepository {
   create(newExpense: writeExpense): Promise<lightExpense>;
   find(userId: string, query?: expenseQuery): Promise<readExpenseInfo[]>;
-  patch(expenseId: string, attributes: patchableAttributes): Promise<boolean>;
+  patch(userId:string, expenseId: string, attributes: patchableAttributes): Promise<boolean>;
   delete(userId: string, query: deleteQuery): Promise<boolean>;
 }

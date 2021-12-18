@@ -89,7 +89,7 @@ export default class ExpenseController {
   async patch(req: Request, res: Response) {
     const owner = req.user! as User;
     const expenseDto = new ExpensePatchDto(req.params.id, req.body);
-    const updateExpense = new UpdateExpense(expenseDto.id, this.expenseRepository);
+    const updateExpense = new UpdateExpense(expenseDto.id, owner.id, this.expenseRepository);
 
     const isUpdated = await updateExpense.update(expenseDto.attributes());
     if (isUpdated) {
