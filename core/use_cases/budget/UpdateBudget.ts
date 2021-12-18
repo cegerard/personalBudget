@@ -31,6 +31,6 @@ export default class UpdateBudget {
       attributesToPatch.available = budget.available + amountDiff;
     }
 
-    return this.repository.patch(this.budgetId, attributesToPatch);
+    return this.repository.patch(this.userId, this.budgetId, attributesToPatch);
   }
 }

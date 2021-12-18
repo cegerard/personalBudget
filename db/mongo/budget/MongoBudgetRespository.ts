@@ -51,8 +51,8 @@ export default class MongoBudgetRepository implements BudgetRepository {
     return res.deletedCount === 1;
   }
 
-  async patch(budgetId: string, attributes: attributesToPatch): Promise<boolean> {
-    const res = await budgetModel.updateOne({ _id: budgetId }, attributes);
+  async patch(userId: string, budgetId: string, attributes: attributesToPatch): Promise<boolean> {
+    const res = await budgetModel.updateOne({ _id: budgetId, 'owner.id': userId }, attributes);
     return res.n === 1;
   }
 }

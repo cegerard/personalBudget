@@ -166,7 +166,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns true', async () => {
-        const res = await mongoRepository.patch(budgetId, attributes);
+        const res = await mongoRepository.patch(userId, budgetId, attributes);
         expect(res).toEqual(true);
       });
     });
@@ -179,7 +179,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.patch(budgetId, attributes);
+        const res = await mongoRepository.patch(userId, budgetId, attributes);
         expect(res).toEqual(false);
       });
     });
@@ -192,7 +192,7 @@ describe('MongoBudgetRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.patch(budgetId, attributes);
+        const res = await mongoRepository.patch(userId, budgetId, attributes);
         expect(res).toEqual(false);
       });
     });

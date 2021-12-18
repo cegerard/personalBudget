@@ -101,7 +101,7 @@ describe('RenewBudget', () => {
 
     describe('with budget update failure', () => {
       it('returns failure status', async () => {
-        budgetRepository.patch = (budgetId, attr) => {
+        budgetRepository.renew = (budgetId, attr) => {
           return Promise.resolve(false);
         };
 
