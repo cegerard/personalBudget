@@ -84,7 +84,7 @@ describe('MongoExpenseRepository', () => {
       });
 
       it('returns true', async () => {
-        const res = await mongoRepository.patch(expenseId, attributes);
+        const res = await mongoRepository.patch(userId, expenseId, attributes);
         expect(res).toEqual(true);
       });
     });
@@ -97,7 +97,7 @@ describe('MongoExpenseRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.patch(expenseId, attributes);
+        const res = await mongoRepository.patch(userId, expenseId, attributes);
         expect(res).toEqual(false);
       });
     });
@@ -110,7 +110,7 @@ describe('MongoExpenseRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.patch(expenseId, attributes);
+        const res = await mongoRepository.patch(userId, expenseId, attributes);
         expect(res).toEqual(false);
       });
     });

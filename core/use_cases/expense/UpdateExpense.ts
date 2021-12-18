@@ -4,10 +4,12 @@ import ExpenseRepository from '../../interfaces/expense/ExpenseRepository';
 export default class UpdateExpense {
   private expenseId: string;
   private repository: ExpenseRepository;
+  private userId: string;
 
-  constructor(expenseId: string, expenseRepository: ExpenseRepository) {
+  constructor(expenseId: string, userId: string, expenseRepository: ExpenseRepository) {
     this.expenseId = expenseId;
     this.repository = expenseRepository;
+    this.userId = userId;
   }
 
   async update(attributes: patchableAttributes): Promise<boolean> {
@@ -17,7 +19,7 @@ export default class UpdateExpense {
       attributesToPatch.amount = Number(attributesToPatch.amount);
     }
 
-    return this.repository.patch(this.expenseId, attributes);
+    return this.repository.patch(this.userId, this.expenseId, attributes);
   }
 }
 

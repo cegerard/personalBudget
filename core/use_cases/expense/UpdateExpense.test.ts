@@ -1,4 +1,3 @@
-import { MongoExpenseRepository } from '../../../db/mongo';
 import ExpenseRepositoryStub from '../../../test/stubs/ExpenseRepositoryStub';
 import UpdateExpense from './UpdateExpense';
 
@@ -13,6 +12,7 @@ describe('UpdateExpense', () => {
   describe('update', () => {
     describe('when the expense exists', () => {
       const EXPENSE_ID = '101';
+      const USER_ID = '0001';
       const EXPECTED_EXPENSE = {
         _id: EXPENSE_ID,
         name: 'new name',
@@ -23,7 +23,7 @@ describe('UpdateExpense', () => {
           name: 'Essence',
         },
         owner: {
-          id: '0001',
+          id: USER_ID,
           name: 'admin istrator',
         },
       };
@@ -31,7 +31,7 @@ describe('UpdateExpense', () => {
       let patchRes: any;
 
       beforeEach(async () => {
-        expenseService = new UpdateExpense(EXPENSE_ID, expenseRepository);
+        expenseService = new UpdateExpense(EXPENSE_ID, USER_ID, expenseRepository);
         patchRes = await expenseService.update({
           name: EXPECTED_EXPENSE.name,
           amount: EXPECTED_EXPENSE.amount,
@@ -53,7 +53,7 @@ describe('UpdateExpense', () => {
       const EXPENSE_ID = 'unkown';
 
       beforeEach(async () => {
-        expenseService = new UpdateExpense(EXPENSE_ID, expenseRepository);
+        expenseService = new UpdateExpense(EXPENSE_ID, '123', expenseRepository);
       });
 
       it('should return false', async () => {

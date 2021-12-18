@@ -74,9 +74,11 @@ export default class ExpenseRepositoryStub implements ExpenseRepository {
     return Promise.resolve(deletedExpenses > 0);
   }
 
-  public patch(expenseId: string, attr: patchableAttributes): Promise<boolean> {
+  public patch(userId: string, expenseId: string, attr: patchableAttributes): Promise<boolean> {
     const attributes: any = attr;
-    const expenseIndex = this.expenseStore.findIndex((expense) => expense._id === expenseId);
+    const expenseIndex = this.expenseStore.findIndex((expense) => {
+      return expense._id === expenseId && expense.owner.id === userId;
+    });
 
     if (expenseIndex >= 0) {
       const expenseToUpdate = this.expenseStore[expenseIndex];
