@@ -129,7 +129,7 @@ describe('MongoExpenseRepository', () => {
       });
 
       it('returns true', async () => {
-        const res = await mongoRepository.delete(query);
+        const res = await mongoRepository.delete(userId, query);
         expect(res).toEqual(true);
       });
     });
@@ -142,7 +142,7 @@ describe('MongoExpenseRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.delete(query);
+        const res = await mongoRepository.delete(userId, query);
         expect(res).toEqual(false);
       });
     });
@@ -155,7 +155,7 @@ describe('MongoExpenseRepository', () => {
       });
 
       it('returns false', async () => {
-        const res = await mongoRepository.delete(query);
+        const res = await mongoRepository.delete(userId, query);
         expect(res).toEqual(false);
       });
     });

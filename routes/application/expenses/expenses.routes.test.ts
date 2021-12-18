@@ -114,8 +114,12 @@ describe('Expenses with authentication', () => {
         });
     });
 
-    it('should return a 404 error when the expense can not be deleted', async () => {
+    it('should return a 404 error when the expense does not exist', async () => {
       await app.delete('/expenses/404').expect(StatusCodes.NOT_FOUND);
+    });
+
+    it('should return a 404 error when the expense can not be deleted', async () => {
+      await app.delete('/expenses/300').expect(StatusCodes.NOT_FOUND);
     });
 
     it('should return a 500 error when the budget line does not exists', async () => {

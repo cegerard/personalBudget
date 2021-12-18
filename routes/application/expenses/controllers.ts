@@ -64,7 +64,7 @@ export default class ExpenseController {
   async delete(req: Request, res: Response) {
     const owner = req.user! as User;
     const expenseToDelete = await this.expenseRepository.find(owner.id, { _id: req.params.id });
-    const isExpenseDeleted = await this.expenseRepository.delete({ _id: req.params.id });
+    const isExpenseDeleted = await this.expenseRepository.delete(owner.id, { _id: req.params.id });
 
     if (!isExpenseDeleted) {
       res.status(StatusCodes.NOT_FOUND).end();

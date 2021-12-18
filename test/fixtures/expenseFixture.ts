@@ -42,5 +42,19 @@ export default {
         name: 'admin istrator',
       },
     },
+    {
+      _id: '300',
+      name: 'medicaments',
+      amount:34.56,
+      date: '2020-11-08',
+      budgetLine: {
+        _id: '50',
+        name: 'sante',
+      },
+      owner: {
+        id: '0002',
+        name: 'other user',
+      },
+    },
   ],
 };

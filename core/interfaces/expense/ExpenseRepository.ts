@@ -8,8 +8,8 @@ import {
 } from '../../@types/expense/types';
 
 export default interface ExpenseRepository {
-  find(userId: string, query?: expenseQuery): Promise<readExpenseInfo[]>;
   create(newExpense: writeExpense): Promise<lightExpense>;
-  delete(query: deleteQuery): Promise<boolean>;
+  find(userId: string, query?: expenseQuery): Promise<readExpenseInfo[]>;
   patch(expenseId: string, attributes: patchableAttributes): Promise<boolean>;
+  delete(userId: string, query: deleteQuery): Promise<boolean>;
 }

@@ -14,7 +14,7 @@ export default class BudgetService {
     // TODO: look for transaction mechanism
     const isDeleted = await this.repository.delete(userId, budgetId);
     if (isDeleted) {
-      this.expenseRepository.delete({ 'budgetLine._id': budgetId });
+      this.expenseRepository.delete(userId, { 'budgetLine._id': budgetId });
     }
     return isDeleted;
   }
