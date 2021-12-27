@@ -3,10 +3,12 @@ import express from 'express';
 import homeRoute from './home/routes';
 import budgetsRoute from './budgets/routes';
 import expensesRoute from './expenses/routes';
+import balanceRoute from './balance/routes';
 import ExpenseController from './expenses/controllers';
 import BudgetController from './budgets/controllers';
 import HomeController from './home/controllers';
 import Authentication from '../../lib/security/authentication';
+import { BalanceController } from './balance/controller';
 
 class AppRouter {
   public router;
@@ -14,7 +16,8 @@ class AppRouter {
   constructor(
     homeController: HomeController,
     budgetController: BudgetController,
-    expenseController: ExpenseController
+    expenseController: ExpenseController,
+    balanceController: BalanceController,
   ) {
     this.router = express.Router();
 
@@ -28,6 +31,11 @@ class AppRouter {
       '/expenses',
       Authentication.ensureAuthenticated,
       expensesRoute.init(expenseController)
+    );
+    this.router.use(
+      '/balance',
+      Authentication.ensureAuthenticated,
+      balanceRoute.init(balanceController)
     );
   }
 }

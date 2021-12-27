@@ -11,6 +11,7 @@ import logger from 'morgan';
 import BudgetRepository from './core/interfaces/budget/BudgetRepository';
 import ExpenseRepository from './core/interfaces/expense/ExpenseRepository';
 import UserRepository from './core/interfaces/user/UserRepository';
+import { BalanceRepository } from './core/interfaces/balance/BalanceRepository';
 import ApiRouter from './routes/api/ApiRouter';
 import AppRouter from './routes/application/AppRouter';
 import HomeController from './routes/application/home/controllers';
@@ -20,6 +21,7 @@ import ExpenseController from './routes/application/expenses/controllers';
 import BudgetRepositoryStub from './test/stubs/BudgetRepositoryStub';
 import ExpenseRepositoryStub from './test/stubs/ExpenseRepositoryStub';
 import UserRepositoryStub from './test/stubs/UserRepositoryStub';
+import { BalanceRepositoryStub } from './test/stubs/BalanceRepositoryStub';
 
 import { User } from './core/User';
 import { UserCredential } from './core/UserCredential';
@@ -30,13 +32,16 @@ import {
   MongoExpenseRepository,
 } from './db/mongo';
 import ApiExpenseController from './routes/api/expenses/controller';
+import { BalanceController } from './routes/application/balance/controller';
+import MongoBalanceRepository from './db/mongo/balance/MongoBalanceRepository';
 
 class Application {
   private mode: string;
+  private budgetRepository: BudgetRepository;
+  private expenseRepository: ExpenseRepository;
+  private userRepository: UserRepository;
+  private balanceRepository: BalanceRepository;
   public app: any;
-  public budgetRepository: BudgetRepository;
-  public expenseRepository: ExpenseRepository;
-  public userRepository: UserRepository;
 
   constructor() {
     this.app = express();
@@ -49,10 +54,12 @@ class Application {
       this.budgetRepository = new MongoBudgetRepository();
       this.expenseRepository = new MongoExpenseRepository();
       this.userRepository = new MongoUserRepository();
+      this.balanceRepository = new MongoBalanceRepository();
     } else {
       this.budgetRepository = new BudgetRepositoryStub();
       this.expenseRepository = new ExpenseRepositoryStub();
       this.userRepository = new UserRepositoryStub();
+      this.balanceRepository = new BalanceRepositoryStub();
     }
 
     if (this.mode === 'production' || this.mode === 'dev') {
@@ -147,8 +154,14 @@ class Application {
     const homeController = new HomeController(this.userRepository);
     const budgetController = new BudgetController(this.budgetRepository, this.expenseRepository);
     const expenseController = new ExpenseController(this.budgetRepository, this.expenseRepository);
+    const balanceController = new BalanceController(this.balanceRepository);
 
-    const appRouter = new AppRouter(homeController, budgetController, expenseController);
+    const appRouter = new AppRouter(
+      homeController,
+      budgetController,
+      expenseController,
+      balanceController
+    );
 
     this.app.use('/', appRouter.router);
   }
